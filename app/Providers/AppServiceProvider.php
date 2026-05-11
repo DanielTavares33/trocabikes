@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\BikeBrand;
+use App\Models\BikeCategory;
+use App\Observers\BikeBrandObserver;
+use App\Observers\BikeCategoryObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +28,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+
+        BikeBrand::observe(BikeBrandObserver::class);
+        BikeCategory::observe(BikeCategoryObserver::class);
     }
 
     /**
