@@ -1,13 +1,11 @@
 import { Head } from '@inertiajs/react';
-import CategoriesGrid from '~/components/home/CategoriesGrid';
-import Footer from '~/components/home/Footer';
-import Hero from '~/components/home/Hero';
+import { Link } from '@inertiajs/react';
 import type { ListingCardData } from '~/components/home/ListingCard';
-import ListingCard from '~/components/home/ListingCard';
 import Navbar from '~/components/home/Navbar';
-import SearchSection from '~/components/home/SearchSection';
+import BrowseFilters from '~/pages/browse/BrowseFilters';
+import BrowseListings from '~/pages/browse/BrowseListings';
 
-const recentListings: ListingCardData[] = [
+const mockListings: ListingCardData[] = [
     {
         id: 1,
         title: 'Canyon Spectral CF 7 — Full Suspended MTB',
@@ -92,62 +90,87 @@ const recentListings: ListingCardData[] = [
             'https://images.unsplash.com/photo-1558981408-600d5c4f2db8?w=600&h=450&fit=crop&q=80',
         imageAlt: 'BMX race bike',
     },
+    {
+        id: 7,
+        title: 'Scott Addict RC — Carbon Road Bike',
+        brand: 'Scott',
+        category: 'Road Bike',
+        price: 2800,
+        year: 2022,
+        condition: 'Excelente',
+        kilometers: 800,
+        location: 'Lisboa',
+        imageUrl:
+            'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&h=450&fit=crop&q=80',
+        imageAlt: 'Scott road bike',
+    },
+    {
+        id: 8,
+        title: 'CUBE Reaction Hybrid — E-MTB',
+        brand: 'CUBE',
+        category: 'E-Bike',
+        price: 2600,
+        year: 2021,
+        condition: 'Boa',
+        kilometers: 600,
+        location: 'Faro',
+        imageUrl:
+            'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&h=450&fit=crop&q=80',
+        imageAlt: 'CUBE e-bike',
+    },
+    {
+        id: 9,
+        title: 'Btwin Rockrider 300 — Beginner MTB',
+        brand: 'Btwin',
+        category: 'Mountain Bike',
+        price: 320,
+        year: 2019,
+        condition: 'Boa',
+        kilometers: 0,
+        location: 'Setubal',
+        imageUrl:
+            'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600&h=450&fit=crop&q=80',
+        imageAlt: 'Btwin mountain bike',
+    },
 ];
 
-export default function Welcome() {
+export default function Browse() {
     return (
         <>
-            <Head title="Trocabikes — Find your next bike" />
+            <Head title="Browse bikes — Trocabikes" />
 
             <div className="flex min-h-screen flex-col bg-bg text-text">
                 <Navbar />
 
-                <main className="flex-1">
-                    <Hero />
-                    <SearchSection />
-                    <CategoriesGrid />
-
-                    <section className="bg-bg-subtle px-6 py-20 lg:px-12">
-                        <div className="mx-auto max-w-6xl">
-                            <div className="mb-12 flex items-end justify-between">
-                                <div>
-                                    <h2 className="mb-2 text-3xl font-semibold text-text">
-                                        Recent listings
-                                    </h2>
-                                    <p className="text-text-muted">
-                                        Fresh bikes just listed in your area
-                                    </p>
-                                </div>
-                                <a
-                                    href="#all-listings"
-                                    className="hidden text-sm font-medium text-primary transition-colors hover:text-primary-hover sm:block"
+                <main className="flex-1 px-6 py-10 lg:px-12">
+                    <div className="mx-auto max-w-6xl">
+                        <div className="mb-8">
+                            <nav className="mb-2 text-sm text-text-muted">
+                                <Link
+                                    href="/"
+                                    className="transition-colors hover:text-text"
                                 >
-                                    View all listings &rarr;
-                                </a>
-                            </div>
-
-                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                                {recentListings.map((listing) => (
-                                    <ListingCard
-                                        key={listing.id}
-                                        listing={listing}
-                                    />
-                                ))}
-                            </div>
-
-                            <div className="mt-10 text-center sm:hidden">
-                                <a
-                                    href="#all-listings"
-                                    className="inline-block rounded-sm border border-border px-6 py-2 text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg"
-                                >
-                                    View all listings &rarr;
-                                </a>
-                            </div>
+                                    Home
+                                </Link>
+                                <span className="mx-2">/</span>
+                                <span className="text-text">Browse bikes</span>
+                            </nav>
+                            <h1 className="text-3xl font-semibold text-text">
+                                Browse bikes
+                            </h1>
                         </div>
-                    </section>
-                </main>
 
-                <Footer />
+                        <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+                            <div className="lg:w-56 lg:shrink-0">
+                                <BrowseFilters />
+                            </div>
+                            <BrowseListings
+                                listings={mockListings}
+                                total={mockListings.length}
+                            />
+                        </div>
+                    </div>
+                </main>
             </div>
         </>
     );
