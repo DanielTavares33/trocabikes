@@ -1,6 +1,7 @@
 export interface ListingCardData {
     id: number;
     title: string;
+    slug: string;
     brand: string;
     category: string;
     price: number;
@@ -27,7 +28,7 @@ const conditionColors: ConditionColor = {
 export default function ListingCard({ listing }: { listing: ListingCardData }) {
     return (
         <a
-            href={`#listing-${listing.id}`}
+            href={`/browse/${listing.slug}`}
             className="group flex flex-col overflow-hidden rounded-sm border border-border bg-surface transition-all hover:border-border-strong hover:shadow-lg"
         >
             <div className="aspect-[4/3] overflow-hidden bg-bg-subtle">

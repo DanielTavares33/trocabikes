@@ -10,6 +10,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property ListingCondition $condition
+ * @property FrameMaterial $frame_material
+ * @property ListingStatus $status
+ * @property-read BikeBrand|null $bikeBrand
+ * @property-read BikeCategory|null $bikeCategory
+ * @property-read User|null $user
+ *
+ * @method static \Database\Factories\ListingFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing query()
+ *
+ * @mixin \Eloquent
+ */
 class Listing extends Model
 {
     /** @use HasFactory<ListingFactory> */

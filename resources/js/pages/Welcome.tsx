@@ -11,6 +11,7 @@ const recentListings: ListingCardData[] = [
     {
         id: 1,
         title: 'Canyon Spectral CF 7 — Full Suspended MTB',
+        slug: 'canyon-spectral-cf-7-full-suspended-mtb',
         brand: 'Canyon',
         category: 'Mountain Bike',
         price: 2850,
@@ -25,6 +26,7 @@ const recentListings: ListingCardData[] = [
     {
         id: 2,
         title: 'Specialized Allez Sprint — Road Racing',
+        slug: 'specialized-allez-sprint-road-racing',
         brand: 'Specialized',
         category: 'Road Bike',
         price: 1950,
@@ -39,6 +41,7 @@ const recentListings: ListingCardData[] = [
     {
         id: 3,
         title: 'Trek FX 3 — City Hybrid Commuter',
+        slug: 'trek-fx-3-city-hybrid-commuter',
         brand: 'Trek',
         category: 'City Bike',
         price: 650,
@@ -53,6 +56,7 @@ const recentListings: ListingCardData[] = [
     {
         id: 4,
         title: 'Brose S Mag — Urban E-Bike 2024',
+        slug: 'brose-s-mag-urban-e-bike-2024',
         brand: 'Brose',
         category: 'E-Bike',
         price: 3200,
@@ -67,6 +71,7 @@ const recentListings: ListingCardData[] = [
     {
         id: 5,
         title: 'Giant Trance X Advanced — Carbon MTB',
+        slug: 'giant-trance-x-advanced-carbon-mtb',
         brand: 'Giant',
         category: 'Mountain Bike',
         price: 4100,
@@ -81,6 +86,7 @@ const recentListings: ListingCardData[] = [
     {
         id: 6,
         title: 'Pinasca BMX Race — Chromoly Frame',
+        slug: 'pinasca-bmx-race-chromoly-frame',
         brand: 'Pinasca',
         category: 'BMX',
         price: 380,

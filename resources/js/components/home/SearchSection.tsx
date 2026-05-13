@@ -66,7 +66,7 @@ export default function SearchSection() {
                         </svg>
                     </div>
 
-                    <button className="h-12 rounded-sm bg-primary px-8 text-sm font-medium text-white transition-colors hover:bg-primary-hover">
+                    <button className="h-12 rounded-sm bg-primary px-8 text-sm font-medium text-white transition-colors hover:bg-primary-hover cursor-pointer">
                         Search
                     </button>
                 </div>

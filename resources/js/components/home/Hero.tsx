@@ -23,7 +23,7 @@ export default function Hero() {
                 </p>
                 <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                     <a
-                        href="#categories"
+                        href="/browse"
                         className="rounded-sm bg-primary px-8 py-3 text-base font-medium text-white transition-colors hover:bg-primary-hover"
                     >
                         Browse bikes

@@ -1,5 +1,4 @@
-import { Head } from '@inertiajs/react';
-import { Link } from '@inertiajs/react';
+import { Head,Link } from '@inertiajs/react';
 
 export default function SignUp() {
     return (
@@ -155,7 +154,7 @@ export default function SignUp() {
                 <p className="mt-6 text-sm text-text-muted">
                     Already have an account?{' '}
                     <Link
-                        href="/signin"
+                        href="/sign-in"
                         className="font-medium text-primary transition-colors hover:text-primary-hover"
                     >
                         Sign in
