@@ -139,7 +139,7 @@ export default function ListingDetail() {
                                         <p className="mb-1 text-xs font-medium tracking-wide text-text-subtle uppercase">
                                             {listing.brand}
                                         </p>
-                                        <h1 className="text-2xl font-semibold leading-tight text-text">
+                                        <h1 className="text-2xl leading-tight font-semibold text-text">
                                             {listing.title}
                                         </h1>
                                     </div>
@@ -152,7 +152,8 @@ export default function ListingDetail() {
                                             className={`rounded-sm px-2.5 py-1 text-xs font-medium capitalize ${
                                                 conditionColors[
                                                     listing.condition.toLowerCase()
-                                                ] || 'bg-bg-subtle text-text-muted'
+                                                ] ||
+                                                'bg-bg-subtle text-text-muted'
                                             }`}
                                         >
                                             {listing.condition}
@@ -190,7 +191,7 @@ export default function ListingDetail() {
                                             </p>
                                             <p className="font-medium text-text">
                                                 {listing.kilometers.toLocaleString(
-                                                    'pt-PT'
+                                                    'pt-PT',
                                                 )}{' '}
                                                 km
                                             </p>
@@ -209,11 +210,7 @@ export default function ListingDetail() {
                                             strokeLinejoin="round"
                                         >
                                             <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                                            <circle
-                                                cx="12"
-                                                cy="10"
-                                                r="3"
-                                            />
+                                            <circle cx="12" cy="10" r="3" />
                                         </svg>
                                         <span>{listing.location}</span>
                                     </div>
@@ -325,7 +322,7 @@ export default function ListingDetail() {
                                         <button
                                             onClick={() => {
                                                 navigator.clipboard.writeText(
-                                                    window.location.href
+                                                    window.location.href,
                                                 );
                                             }}
                                             className="flex items-center justify-center rounded-sm border border-border p-2.5 text-text-subtle transition-colors hover:border-border-strong hover:bg-bg-subtle hover:text-text"

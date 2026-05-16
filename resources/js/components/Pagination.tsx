@@ -10,13 +10,17 @@ export default function Pagination({
     onPageChange: (page: number) => void;
 }) {
     if (totalPages <= 1) {
-return null;
-}
+        return null;
+    }
 
     const pages: (number | 'ellipsis')[] = [];
 
     for (let i = 1; i <= totalPages; i++) {
-        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+        if (
+            i === 1 ||
+            i === totalPages ||
+            (i >= currentPage - 1 && i <= currentPage + 1)
+        ) {
             pages.push(i);
         } else if (pages[pages.length - 1] !== 'ellipsis') {
             pages.push('ellipsis');
@@ -32,7 +36,7 @@ return null;
                     'flex h-9 w-9 items-center justify-center rounded-sm text-sm transition-colors',
                     currentPage === 1
                         ? 'cursor-not-allowed text-text-subtle'
-                        : 'text-text-muted hover:border-border-strong hover:bg-bg-subtle hover:text-text'
+                        : 'text-text-muted hover:border-border-strong hover:bg-bg-subtle hover:text-text',
                 )}
             >
                 <svg
@@ -65,12 +69,12 @@ return null;
                             'flex h-9 w-9 items-center justify-center rounded-sm text-sm font-medium transition-colors',
                             page === currentPage
                                 ? 'bg-primary text-white'
-                                : 'text-text-muted hover:bg-bg-subtle hover:text-text'
+                                : 'text-text-muted hover:bg-bg-subtle hover:text-text',
                         )}
                     >
                         {page}
                     </button>
-                )
+                ),
             )}
 
             <button
@@ -80,7 +84,7 @@ return null;
                     'flex h-9 w-9 items-center justify-center rounded-sm text-sm transition-colors',
                     currentPage === totalPages
                         ? 'cursor-not-allowed text-text-subtle'
-                        : 'text-text-muted hover:border-border-strong hover:bg-bg-subtle hover:text-text'
+                        : 'text-text-muted hover:border-border-strong hover:bg-bg-subtle hover:text-text',
                 )}
             >
                 <svg

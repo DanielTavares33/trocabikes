@@ -29,7 +29,7 @@ export default function Hero() {
                         Browse bikes
                     </a>
                     <a
-                        href="#"
+                        href="/listings/create"
                         className="rounded-sm border border-white/30 bg-white/10 px-8 py-3 text-base font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
                     >
                         Sell your bike
