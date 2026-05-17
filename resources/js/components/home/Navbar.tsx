@@ -1,4 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
+import { Bike, Heart, LogOut, User } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { logout, myBikes, profile, savedBikes } from '~/routes';
 
@@ -55,20 +56,23 @@ export default function Navbar() {
                         <div className="absolute top-full right-0 mt-2 w-48 rounded-sm border border-border bg-bg py-1 shadow-lg">
                             <Link
                                 href={profile.url()}
-                                className="block px-4 py-2 text-sm text-text transition-colors hover:bg-bg-subtle"
+                                className="flex items-center gap-2 px-4 py-2 text-sm text-text transition-colors hover:bg-bg-subtle"
                             >
+                                <User className="h-4 w-4" />
                                 Profile
                             </Link>
                             <Link
                                 href={myBikes.url()}
-                                className="block px-4 py-2 text-sm text-text transition-colors hover:bg-bg-subtle"
+                                className="flex items-center gap-2 px-4 py-2 text-sm text-text transition-colors hover:bg-bg-subtle"
                             >
+                                <Bike className="h-4 w-4" />
                                 My Bikes
                             </Link>
                             <Link
                                 href={savedBikes.url()}
-                                className="block px-4 py-2 text-sm text-text transition-colors hover:bg-bg-subtle"
+                                className="flex items-center gap-2 px-4 py-2 text-sm text-text transition-colors hover:bg-bg-subtle"
                             >
+                                <Heart className="h-4 w-4" />
                                 Saved Bikes
                             </Link>
                             <div className="my-1 border-t border-border" />
@@ -76,8 +80,9 @@ export default function Navbar() {
                                 href={logout.url()}
                                 method="post"
                                 as="button"
-                                className="block w-full px-4 py-2 text-left text-sm text-text transition-colors hover:bg-bg-subtle cursor-pointer"
+                                className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-text transition-colors hover:bg-bg-subtle cursor-pointer"
                             >
+                                <LogOut className="h-4 w-4" />
                                 Logout
                             </Link>
                         </div>

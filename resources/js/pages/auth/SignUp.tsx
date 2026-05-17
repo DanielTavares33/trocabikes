@@ -129,12 +129,6 @@ export default function SignUp() {
                                     )}
                                 </div>
 
-                                <input
-                                    type="hidden"
-                                    name="accepted_terms"
-                                    value="1"
-                                />
-
                                 <div className="rounded-sm border border-border bg-bg-subtle p-3">
                                     <p className="text-xs text-text-muted">
                                         By creating an account, you

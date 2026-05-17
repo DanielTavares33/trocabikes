@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\RegisterPostRequest;
 use App\Models\User;
 use Auth;
-use Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -25,7 +24,7 @@ class RegisterController extends Controller
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'password' => $validated['password'],
         ]);
 
         // Log the user in

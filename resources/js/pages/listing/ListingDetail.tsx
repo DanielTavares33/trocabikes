@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import { BadgeCheck, Link as LinkIcon, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 
@@ -199,19 +200,7 @@ export default function ListingDetail() {
                                     </div>
 
                                     <div className="mt-4 flex items-center gap-2 text-sm text-text-muted">
-                                        <svg
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                                            <circle cx="12" cy="10" r="3" />
-                                        </svg>
+                                        <MapPin width={16} height={16} />
                                         <span>{listing.location}</span>
                                     </div>
                                 </div>
@@ -229,15 +218,12 @@ export default function ListingDetail() {
                                                     {seller.name}
                                                 </p>
                                                 {seller.isVerified && (
-                                                    <svg
-                                                        width="16"
-                                                        height="16"
-                                                        viewBox="0 0 24 24"
-                                                        fill="currentColor"
+                                                    <BadgeCheck
+                                                        width={16}
+                                                        height={16}
                                                         className="text-primary"
-                                                    >
-                                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>
+                                                        fill="currentColor"
+                                                    />
                                                 )}
                                             </div>
                                             <p className="text-xs text-text-subtle">
@@ -252,18 +238,7 @@ export default function ListingDetail() {
                                             href={`tel:${seller.phone}`}
                                             className="flex items-center justify-center gap-2 rounded-sm bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
                                         >
-                                            <svg
-                                                width="18"
-                                                height="18"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            >
-                                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                                            </svg>
+                                            <Phone width={18} height={18} />
                                             Call
                                         </a>
                                         <a
@@ -272,43 +247,14 @@ export default function ListingDetail() {
                                             rel="noopener noreferrer"
                                             className="flex items-center justify-center gap-2 rounded-sm bg-green-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-green-600"
                                         >
-                                            <svg
-                                                width="18"
-                                                height="18"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            >
-                                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                                            </svg>
+                                            <MessageCircle width={18} height={18} />
                                             WhatsApp
                                         </a>
                                         <a
                                             href={`mailto:${seller.email}`}
                                             className="flex items-center justify-center gap-2 rounded-sm border border-border px-4 py-2.5 text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle"
                                         >
-                                            <svg
-                                                width="18"
-                                                height="18"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            >
-                                                <rect
-                                                    width="20"
-                                                    height="16"
-                                                    x="2"
-                                                    y="4"
-                                                    rx="2"
-                                                />
-                                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                                            </svg>
+                                            <Mail width={18} height={18} />
                                             Email
                                         </a>
                                     </div>
@@ -328,19 +274,7 @@ export default function ListingDetail() {
                                             className="flex items-center justify-center rounded-sm border border-border p-2.5 text-text-subtle transition-colors hover:border-border-strong hover:bg-bg-subtle hover:text-text"
                                             title="Copy link"
                                         >
-                                            <svg
-                                                width="18"
-                                                height="18"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            >
-                                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                                            </svg>
+                                            <LinkIcon width={18} height={18} />
                                         </button>
                                         <a
                                             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
