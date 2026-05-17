@@ -76,7 +76,7 @@ export default function Navbar() {
                                 href={logout.url()}
                                 method="post"
                                 as="button"
-                                className="block w-full px-4 py-2 text-left text-sm text-text transition-colors hover:bg-bg-subtle"
+                                className="block w-full px-4 py-2 text-left text-sm text-text transition-colors hover:bg-bg-subtle cursor-pointer"
                             >
                                 Logout
                             </Link>
