@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, Form } from '@inertiajs/react';
 
 export default function SignIn() {
     return (
@@ -25,65 +25,79 @@ export default function SignIn() {
                         </p>
                     </div>
 
-                    <form className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-1.5">
-                            <label
-                                htmlFor="email"
-                                className="text-sm font-medium text-text"
-                            >
-                                Email
-                            </label>
-                            <input
-                                id="email"
-                                type="email"
-                                name="email"
-                                autoComplete="email"
-                                placeholder="you@example.com"
-                                className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
-                            />
-                        </div>
+                    <Form
+                        action="/sign-in"
+                        method="post"
+                        className="flex flex-col gap-4"
+                    >
+                        {({ errors, invalid, processing }) => (
+                            <>
+                                <div className="flex flex-col gap-1.5">
+                                    <label
+                                        htmlFor="email"
+                                        className="text-sm font-medium text-text"
+                                    >
+                                        Email
+                                    </label>
+                                    <input
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        autoComplete="email"
+                                        placeholder="you@example.com"
+                                        className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                                    />
+                                </div>
 
-                        <div className="flex flex-col gap-1.5">
-                            <div className="flex items-center justify-between">
-                                <label
-                                    htmlFor="password"
-                                    className="text-sm font-medium text-text"
+                                <div className="flex flex-col gap-1.5">
+                                    <div className="flex items-center justify-between">
+                                        <label
+                                            htmlFor="password"
+                                            className="text-sm font-medium text-text"
+                                        >
+                                            Password
+                                        </label>
+                                    </div>
+                                    <input
+                                        id="password"
+                                        type="password"
+                                        name="password"
+                                        autoComplete="current-password"
+                                        placeholder="Enter your password"
+                                        className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                                    />
+                                </div>
+                                {errors.email && (
+                                    <p className="text-xs text-error">
+                                        {errors.email}
+                                    </p>
+                                )}
+
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        id="remember"
+                                        type="checkbox"
+                                        name="remember"
+                                        className="h-4 w-4 rounded-sm border border-border bg-bg accent-primary"
+                                    />
+                                    <label
+                                        htmlFor="remember"
+                                        className="text-sm text-text-muted"
+                                    >
+                                        Keep me signed in
+                                    </label>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="mt-2 h-10 w-full rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover"
+                                    disabled={processing}
                                 >
-                                    Password
-                                </label>
-                            </div>
-                            <input
-                                id="password"
-                                type="password"
-                                name="password"
-                                autoComplete="current-password"
-                                placeholder="Enter your password"
-                                className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
-                            />
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                            <input
-                                id="remember"
-                                type="checkbox"
-                                name="remember"
-                                className="h-4 w-4 rounded-sm border border-border bg-bg accent-primary"
-                            />
-                            <label
-                                htmlFor="remember"
-                                className="text-sm text-text-muted"
-                            >
-                                Keep me signed in
-                            </label>
-                        </div>
-
-                        <button
-                            type="submit"
-                            className="mt-2 h-10 w-full rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover"
-                        >
-                            Sign in
-                        </button>
-                    </form>
+                                    Sign in
+                                </button>
+                            </>
+                        )}
+                    </Form>
 
                     <div className="mt-6 flex flex-col gap-3">
                         <div className="relative flex items-center justify-center">

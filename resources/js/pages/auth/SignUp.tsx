@@ -31,7 +31,7 @@ export default function SignUp() {
                         method="post"
                         className="flex flex-col gap-4"
                     >
-                        {({ errors, invalid }) => (
+                        {({ errors, invalid, processing }) => (
                             <>
                                 <div className="flex flex-col gap-1.5">
                                     <label
@@ -158,6 +158,7 @@ export default function SignUp() {
                                 <button
                                     type="submit"
                                     className="mt-2 h-10 w-full rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover cursor-pointer"
+                                    disabled={processing}
                                 >
                                     Create account
                                 </button>
