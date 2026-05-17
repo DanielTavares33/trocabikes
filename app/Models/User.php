@@ -43,7 +43,7 @@ use Illuminate\Notifications\Notifiable;
  *
  * @mixin \Eloquent
  */
-#[Fillable(['name', 'email', 'password', 'avatar'])]
+#[Fillable(['name', 'email', 'password', 'avatar', 'phone', 'whatsapp', 'district', 'city', 'bio'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
