@@ -1,6 +1,29 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
+import { useEffect, useRef, useState } from 'react';
+import { logout, myBikes, profile, savedBikes } from '~/routes';
 
 export default function Navbar() {
+    const { auth } = usePage().props;
+    const user = auth.user;
+    const [open, setOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node)
+            ) {
+                setOpen(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () =>
+            document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
     return (
         <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-border bg-bg/80 px-6 backdrop-blur-md lg:px-12">
             <Link href="/" className="flex items-center gap-2">
@@ -9,20 +32,73 @@ export default function Navbar() {
                 </span>
             </Link>
 
-            <div className="flex items-center gap-3">
-                <Link
-                    href="/sign-in"
-                    className="rounded-sm border border-border px-4 py-2 text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle"
-                >
-                    Sign in
-                </Link>
-                <Link
-                    href="/sign-up"
-                    className="rounded-sm bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
-                >
-                    Sign up
-                </Link>
-            </div>
+            {user ? (
+                <div className="relative" ref={dropdownRef}>
+                    <button
+                        onClick={() => setOpen(!open)}
+                        className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-border transition-colors hover:border-border-strong"
+                    >
+                        {user.avatar ? (
+                            <img
+                                src={user.avatar}
+                                alt={user.name}
+                                className="h-full w-full object-cover"
+                            />
+                        ) : (
+                            <span className="text-sm font-semibold text-text">
+                                {user.name.charAt(0).toUpperCase()}
+                            </span>
+                        )}
+                    </button>
+
+                    {open && (
+                        <div className="absolute top-full right-0 mt-2 w-48 rounded-sm border border-border bg-bg py-1 shadow-lg">
+                            <Link
+                                href={profile.url()}
+                                className="block px-4 py-2 text-sm text-text transition-colors hover:bg-bg-subtle"
+                            >
+                                Profile
+                            </Link>
+                            <Link
+                                href={myBikes.url()}
+                                className="block px-4 py-2 text-sm text-text transition-colors hover:bg-bg-subtle"
+                            >
+                                My Bikes
+                            </Link>
+                            <Link
+                                href={savedBikes.url()}
+                                className="block px-4 py-2 text-sm text-text transition-colors hover:bg-bg-subtle"
+                            >
+                                Saved Bikes
+                            </Link>
+                            <div className="my-1 border-t border-border" />
+                            <Link
+                                href={logout.url()}
+                                method="post"
+                                as="button"
+                                className="block w-full px-4 py-2 text-left text-sm text-text transition-colors hover:bg-bg-subtle"
+                            >
+                                Logout
+                            </Link>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div className="flex items-center gap-3">
+                    <Link
+                        href="/sign-in"
+                        className="rounded-sm border border-border px-4 py-2 text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle"
+                    >
+                        Sign in
+                    </Link>
+                    <Link
+                        href="/sign-up"
+                        className="rounded-sm bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
+                    >
+                        Sign up
+                    </Link>
+                </div>
+            )}
         </header>
     );
 }
