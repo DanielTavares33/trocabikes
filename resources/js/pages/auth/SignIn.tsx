@@ -1,6 +1,10 @@
 import { Head, Link, Form } from '@inertiajs/react';
+import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function SignIn() {
+    const [showPassword, setShowPassword] = useState(false);
+
     return (
         <>
             <Head title="Sign in — Trocabikes" />
@@ -30,7 +34,7 @@ export default function SignIn() {
                         method="post"
                         className="flex flex-col gap-4"
                     >
-                        {({ errors, invalid, processing }) => (
+                        {({ errors, processing }) => (
                             <>
                                 <div className="flex flex-col gap-1.5">
                                     <label
@@ -58,14 +62,33 @@ export default function SignIn() {
                                             Password
                                         </label>
                                     </div>
-                                    <input
-                                        id="password"
-                                        type="password"
-                                        name="password"
-                                        autoComplete="current-password"
-                                        placeholder="Enter your password"
-                                        className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
-                                    />
+                                    <div className="relative">
+                                        <input
+                                            id="password"
+                                            type={
+                                                showPassword
+                                                    ? 'text'
+                                                    : 'password'
+                                            }
+                                            name="password"
+                                            autoComplete="current-password"
+                                            placeholder="Enter your password"
+                                            className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                                        />
+                                        <button
+                                            type="button"
+                                            className="absolute top-1/2 right-3 -translate-y-1/2 text-text-muted"
+                                            onClick={() =>
+                                                setShowPassword(!showPassword)
+                                            }
+                                        >
+                                            {showPassword ? (
+                                                <EyeOff size={16}/>
+                                            ) : (
+                                                <Eye size={16}/>
+                                            )}
+                                        </button>
+                                    </div>
                                 </div>
                                 {errors.email && (
                                     <p className="text-xs text-error">
