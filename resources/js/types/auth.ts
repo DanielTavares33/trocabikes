@@ -3,12 +3,17 @@ export type User = {
     name: string;
     email: string;
     avatar?: string;
+    phone?: string;
+    whatsapp?: string;
+    district?: string;
+    city?: string;
+    bio?: string;
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
-    [key: string]: unknown; // This allows for additional properties...
+    [key: string]: unknown;
 };
 
 export type Auth = {
-    user: User;
+    user: User | null;
 };

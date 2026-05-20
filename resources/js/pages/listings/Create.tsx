@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import { Image } from 'lucide-react';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 
@@ -369,28 +370,12 @@ export default function Create() {
                                 </p>
 
                                 <div className="flex cursor-pointer flex-col items-center justify-center rounded-sm border-2 border-dashed border-border-strong bg-bg px-6 py-12 transition-colors hover:border-primary hover:bg-bg-subtle">
-                                    <svg
-                                        width="40"
-                                        height="40"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="mb-3 text-text-muted"
-                                    >
-                                        <rect
-                                            x="3"
-                                            y="3"
-                                            width="18"
-                                            height="18"
-                                            rx="2"
-                                            ry="2"
-                                        />
-                                        <circle cx="8.5" cy="8.5" r="1.5" />
-                                        <path d="M21 15l-5-5L5 21" />
-                                    </svg>
+                                <Image
+                                    width={40}
+                                    height={40}
+                                    className="mb-3 text-text-muted"
+                                    strokeWidth={1.5}
+                                />
                                     <p className="mb-1 text-sm font-medium text-text">
                                         Click to upload photos
                                     </p>

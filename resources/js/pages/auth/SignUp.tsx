@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, Form } from '@inertiajs/react';
 
 export default function SignUp() {
     return (
@@ -26,93 +26,139 @@ export default function SignUp() {
                         </p>
                     </div>
 
-                    <form className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-1.5">
-                            <label
-                                htmlFor="name"
-                                className="text-sm font-medium text-text"
-                            >
-                                Full name
-                            </label>
-                            <input
-                                id="name"
-                                type="text"
-                                name="name"
-                                autoComplete="name"
-                                placeholder="Your full name"
-                                className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
-                            />
-                        </div>
+                    <Form
+                        action="/sign-up"
+                        method="post"
+                        className="flex flex-col gap-4"
+                    >
+                        {({ errors, invalid, processing }) => (
+                            <>
+                                <div className="flex flex-col gap-1.5">
+                                    <label
+                                        htmlFor="name"
+                                        className="text-sm font-medium text-text"
+                                    >
+                                        Full name{' '}
+                                        <span className="text-error">*</span>
+                                    </label>
+                                    <input
+                                        id="name"
+                                        type="text"
+                                        name="name"
+                                        autoComplete="name"
+                                        placeholder="Your full name"
+                                        required
+                                        className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                                    />
+                                    {invalid('name') && (
+                                        <p className="mt-1 text-xs text-error">
+                                            {errors.name}
+                                        </p>
+                                    )}
+                                </div>
 
-                        <div className="flex flex-col gap-1.5">
-                            <label
-                                htmlFor="email"
-                                className="text-sm font-medium text-text"
-                            >
-                                Email
-                            </label>
-                            <input
-                                id="email"
-                                type="email"
-                                name="email"
-                                autoComplete="email"
-                                placeholder="you@example.com"
-                                className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
-                            />
-                        </div>
+                                <div className="flex flex-col gap-1.5">
+                                    <label
+                                        htmlFor="email"
+                                        className="text-sm font-medium text-text"
+                                    >
+                                        Email{' '}
+                                        <span className="text-error">*</span>
+                                    </label>
+                                    <input
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        autoComplete="email"
+                                        placeholder="you@example.com"
+                                        required
+                                        className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                                    />
+                                    {invalid('email') && (
+                                        <p className="mt-1 text-xs text-error">
+                                            {errors.email}
+                                        </p>
+                                    )}
+                                </div>
 
-                        <div className="flex flex-col gap-1.5">
-                            <label
-                                htmlFor="password"
-                                className="text-sm font-medium text-text"
-                            >
-                                Password
-                            </label>
-                            <input
-                                id="password"
-                                type="password"
-                                name="password"
-                                autoComplete="new-password"
-                                placeholder="At least 8 characters"
-                                className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
-                            />
-                        </div>
+                                <div className="flex flex-col gap-1.5">
+                                    <label
+                                        htmlFor="password"
+                                        className="text-sm font-medium text-text"
+                                    >
+                                        Password{' '}
+                                        <span className="text-error">*</span>
+                                    </label>
+                                    <input
+                                        id="password"
+                                        type="password"
+                                        name="password"
+                                        autoComplete="new-password"
+                                        placeholder="At least 8 characters"
+                                        required
+                                        className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                                    />
+                                    {invalid('password') && (
+                                        <p className="mt-1 text-xs text-error">
+                                            {errors.password}
+                                        </p>
+                                    )}
+                                </div>
 
-                        <div className="flex items-start gap-2">
-                            <input
-                                id="terms"
-                                type="checkbox"
-                                name="terms"
-                                className="mt-0.5 h-4 w-4 rounded-sm border border-border bg-bg accent-primary"
-                            />
-                            <label
-                                htmlFor="terms"
-                                className="text-sm text-text-muted"
-                            >
-                                I agree to the{' '}
-                                <Link
-                                    href="/terms"
-                                    className="font-medium text-primary transition-colors hover:text-primary-hover"
+                                <div className="flex flex-col gap-1.5">
+                                    <label
+                                        htmlFor="password_confirmation"
+                                        className="text-sm font-medium text-text"
+                                    >
+                                        Confirm password{' '}
+                                        <span className="text-error">*</span>
+                                    </label>
+                                    <input
+                                        id="password_confirmation"
+                                        type="password"
+                                        name="password_confirmation"
+                                        autoComplete="new-password"
+                                        placeholder="Confirm your password"
+                                        required
+                                        className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                                    />
+                                    {invalid('password_confirmation') && (
+                                        <p className="mt-1 text-xs text-error">
+                                            {errors.password_confirmation}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="rounded-sm border border-border bg-bg-subtle p-3">
+                                    <p className="text-xs text-text-muted">
+                                        By creating an account, you
+                                        automatically agree to our{' '}
+                                        <Link
+                                            href="/terms"
+                                            className="font-medium text-primary transition-colors hover:text-primary-hover"
+                                        >
+                                            Terms of Service
+                                        </Link>{' '}
+                                        and{' '}
+                                        <Link
+                                            href="/privacy"
+                                            className="font-medium text-primary transition-colors hover:text-primary-hover"
+                                        >
+                                            Privacy Policy
+                                        </Link>
+                                    </p>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="mt-2 h-10 w-full rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover cursor-pointer"
+                                    disabled={processing}
                                 >
-                                    Terms of Service
-                                </Link>{' '}
-                                and{' '}
-                                <Link
-                                    href="/privacy"
-                                    className="font-medium text-primary transition-colors hover:text-primary-hover"
-                                >
-                                    Privacy Policy
-                                </Link>
-                            </label>
-                        </div>
-
-                        <button
-                            type="submit"
-                            className="mt-2 h-10 w-full rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover"
-                        >
-                            Create account
-                        </button>
-                    </form>
+                                    Create account
+                                </button>
+                            </>
+                        )}
+                    </Form>
 
                     <div className="mt-6 flex flex-col gap-3">
                         <div className="relative flex items-center justify-center">

@@ -1,3 +1,4 @@
+import { Search } from 'lucide-react';
 import type { ListingCardData } from '~/components/home/ListingCard';
 import ListingCard from '~/components/home/ListingCard';
 
@@ -25,20 +26,12 @@ export default function BrowseListings({
 
             {listings.length === 0 ? (
                 <div className="flex flex-col items-center justify-center rounded-sm border border-border bg-surface py-20 text-center">
-                    <svg
-                        width="48"
-                        height="48"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                    <Search
+                        width={48}
+                        height={48}
                         className="mb-4 text-text-subtle"
-                    >
-                        <circle cx="11" cy="11" r="8" />
-                        <path d="m21 21-4.3-4.3" />
-                    </svg>
+                        strokeWidth={1.5}
+                    />
                     <h3 className="mb-1 text-base font-semibold text-text">
                         No bikes found
                     </h3>
