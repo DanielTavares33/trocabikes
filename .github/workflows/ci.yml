@@ -49,5 +49,8 @@ jobs:
       - name: Generate Wayfinder Types
         run: php artisan wayfinder:generate
 
+      - name: Build Assets
+        run: bun run build
+
       - name: Run CI Pipeline
         run: composer ci:check
