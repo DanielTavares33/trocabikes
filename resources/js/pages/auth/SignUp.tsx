@@ -74,11 +74,16 @@ export default function SignUp() {
                                         required
                                         className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                                     />
-                                    {invalid('email') && (
-                                        <p className="mt-1 text-xs text-error">
-                                            {errors.email}
-                                        </p>
-                                    )}
+                                {errors.email && (
+                                    <p className="mt-1 text-xs text-error">
+                                        {errors.email}
+                                    </p>
+                                )}
+                                {errors.message && (
+                                    <p className="mt-1 text-xs text-error">
+                                        {errors.message}
+                                    </p>
+                                )}
                                 </div>
 
                                 <div className="flex flex-col gap-1.5">

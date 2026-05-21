@@ -1,6 +1,6 @@
 import { Head, Link, Form } from '@inertiajs/react';
-import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 
 export default function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
@@ -83,9 +83,9 @@ export default function SignIn() {
                                             }
                                         >
                                             {showPassword ? (
-                                                <EyeOff size={16}/>
+                                                <EyeOff size={16} />
                                             ) : (
-                                                <Eye size={16}/>
+                                                <Eye size={16} />
                                             )}
                                         </button>
                                     </div>
@@ -95,7 +95,11 @@ export default function SignIn() {
                                         {errors.email}
                                     </p>
                                 )}
-
+                                {errors.message && (
+                                    <p className="text-xs text-error">
+                                        {errors.message}
+                                    </p>
+                                )}
                                 <div className="flex items-center gap-2">
                                     <input
                                         id="remember"
@@ -110,7 +114,6 @@ export default function SignIn() {
                                         Keep me signed in
                                     </label>
                                 </div>
-
                                 <button
                                     type="submit"
                                     className="mt-2 h-10 w-full rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover"
