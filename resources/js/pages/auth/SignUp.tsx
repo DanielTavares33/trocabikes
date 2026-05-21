@@ -74,16 +74,16 @@ export default function SignUp() {
                                         required
                                         className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                                     />
-                                {errors.email && (
-                                    <p className="mt-1 text-xs text-error">
-                                        {errors.email}
-                                    </p>
-                                )}
-                                {errors.message && (
-                                    <p className="mt-1 text-xs text-error">
-                                        {errors.message}
-                                    </p>
-                                )}
+                                    {errors.email && (
+                                        <p className="mt-1 text-xs text-error">
+                                            {errors.email}
+                                        </p>
+                                    )}
+                                    {errors.message && (
+                                        <p className="mt-1 text-xs text-error">
+                                            {errors.message}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="flex flex-col gap-1.5">
@@ -156,7 +156,7 @@ export default function SignUp() {
 
                                 <button
                                     type="submit"
-                                    className="mt-2 h-10 w-full rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover cursor-pointer"
+                                    className="mt-2 h-10 w-full cursor-pointer rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover"
                                     disabled={processing}
                                 >
                                     Create account

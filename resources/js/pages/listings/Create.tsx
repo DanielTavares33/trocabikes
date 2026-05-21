@@ -370,12 +370,12 @@ export default function Create() {
                                 </p>
 
                                 <div className="flex cursor-pointer flex-col items-center justify-center rounded-sm border-2 border-dashed border-border-strong bg-bg px-6 py-12 transition-colors hover:border-primary hover:bg-bg-subtle">
-                                <Image
-                                    width={40}
-                                    height={40}
-                                    className="mb-3 text-text-muted"
-                                    strokeWidth={1.5}
-                                />
+                                    <Image
+                                        width={40}
+                                        height={40}
+                                        className="mb-3 text-text-muted"
+                                        strokeWidth={1.5}
+                                    />
                                     <p className="mb-1 text-sm font-medium text-text">
                                         Click to upload photos
                                     </p>
