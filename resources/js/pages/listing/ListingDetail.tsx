@@ -1,5 +1,12 @@
 import { Head, Link } from '@inertiajs/react';
-import { BadgeCheck, Link as LinkIcon, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
+import {
+    BadgeCheck,
+    Link as LinkIcon,
+    Mail,
+    MapPin,
+    MessageCircle,
+    Phone,
+} from 'lucide-react';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 
@@ -247,7 +254,10 @@ export default function ListingDetail() {
                                             rel="noopener noreferrer"
                                             className="flex items-center justify-center gap-2 rounded-sm bg-green-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-green-600"
                                         >
-                                            <MessageCircle width={18} height={18} />
+                                            <MessageCircle
+                                                width={18}
+                                                height={18}
+                                            />
                                             WhatsApp
                                         </a>
                                         <a

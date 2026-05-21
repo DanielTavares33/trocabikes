@@ -80,7 +80,7 @@ export default function Navbar() {
                                 href={logout.url()}
                                 method="post"
                                 as="button"
-                                className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-text transition-colors hover:bg-bg-subtle cursor-pointer"
+                                className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left text-sm text-text transition-colors hover:bg-bg-subtle"
                             >
                                 <LogOut className="h-4 w-4" />
                                 Logout
