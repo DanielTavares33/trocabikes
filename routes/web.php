@@ -3,15 +3,20 @@
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Middleware\RateLimiterMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Welcome')->name('home');
 
 Route::get('/sign-in', [LoginController::class, 'index'])->name('sign-in');
-Route::post('/sign-in', [LoginController::class, 'login'])->name('login');
+Route::post('/sign-in', [LoginController::class, 'login'])
+    ->middleware(RateLimiterMiddleware::class.':login,5,60')
+    ->name('login');
 
 Route::get('/sign-up', [RegisterController::class, 'index'])->name('sign-up');
-Route::post('/sign-up', [RegisterController::class, 'register'])->name('register');
+Route::post('/sign-up', [RegisterController::class, 'register'])
+    ->middleware(RateLimiterMiddleware::class.':register,5,60')
+    ->name('register');
 
 Route::inertia('/browse', 'browse/Browse')->name('browse');
 Route::inertia('/browse/{listing:slug}', 'listing/ListingDetail')->name('listings.show');
