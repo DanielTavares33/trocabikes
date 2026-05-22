@@ -4,9 +4,9 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
+
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertAuthenticated;
-use function Pest\Laravel\assertGuest;
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
 
@@ -73,8 +73,6 @@ test('registered user receives verification email', function () {
 | Login - Block Unverified Users
 |--------------------------------------------------------------------------
 */
-
-
 
 test('verified user can login', function () {
     User::factory()->create([
