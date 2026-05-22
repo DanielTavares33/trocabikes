@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\RegisterPostRequest;
 use App\Models\User;
 use Auth;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -17,20 +17,18 @@ class RegisterController extends Controller
 
     public function register(RegisterPostRequest $request): RedirectResponse
     {
-        // Validate the request data
         $validated = $request->validated();
 
-        // Create the user
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'],
         ]);
 
-        // Log the user in
         Auth::login($user);
 
-        // Redirect to the home page
-        return redirect()->route('home');
+        event(new Registered($user));
+
+        return redirect()->route('verification.notice')->with('message', 'Registration successful! Please verify your email address.');
     }
 }
