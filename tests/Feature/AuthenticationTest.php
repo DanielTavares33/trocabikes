@@ -132,7 +132,7 @@ test('user can register with valid data', function () {
         'password_confirmation' => AUTH_TEST_PASSWORD,
     ]);
 
-    $response->assertRedirect(route('home'));
+    $response->assertRedirect(route('verification.notice'));
     assertDatabaseHas('users', ['email' => AUTH_REGISTRATION_EMAIL]);
     assertAuthenticated();
 });

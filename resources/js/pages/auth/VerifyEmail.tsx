@@ -44,7 +44,11 @@ export default function VerifyEmail({ email }: Readonly<VerifyEmailProps>) {
                         </p>
                     </div>
 
-                    <Form action="/email/verification-notification" method="post" className="mt-6">
+                    <Form
+                        action="/email/verification-notification"
+                        method="post"
+                        className="mt-6"
+                    >
                         {({ errors, processing }) => (
                             <>
                                 <input
