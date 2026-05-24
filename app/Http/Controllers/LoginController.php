@@ -22,6 +22,17 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
+            $user = Auth::user();
+            if ($user->email_verified_at === null) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return back()->withErrors([
+                    'email' => 'Please verify your email address before signing in.',
+                ]);
+            }
+
             return redirect()->intended(route('home'));
         }
 
