@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Database\Factories\BikeBrandFactory;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +16,22 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BikeBrand newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BikeBrand newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BikeBrand query()
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property string|null $logo
+ * @property bool $is_active
+ * @property CarbonImmutable|null $created_at
+ * @property CarbonImmutable|null $updated_at
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BikeBrand whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BikeBrand whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BikeBrand whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BikeBrand whereLogo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BikeBrand whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BikeBrand whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BikeBrand whereUpdatedAt($value)
  *
  * @mixin \Eloquent
  */

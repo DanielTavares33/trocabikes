@@ -122,7 +122,7 @@ test('login rate limit is IP based', function () {
         'password' => TEST_PASSWORD,
     ]);
 
-    $response->assertRedirect(route('verification.notice'));
+    $response->assertRedirect(route('home'));
 });
 
 test('registration rate limit is IP based', function () {
@@ -144,5 +144,5 @@ test('registration rate limit is IP based', function () {
         'password_confirmation' => 'password123',
     ]);
 
-    $response->assertRedirect(route('verification.notice'));
+    $response->assertRedirect(route('home'));
 });
