@@ -2,9 +2,10 @@ import { Head, Link, Form } from '@inertiajs/react';
 
 interface ResetPasswordProps {
     token?: string;
+    email?: string;
 }
 
-export default function ResetPassword({ token }: ResetPasswordProps) {
+export default function ResetPassword({ token, email }: ResetPasswordProps) {
     return (
         <>
             <Head title="Reset password — Trocabikes" />
@@ -48,6 +49,7 @@ export default function ResetPassword({ token }: ResetPasswordProps) {
                                         id="email"
                                         type="email"
                                         name="email"
+                                        defaultValue={email}
                                         autoComplete="email"
                                         placeholder="you@example.com"
                                         required

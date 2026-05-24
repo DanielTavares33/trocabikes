@@ -33,9 +33,12 @@ class PasswordController extends Controller
         return back()->with(['status' => __($this->getSentStatus())]);
     }
 
-    public function showResetPassword(string $token)
+public function showResetPassword(string $token, Request $request)
     {
-        return inertia('auth/ResetPassword', ['token' => $token]);
+        return inertia('auth/ResetPassword', [
+            'token' => $token,
+            'email' => $request->query('email'),
+        ]);
     }
 
     public function reset(Request $request): RedirectResponse
