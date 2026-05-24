@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Notifications\ResetPasswordNotification;
 use App\Notifications\VerifyEmailNotification;
 use Carbon\CarbonImmutable;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -67,7 +69,7 @@ use Illuminate\Notifications\Notifiable;
  */
 #[Fillable(['name', 'email', 'password', 'avatar', 'phone', 'whatsapp', 'district', 'city', 'bio'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
@@ -88,5 +90,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification(): void
     {
         $this->notify(new VerifyEmailNotification);
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordNotification(
+            route('password.reset', ['token' => $token, 'email' => $this->email])
+        ));
     }
 }

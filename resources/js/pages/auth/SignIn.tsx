@@ -114,13 +114,21 @@ export default function SignIn() {
                                         Keep me signed in
                                     </label>
                                 </div>
-                                <button
+<button
                                     type="submit"
                                     className="mt-2 h-10 w-full rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover"
                                     disabled={processing}
                                 >
                                     Sign in
                                 </button>
+                                <p className="text-center text-sm">
+                                    <Link
+                                        href="/forgot-password"
+                                        className="text-text-muted transition-colors hover:text-primary"
+                                    >
+                                        Forgot your password?
+                                    </Link>
+                                </p>
                             </>
                         )}
                     </Form>
