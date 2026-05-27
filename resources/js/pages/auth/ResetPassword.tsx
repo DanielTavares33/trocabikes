@@ -37,7 +37,13 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                     >
                         {({ errors, processing }) => (
                             <>
-                                {token && <input type="hidden" name="token" value={token} />}
+                                {token && (
+                                    <input
+                                        type="hidden"
+                                        name="token"
+                                        value={token}
+                                    />
+                                )}
                                 <div className="flex flex-col gap-1.5">
                                     <label
                                         htmlFor="email"

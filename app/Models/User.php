@@ -92,7 +92,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         $this->notify(new VerifyEmailNotification);
     }
 
-public function sendPasswordResetNotification($token): void
+    public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification(
             route('password.reset', ['token' => $token, 'email' => $this->email])

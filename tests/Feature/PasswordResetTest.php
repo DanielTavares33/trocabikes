@@ -1,8 +1,8 @@
 <?php
 
+use App\Mail\ResetPasswordMailable;
 use App\Models\User;
 use App\Notifications\ResetPasswordNotification;
-use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
@@ -225,7 +225,7 @@ test('password reset notification uses custom mailable', function () {
     Notification::assertSentTo($user, ResetPasswordNotification::class, function ($notification) use ($user) {
         $mail = $notification->toMail($user);
 
-        expect($mail)->toBeInstanceOf(\App\Mail\ResetPasswordMailable::class);
+        expect($mail)->toBeInstanceOf(ResetPasswordMailable::class);
 
         return true;
     });
