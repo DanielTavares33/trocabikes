@@ -28,7 +28,7 @@ test('guest can view forgot password page', function () {
     $response = get(route('password.request'));
 
     $response->assertOk();
-    $response->assertSee('Forgot your password?');
+    $response->assertSee('Forgot your password test?');
 });
 
 /*
