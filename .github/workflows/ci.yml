@@ -41,7 +41,7 @@ jobs:
         run: bun install
 
       - name: Copy Environment File
-        run: cp .env.example .env
+        run: cp .env.example .env && echo "INERTIA_SSR_ENABLED=false" >> .env
 
       - name: Generate Application Key
         run: php artisan key:generate
