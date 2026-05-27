@@ -1,17 +1,16 @@
 <?php
 
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Middleware\RateLimiterMiddleware;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,29 +52,37 @@ Route::post('/logout', [LoginController::class, 'destroy'])
 |--------------------------------------------------------------------------
 */
 
-// Show verification notice page (requires auth)
-Route::get('/email/verify', function () {
-    return Inertia::render('auth/VerifyEmail', [
-        'email' => auth()->user()->email,
-    ]);
-})->middleware([Authenticate::class, ThrottleRequests::class.':6,1'])
+Route::get('/email/verify', [EmailVerificationController::class, 'show'])
+    ->middleware([Authenticate::class, ThrottleRequests::class.':6,1'])
     ->name('verification.notice');
 
-// Handle verification link click
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
-
-    return redirect()->route('home')->with('message', 'Email verified successfully!');
-})->middleware([ValidateSignature::class])
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware([ValidateSignature::class])
     ->name('verification.verify');
 
-// Resend verification email
-Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
-
-    return back()->with('message', 'Verification link sent!');
-})->middleware([Authenticate::class, ThrottleRequests::class.':6,1'])
+Route::post('/email/verification-notification', [EmailVerificationController::class, 'send'])
+    ->middleware([Authenticate::class, ThrottleRequests::class.':6,1'])
     ->name('verification.send');
+
+/*
+|--------------------------------------------------------------------------
+| Reset Password Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/forgot-password', [PasswordController::class, 'showForgotPassword'])
+    ->name('password.request');
+
+Route::post('/forgot-password', [PasswordController::class, 'sendResetLink'])
+    ->middleware('guest')
+    ->name('password.email');
+
+Route::get('/reset-password/{token}', [PasswordController::class, 'showResetPassword'])
+    ->middleware('guest')
+    ->name('password.reset');
+
+Route::post('/reset-password', [PasswordController::class, 'reset'])
+    ->middleware('guest')
+    ->name('password.update');
 
 /*
 |--------------------------------------------------------------------------
