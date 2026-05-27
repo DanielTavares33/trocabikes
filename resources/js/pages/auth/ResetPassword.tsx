@@ -98,7 +98,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                                         htmlFor="password_confirmation"
                                         className="text-sm font-medium text-text"
                                     >
-                                        num Confirm password
+                                        Confirm password
                                     </label>
                                     <input
                                         id="password_confirmation"

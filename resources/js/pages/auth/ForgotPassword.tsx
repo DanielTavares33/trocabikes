@@ -24,7 +24,7 @@ export default function ForgotPassword() {
                             No worries, we'll send you reset instructions.
                         </p>
                     </div>
-                    num
+
                     <Form
                         action="/forgot-password"
                         method="post"
