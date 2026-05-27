@@ -25,11 +25,11 @@ const NEW_PASSWORD = 'newpassword456';
 */
 
 test('guest can view forgot password page', function () {
-    $response = get(route('password.request'));
-
-    $response->assertOk();
-    dump($response->getContent());
-    $response->assertSee('Forgot your password?');
+    get(route('password.request'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('auth/ForgotPassword')
+        );
 });
 
 /*
@@ -82,10 +82,11 @@ test('guest can view reset password page with valid token', function () {
 
     $token = Password::createToken($user);
 
-    $response = get(route('password.reset', ['token' => $token]));
-
-    $response->assertOk();
-    $response->assertSee('Reset your password');
+    get(route('password.reset', ['token' => $token, 'email' => RESET_EMAIL]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('auth/ResetPassword')
+        );
 });
 
 test('reset password page contains email input with user email', function () {
@@ -95,12 +96,14 @@ test('reset password page contains email input with user email', function () {
 
     $token = Password::createToken($user);
 
-    $response = get(route('password.reset', [
+    get(route('password.reset', [
         'token' => $token,
         'email' => RESET_EMAIL,
-    ]));
-
-    $response->assertOk();
+    ]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('auth/ResetPassword')
+        );
 });
 
 /*
