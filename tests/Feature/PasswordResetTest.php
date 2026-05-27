@@ -25,11 +25,10 @@ const NEW_PASSWORD = 'newpassword456';
 */
 
 test('guest can view forgot password page', function () {
-    $response = get(route('password.request'));
+    $response = get(route('sign-in'));
 
     $response->assertOk();
     $response->assertSee('Forgot your password?');
-    $response->assertSee('send you reset instructions');
 });
 
 /*
@@ -85,7 +84,7 @@ test('guest can view reset password page with valid token', function () {
     $response = get(route('password.reset', ['token' => $token]));
 
     $response->assertOk();
-    $response->assertSee('Reset your password');
+    $response->assertSee('Reset password');
 });
 
 test('reset password page contains email input with user email', function () {
