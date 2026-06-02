@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ProfileController;
@@ -45,6 +46,10 @@ Route::post('/sign-up', [RegisterController::class, 'register'])
 Route::post('/logout', [LoginController::class, 'destroy'])
     ->middleware(Authenticate::class)
     ->name('logout');
+
+// Google OAuth
+Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('google.redirect');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('google.callback');
 
 /*
 |--------------------------------------------------------------------------

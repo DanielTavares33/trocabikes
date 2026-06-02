@@ -67,7 +67,7 @@ use Illuminate\Notifications\Notifiable;
  *
  * @mixin \Eloquent
  */
-#[Fillable(['name', 'email', 'password', 'avatar', 'phone', 'whatsapp', 'district', 'city', 'bio'])]
+#[Fillable(['name', 'email', 'password', 'avatar', 'phone', 'whatsapp', 'district', 'city', 'bio', 'google_id', 'email_verified_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 {
