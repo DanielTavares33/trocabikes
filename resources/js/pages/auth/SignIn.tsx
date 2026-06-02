@@ -141,7 +141,10 @@ export default function SignIn() {
                             </span>
                         </div>
 
-                        <a href="/auth/google/redirect" className="flex h-10 w-full items-center justify-center gap-2 rounded-sm border border-border text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle">
+                        <a
+                            href="/auth/google/redirect"
+                            className="flex h-10 w-full items-center justify-center gap-2 rounded-sm border border-border text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle"
+                        >
                             <svg
                                 width="18"
                                 height="18"

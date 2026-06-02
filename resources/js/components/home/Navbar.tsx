@@ -44,6 +44,7 @@ export default function Navbar() {
                                 src={user.avatar}
                                 alt={user.name}
                                 className="h-full w-full object-cover"
+                                referrerPolicy="no-referrer"
                             />
                         ) : (
                             <span className="text-sm font-semibold text-text">

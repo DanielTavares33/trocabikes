@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Auth;
-use Illuminate\Http\Request;
 use Laravel\Socialite\Socialite;
 use Throwable;
 
@@ -27,19 +26,29 @@ class GoogleAuthController extends Controller
         $existingUser = User::where('email', $user->getEmail())->first();
 
         if ($existingUser) {
-            // Log in the existing user
+            if (is_null($existingUser->google_id)) {
+                $existingUser->update([
+                    'google_id' => $user->getId(),
+                    'avatar' => $user->getAvatar(),
+                    'email_verified_at' => now(),
+                ]);
+            }
+
+            session()->regenerate();
             Auth::login($existingUser);
         } else {
-            // Create a new user and log them in
             $newUser = User::updateOrCreate(
                 ['email' => $user->getEmail()],
                 [
                     'name' => $user->getName(),
+                    'password' => bcrypt(str()->random(16)),
                     'google_id' => $user->getId(),
                     'avatar' => $user->getAvatar(),
+                    'email_verified_at' => now(),
                 ]
             );
 
+            session()->regenerate();
             Auth::login($newUser);
         }
 
