@@ -2,10 +2,11 @@ import { Head, Link } from '@inertiajs/react';
 import { Image } from 'lucide-react';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
+import Layout from '~/components/layout/Layout';
 
 export default function Create() {
     return (
-        <>
+        <Layout>
             <Head title="Sell your bike — Trocabikes" />
 
             <div className="flex min-h-screen flex-col bg-bg text-text">
@@ -442,6 +443,6 @@ export default function Create() {
 
                 <Footer />
             </div>
-        </>
+        </Layout>
     );
 }

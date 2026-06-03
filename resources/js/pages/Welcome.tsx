@@ -6,6 +6,7 @@ import type { ListingCardData } from '~/components/home/ListingCard';
 import ListingCard from '~/components/home/ListingCard';
 import Navbar from '~/components/home/Navbar';
 import SearchSection from '~/components/home/SearchSection';
+import Layout from '~/components/layout/Layout';
 
 const recentListings: ListingCardData[] = [
     {
@@ -102,7 +103,7 @@ const recentListings: ListingCardData[] = [
 
 export default function Welcome() {
     return (
-        <>
+        <Layout>
             <Head title="Trocabikes — Find your next bike" />
 
             <div className="flex min-h-screen flex-col bg-bg text-text">
@@ -155,6 +156,6 @@ export default function Welcome() {
 
                 <Footer />
             </div>
-        </>
+        </Layout>
     );
 }

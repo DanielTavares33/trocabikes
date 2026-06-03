@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Auth;
+use Inertia\Inertia;
 use Laravel\Socialite\Socialite;
 use Throwable;
 
@@ -20,7 +21,8 @@ class GoogleAuthController extends Controller
             // Get the user information from Google
             $user = Socialite::driver('google')->user();
         } catch (Throwable $e) {
-            return redirect()->route('sign-in')->with('error', 'Failed to authenticate with Google. Please try again.');
+            Inertia::flash('error', 'Failed to authenticate with Google. Please try again.');
+            return redirect()->route('sign-in');
         }
 
         $existingUser = User::where('email', $user->getEmail())->first();
@@ -52,6 +54,7 @@ class GoogleAuthController extends Controller
             Auth::login($newUser);
         }
 
+        Inertia::flash('success', 'Successfully signed in!');
         return redirect()->route('home');
     }
 }

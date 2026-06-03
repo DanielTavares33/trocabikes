@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
+import Layout from '~/components/layout/Layout';
 
 interface SellerData {
     name: string;
@@ -99,7 +100,7 @@ export default function ListingDetail() {
     };
 
     return (
-        <>
+        <Layout>
             <Head title={`${listing.title} — Trocabikes`} />
 
             <div className="flex min-h-screen flex-col bg-bg text-text">
@@ -335,6 +336,6 @@ export default function ListingDetail() {
                 </main>
                 <Footer />
             </div>
-        </>
+        </Layout>
     );
 }

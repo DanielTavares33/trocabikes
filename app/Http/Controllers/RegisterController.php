@@ -7,6 +7,7 @@ use App\Models\User;
 use Auth;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
 
 class RegisterController extends Controller
 {
@@ -29,6 +30,7 @@ class RegisterController extends Controller
 
         event(new Registered($user));
 
-        return redirect()->route('verification.notice')->with('message', 'Registration successful! Please verify your email address.');
+        Inertia::flash('success', 'Registration successful! Please verify your email address.');
+        return redirect()->route('verification.notice');
     }
 }

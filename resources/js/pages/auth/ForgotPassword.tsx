@@ -1,8 +1,9 @@
 import { Head, Link, Form } from '@inertiajs/react';
+import Layout from '~/components/layout/Layout';
 
 export default function ForgotPassword() {
     return (
-        <>
+        <Layout>
             <Head title="Forgot password — Trocabikes" />
 
             <div className="flex min-h-screen flex-col items-center justify-center bg-bg px-6 py-12">
@@ -87,6 +88,6 @@ export default function ForgotPassword() {
                     </Link>
                 </p>
             </div>
-        </>
+        </Layout>
     );
 }

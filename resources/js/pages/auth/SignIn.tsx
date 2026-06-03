@@ -1,12 +1,13 @@
 import { Head, Link, Form } from '@inertiajs/react';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
+import Layout from '@/components/layout/Layout';
 
 export default function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <>
+        <Layout>
             <Head title="Sign in — Trocabikes" />
 
             <div className="flex min-h-screen flex-col items-center justify-center bg-bg px-6 py-12">
@@ -183,6 +184,6 @@ export default function SignIn() {
                     </Link>
                 </p>
             </div>
-        </>
+        </Layout>
     );
 }

@@ -11,6 +11,7 @@ import {
 import { useState } from 'react';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
+import Layout from '~/components/layout/Layout';
 import type { User } from '~/types/auth';
 
 interface Props {
@@ -35,7 +36,7 @@ export default function Profile({ user }: Readonly<Props>) {
     }
 
     return (
-        <>
+        <Layout>
             <Head title="Profile — Trocabikes" />
 
             <div className="flex min-h-screen flex-col bg-bg text-text">
@@ -370,6 +371,6 @@ export default function Profile({ user }: Readonly<Props>) {
 
                 <Footer />
             </div>
-        </>
+        </Layout>
     );
 }

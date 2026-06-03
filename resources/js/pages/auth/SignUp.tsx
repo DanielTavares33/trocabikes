@@ -1,8 +1,9 @@
 import { Head, Link, Form } from '@inertiajs/react';
+import Layout from '@/components/layout/Layout';
 
 export default function SignUp() {
     return (
-        <>
+        <Layout>
             <Head title="Create account — Trocabikes" />
 
             <div className="flex min-h-screen flex-col items-center justify-center bg-bg px-6 py-12">
@@ -212,6 +213,6 @@ export default function SignUp() {
                     </Link>
                 </p>
             </div>
-        </>
+        </Layout>
     );
 }
