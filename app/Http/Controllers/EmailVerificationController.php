@@ -20,6 +20,7 @@ class EmailVerificationController extends Controller
         $request->fulfill();
 
         Inertia::flash('success', 'Email verified successfully!');
+
         return redirect()->route('home');
     }
 
@@ -28,6 +29,7 @@ class EmailVerificationController extends Controller
         auth()->user()->sendEmailVerificationNotification();
 
         Inertia::flash('success', 'Verification email sent! Please check your inbox.');
+
         return back();
     }
 }

@@ -186,7 +186,7 @@ test('authenticated user can resend verification email', function () {
     $response = actingAs($user)->post(route('verification.send'));
 
     $response->assertRedirect();
-    $response->assertSessionHas('message', 'Verification link sent!');
+    $response->assertInertiaFlash('success', 'Verification email sent! Please check your inbox.');
 });
 
 test('unauthenticated user cannot resend verification email', function () {

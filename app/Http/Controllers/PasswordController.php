@@ -26,6 +26,7 @@ class PasswordController extends Controller
 
         if (! $user) {
             Inertia::flash('error', 'No user found with that email address.');
+
             return back()->withErrors(['email' => __($this->getInvalidEmailStatus())]);
         }
 
@@ -33,6 +34,7 @@ class PasswordController extends Controller
         $user->sendPasswordResetNotification($token);
 
         Inertia::flash('success', 'Password reset link sent! Please check your inbox.');
+
         return back()->with(['status' => __($this->getSentStatus())]);
     }
 
@@ -67,10 +69,12 @@ class PasswordController extends Controller
 
         if ($status === Password::PASSWORD_RESET) {
             Inertia::flash('success', 'Password reset successfully! You can now sign in with your new password.');
+
             return redirect()->route('sign-in')->with('status', __($status));
         }
 
         Inertia::flash('error', 'Failed to reset password. Please try again.');
+
         return back()->withErrors(['email' => [__($status)]]);
     }
 

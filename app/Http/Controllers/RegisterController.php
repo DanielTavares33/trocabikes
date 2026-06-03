@@ -31,6 +31,7 @@ class RegisterController extends Controller
         event(new Registered($user));
 
         Inertia::flash('success', 'Registration successful! Please verify your email address.');
+
         return redirect()->route('verification.notice');
     }
 }

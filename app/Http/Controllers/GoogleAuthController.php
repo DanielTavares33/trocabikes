@@ -22,6 +22,7 @@ class GoogleAuthController extends Controller
             $user = Socialite::driver('google')->user();
         } catch (Throwable $e) {
             Inertia::flash('error', 'Failed to authenticate with Google. Please try again.');
+
             return redirect()->route('sign-in');
         }
 
@@ -55,6 +56,7 @@ class GoogleAuthController extends Controller
         }
 
         Inertia::flash('success', 'Successfully signed in!');
+
         return redirect()->route('home');
     }
 }

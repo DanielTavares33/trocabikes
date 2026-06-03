@@ -35,6 +35,7 @@ class LoginController extends Controller
             }
 
             Inertia::flash('success', 'Successfully signed in!');
+
             return redirect()->intended(route('home'));
         }
 
@@ -50,6 +51,7 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         Inertia::flash('success', 'Successfully signed out!');
+
         return redirect()->route('home');
     }
 }
