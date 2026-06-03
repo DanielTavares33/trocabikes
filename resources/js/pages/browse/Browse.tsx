@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Footer from '~/components/home/Footer';
 import type { ListingCardData } from '~/components/home/ListingCard';
 import Navbar from '~/components/home/Navbar';
+import Layout from '~/components/layout/Layout';
 import Pagination from '~/components/Pagination';
 import BrowseFilters from '~/pages/browse/BrowseFilters';
 import BrowseListings from '~/pages/browse/BrowseListings';
@@ -289,7 +290,7 @@ export default function Browse() {
     const paginatedListings = mockListings.slice(start, start + PER_PAGE);
 
     return (
-        <>
+        <Layout>
             <Head title="Browse bikes — Trocabikes" />
 
             <div className="flex min-h-screen flex-col bg-bg text-text">
@@ -333,6 +334,6 @@ export default function Browse() {
                 </main>
                 <Footer />
             </div>
-        </>
+        </Layout>
     );
 }

@@ -1,10 +1,11 @@
 import { Head } from '@inertiajs/react';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
+import Layout from '~/components/layout/Layout';
 
 export default function SavedBikes() {
     return (
-        <>
+        <Layout>
             <Head title="Saved Bikes — Trocabikes" />
 
             <div className="flex min-h-screen flex-col bg-bg text-text">
@@ -16,6 +17,6 @@ export default function SavedBikes() {
 
                 <Footer />
             </div>
-        </>
+        </Layout>
     );
 }

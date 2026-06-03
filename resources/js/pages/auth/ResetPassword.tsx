@@ -1,4 +1,5 @@
 import { Head, Link, Form } from '@inertiajs/react';
+import Layout from '~/components/layout/Layout';
 
 interface ResetPasswordProps {
     token?: string;
@@ -7,7 +8,7 @@ interface ResetPasswordProps {
 
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
     return (
-        <>
+        <Layout>
             <Head title="Reset password — Trocabikes" />
 
             <div className="flex min-h-screen flex-col items-center justify-center bg-bg px-6 py-12">
@@ -132,6 +133,6 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                     </Form>
                 </div>
             </div>
-        </>
+        </Layout>
     );
 }

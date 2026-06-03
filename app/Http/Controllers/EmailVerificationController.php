@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
 
 class EmailVerificationController extends Controller
 {
@@ -18,13 +19,17 @@ class EmailVerificationController extends Controller
     {
         $request->fulfill();
 
-        return redirect()->route('home')->with('message', 'Email verified successfully!');
+        Inertia::flash('success', 'Email verified successfully!');
+
+        return redirect()->route('home');
     }
 
     public function send(): RedirectResponse
     {
         auth()->user()->sendEmailVerificationNotification();
 
-        return back()->with('message', 'Verification link sent!');
+        Inertia::flash('success', 'Verification email sent! Please check your inbox.');
+
+        return back();
     }
 }

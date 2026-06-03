@@ -1,5 +1,6 @@
 import { Head, Link, Form } from '@inertiajs/react';
 import { Mail, ArrowRight } from 'lucide-react';
+import Layout from '@/components/layout/Layout';
 
 interface VerifyEmailProps {
     email: string;
@@ -7,7 +8,7 @@ interface VerifyEmailProps {
 
 export default function VerifyEmail({ email }: Readonly<VerifyEmailProps>) {
     return (
-        <>
+        <Layout>
             <Head title="Verify your email — Trocabikes" />
 
             <div className="flex min-h-screen flex-col items-center justify-center bg-bg px-6 py-12">
@@ -98,6 +99,6 @@ export default function VerifyEmail({ email }: Readonly<VerifyEmailProps>) {
                     </p>
                 </div>
             </div>
-        </>
+        </Layout>
     );
 }

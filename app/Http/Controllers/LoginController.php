@@ -6,6 +6,7 @@ use App\Http\Requests\Auth\LoginPostRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class LoginController extends Controller
 {
@@ -33,6 +34,8 @@ class LoginController extends Controller
                 ]);
             }
 
+            Inertia::flash('success', 'Successfully signed in!');
+
             return redirect()->intended(route('home'));
         }
 
@@ -44,9 +47,10 @@ class LoginController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        Inertia::flash('success', 'Successfully signed out!');
 
         return redirect()->route('home');
     }

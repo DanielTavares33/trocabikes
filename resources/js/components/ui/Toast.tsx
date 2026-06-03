@@ -1,0 +1,59 @@
+import { Toaster } from 'react-hot-toast';
+
+const toastOptions = {
+    duration: 4000,
+    style: {
+        fontFamily: "'Instrument Sans', ui-sans-serif, system-ui, sans-serif",
+        fontSize: '14px',
+        fontWeight: '500',
+        backgroundColor: '#FFFFFF',
+        color: '#fafaf9',
+        borderRadius: '8px',
+        padding: '12px 12px',
+        boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+    },
+    success: {
+        duration: 4000,
+        iconTheme: {
+            primary: '#16a34a',
+            secondary: '#dcfce7',
+        },
+        style: {
+            fontFamily: "'Instrument Sans', ui-sans-serif, system-ui, sans-serif",
+            fontSize: '14px',
+            fontWeight: '500',
+            backgroundColor: '#FFFFFF',
+            color: '#16a34a',
+            borderRadius: '8px',
+            padding: '12px 12px',
+            boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+        },
+    },
+    error: {
+        duration: 5000,
+        iconTheme: {
+            primary: '#dc2626',
+            secondary: '#fef2f2',
+        },
+        style: {
+            fontFamily: "'Instrument Sans', ui-sans-serif, system-ui, sans-serif",
+            fontSize: '14px',
+            fontWeight: '500',
+            backgroundColor: '#FFFFFF',
+            color: '#dc2626',
+            borderRadius: '8px',
+            padding: '12px 12px',
+            boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+        },
+    },
+};
+
+export default function Toast() {
+    return (
+        <Toaster
+            position="top-right"
+            reverseOrder={false}
+            toastOptions={toastOptions}
+        />
+    );
+}
