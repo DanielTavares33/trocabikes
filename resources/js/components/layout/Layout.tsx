@@ -1,6 +1,7 @@
 import { usePage } from '@inertiajs/react';
 import React, { useEffect } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
+import Toast from '@/components/ui/Toast';
 
 export default function Layout({
     children,
@@ -21,7 +22,7 @@ export default function Layout({
 
     return (
         <>
-            <Toaster position="top-right" reverseOrder={false} />
+            <Toast />
             {children}
         </>
     );
