@@ -157,7 +157,7 @@ export default function SignUp() {
 
                                 <button
                                     type="submit"
-                                    className="mt-2 h-10 w-full cursor-pointer rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover"
+                                    className="mt-2 h-10 w-full rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover"
                                     disabled={processing}
                                 >
                                     Create account

@@ -172,13 +172,6 @@ export default function MyBikes() {
             ? MY_BIKES
             : MY_BIKES.filter((bike) => bike.status === filter);
 
-    const stats = {
-        total: MY_BIKES.length,
-        active: MY_BIKES.filter((b) => b.status === 'active').length,
-        sold: MY_BIKES.filter((b) => b.status === 'sold').length,
-        archived: MY_BIKES.filter((b) => b.status === 'archived').length,
-    };
-
     return (
         <Layout>
             <Head title="My Bikes — Trocabikes" />
@@ -214,49 +207,6 @@ export default function MyBikes() {
                                 />
                                 Create New Listing
                             </Link>
-                        </div>
-
-                        <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-                            <StatCard
-                                label="Total Bikes"
-                                value={stats.total}
-                                icon={
-                                    <TrendingUp
-                                        width={20}
-                                        height={20}
-                                        strokeWidth={1.5}
-                                    />
-                                }
-                                active={filter === 'all'}
-                                onClick={() => setFilter('all')}
-                            />
-                            <StatCard
-                                label="Active"
-                                value={stats.active}
-                                icon={
-                                    <div className="h-2.5 w-2.5 rounded-full bg-accent" />
-                                }
-                                active={filter === 'active'}
-                                onClick={() => setFilter('active')}
-                            />
-                            <StatCard
-                                label="Sold"
-                                value={stats.sold}
-                                icon={
-                                    <div className="h-2.5 w-2.5 rounded-full bg-orange-500" />
-                                }
-                                active={filter === 'sold'}
-                                onClick={() => setFilter('sold')}
-                            />
-                            <StatCard
-                                label="Archived"
-                                value={stats.archived}
-                                icon={
-                                    <div className="h-2.5 w-2.5 rounded-full bg-stone-400" />
-                                }
-                                active={filter === 'archived'}
-                                onClick={() => setFilter('archived')}
-                            />
                         </div>
 
                         <div className="mb-6 flex gap-1 rounded-sm bg-bg-subtle p-1">
@@ -300,39 +250,6 @@ export default function MyBikes() {
                 <Footer />
             </div>
         </Layout>
-    );
-}
-
-function StatCard({
-    label,
-    value,
-    icon,
-    active,
-    onClick,
-}: {
-    label: string;
-    value: number;
-    icon: React.ReactNode;
-    active: boolean;
-    onClick: () => void;
-}) {
-    return (
-        <button
-            onClick={onClick}
-            className={`flex items-center gap-3 rounded-sm border px-4 py-3 text-left transition-all ${
-                active
-                    ? 'border-border-strong bg-surface shadow-sm'
-                    : 'border-border bg-surface hover:border-border-strong'
-            }`}
-        >
-            <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-bg-subtle text-text-muted">
-                {icon}
-            </div>
-            <div>
-                <p className="text-2xl font-semibold text-text">{value}</p>
-                <p className="text-xs text-text-muted">{label}</p>
-            </div>
-        </button>
     );
 }
 
