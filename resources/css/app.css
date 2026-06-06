@@ -23,3 +23,7 @@
     --color-accent-muted: #dcfce7;
     --color-error: #dc2626;
 }
+
+button {
+    cursor: pointer;
+}

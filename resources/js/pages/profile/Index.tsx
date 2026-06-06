@@ -356,7 +356,7 @@ export default function Profile({ user }: Readonly<Props>) {
                                         <button
                                             type="submit"
                                             disabled={processing}
-                                            className="cursor-pointer rounded-sm bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+                                            className="rounded-sm bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                                         >
                                             {processing
                                                 ? 'Saving...'

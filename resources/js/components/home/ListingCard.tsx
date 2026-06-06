@@ -1,4 +1,6 @@
-import { MapPin } from 'lucide-react';
+import { Heart, MapPin, Trash } from 'lucide-react';
+import { useModal } from '@/hooks/useModal';
+import Modal from '../ui/Modal';
 
 export interface ListingCardData {
     id: number;
@@ -21,17 +23,25 @@ type ConditionColor = {
 
 const conditionColors: ConditionColor = {
     nova: 'bg-accent-muted text-accent',
-    excelente: 'bg-orange-100 text-orange-700',
+    excellente: 'bg-orange-100 text-orange-700',
     boa: 'bg-stone-100 text-stone-700',
     regular: 'bg-amber-100 text-amber-700',
     usada: 'bg-stone-100 text-stone-700',
 };
 
-export default function ListingCard({ listing }: { listing: ListingCardData }) {
+export default function ListingCard({
+    listing,
+    saved = false,
+}: {
+    readonly listing: ListingCardData;
+    readonly saved?: boolean;
+}) {
+    const modal = useModal();
+
     return (
         <a
             href={`/browse/${listing.slug}`}
-            className="group flex flex-col overflow-hidden rounded-sm border border-border bg-surface transition-all hover:border-border-strong hover:shadow-lg"
+            className="group relative flex flex-col overflow-hidden rounded-sm border border-border bg-surface transition-all hover:border-border-strong hover:shadow-lg"
         >
             <div className="aspect-[4/3] overflow-hidden bg-bg-subtle">
                 <img
@@ -75,9 +85,70 @@ export default function ListingCard({ listing }: { listing: ListingCardData }) {
                     )}
                 </div>
 
-                <div className="mt-2 flex items-center gap-1 text-xs text-text-muted">
-                    <MapPin width={12} height={12} />
-                    <span>{listing.location}</span>
+                <div className="mt-3 flex items-center justify-between">
+                    <div className="flex items-center gap-1 text-xs text-text-muted">
+                        <MapPin width={12} height={12} />
+                        <span>{listing.location}</span>
+                    </div>
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            modal.open();
+                        }}
+                        className="text-text-subtle transition-colors hover:text-error"
+                        aria-label={
+                            saved ? 'Remove from saved' : 'Save to saved bikes'
+                        }
+                    >
+                        {saved ? (
+                            <Heart
+                                width={16}
+                                height={16}
+                                className="fill-error text-error"
+                                strokeWidth={2}
+                            />
+                        ) : (
+                            <Trash
+                                width={16}
+                                height={16}
+                                className="fill-none text-text-subtle"
+                                strokeWidth={2}
+                            />
+                        )}
+                    </button>
+                    <Modal
+                        isOpen={modal.isOpen}
+                        onClose={modal.close}
+                        title="Confirm Removal"
+                        size="md"
+                        closeOnBackdrop={true}
+                        closeOnEsc={true}
+                    >
+                        <div>
+                            <p className="mb-4 text-sm text-text">
+                                Are you sure you want to remove this bike from your
+                                saved list?
+                            </p>
+                            <div className="flex justify-end gap-2">
+                                <button
+                                    onClick={modal.close}
+                                    className="rounded-md bg-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        // Add your removal logic here
+                                        modal.close();
+                                    }}
+                                    className="rounded-md bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                    </Modal>
                 </div>
             </div>
         </a>

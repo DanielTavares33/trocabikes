@@ -32,102 +32,7 @@ interface MyBikeListing {
 }
 
 const MY_BIKES: MyBikeListing[] = [
-    {
-        id: 1,
-        title: 'Canyon Spectral CF 7 — Full Suspended MTB',
-        slug: 'canyon-spectral-cf-7-full-suspended-mtb',
-        brand: 'Canyon',
-        price: 2850,
-        year: 2022,
-        condition: 'Excellent',
-        status: 'active',
-        views: 234,
-        inquiries: 12,
-        createdAt: '2024-01-15',
-        imageUrl:
-            'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600&h=450&fit=crop&q=80',
-        imageAlt: 'Canyon Spectral mountain bike',
-    },
-    {
-        id: 2,
-        title: 'Specialized Allez Sprint — Road Racing',
-        slug: 'specialized-allez-sprint-road-racing',
-        brand: 'Specialized',
-        price: 1950,
-        year: 2021,
-        condition: 'Good',
-        status: 'sold',
-        views: 456,
-        inquiries: 28,
-        createdAt: '2023-11-20',
-        imageUrl:
-            'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&h=450&fit=crop&q=80',
-        imageAlt: 'Specialized Allez Sprint road bike',
-    },
-    {
-        id: 3,
-        title: 'Trek FX 3 — City Hybrid Commuter',
-        slug: 'trek-fx-3-city-hybrid-commuter',
-        brand: 'Trek',
-        price: 650,
-        year: 2023,
-        condition: 'New',
-        status: 'active',
-        views: 89,
-        inquiries: 4,
-        createdAt: '2024-02-01',
-        imageUrl:
-            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=450&fit=crop&q=80',
-        imageAlt: 'Trek FX city bike',
-    },
-    {
-        id: 4,
-        title: 'Brose S Mag — Urban E-Bike 2024',
-        slug: 'brose-s-mag-urban-e-bike-2024',
-        brand: 'Brose',
-        price: 3200,
-        year: 2024,
-        condition: 'New',
-        status: 'archived',
-        views: 156,
-        inquiries: 8,
-        createdAt: '2024-01-05',
-        imageUrl:
-            'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&h=450&fit=crop&q=80',
-        imageAlt: 'Brose e-bike',
-    },
-    {
-        id: 5,
-        title: 'Giant Trance X Advanced — Carbon MTB',
-        slug: 'giant-trance-x-advanced-carbon-mtb',
-        brand: 'Giant',
-        price: 4100,
-        year: 2023,
-        condition: 'Excellent',
-        status: 'active',
-        views: 312,
-        inquiries: 19,
-        createdAt: '2023-12-10',
-        imageUrl:
-            'https://images.unsplash.com/photo-1597326556223-28c6a7a2a7e8?w=600&h=450&fit=crop&q=80',
-        imageAlt: 'Giant mountain bike',
-    },
-    {
-        id: 6,
-        title: 'Cannondale Trail 6 — Hardtail MTB',
-        slug: 'cannondale-trail-6-hardtail-mtb',
-        brand: 'Cannondale',
-        price: 700,
-        year: 2020,
-        condition: 'Fair',
-        status: 'sold',
-        views: 523,
-        inquiries: 31,
-        createdAt: '2023-08-22',
-        imageUrl:
-            'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600&h=450&fit=crop&q=80',
-        imageAlt: 'Cannondale mountain bike',
-    },
+    
 ];
 
 const statusConfig: Record<
@@ -216,49 +121,6 @@ export default function MyBikes() {
                             </Link>
                         </div>
 
-                        <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-                            <StatCard
-                                label="Total Bikes"
-                                value={stats.total}
-                                icon={
-                                    <TrendingUp
-                                        width={20}
-                                        height={20}
-                                        strokeWidth={1.5}
-                                    />
-                                }
-                                active={filter === 'all'}
-                                onClick={() => setFilter('all')}
-                            />
-                            <StatCard
-                                label="Active"
-                                value={stats.active}
-                                icon={
-                                    <div className="h-2.5 w-2.5 rounded-full bg-accent" />
-                                }
-                                active={filter === 'active'}
-                                onClick={() => setFilter('active')}
-                            />
-                            <StatCard
-                                label="Sold"
-                                value={stats.sold}
-                                icon={
-                                    <div className="h-2.5 w-2.5 rounded-full bg-orange-500" />
-                                }
-                                active={filter === 'sold'}
-                                onClick={() => setFilter('sold')}
-                            />
-                            <StatCard
-                                label="Archived"
-                                value={stats.archived}
-                                icon={
-                                    <div className="h-2.5 w-2.5 rounded-full bg-stone-400" />
-                                }
-                                active={filter === 'archived'}
-                                onClick={() => setFilter('archived')}
-                            />
-                        </div>
-
                         <div className="mb-6 flex gap-1 rounded-sm bg-bg-subtle p-1">
                             {(
                                 [
@@ -280,7 +142,7 @@ export default function MyBikes() {
                                     {status === 'all'
                                         ? 'All'
                                         : status.charAt(0).toUpperCase() +
-                                          status.slice(1)}
+                                        status.slice(1)}
                                 </button>
                             ))}
                         </div>
@@ -300,39 +162,6 @@ export default function MyBikes() {
                 <Footer />
             </div>
         </Layout>
-    );
-}
-
-function StatCard({
-    label,
-    value,
-    icon,
-    active,
-    onClick,
-}: {
-    label: string;
-    value: number;
-    icon: React.ReactNode;
-    active: boolean;
-    onClick: () => void;
-}) {
-    return (
-        <button
-            onClick={onClick}
-            className={`flex items-center gap-3 rounded-sm border px-4 py-3 text-left transition-all ${
-                active
-                    ? 'border-border-strong bg-surface shadow-sm'
-                    : 'border-border bg-surface hover:border-border-strong'
-            }`}
-        >
-            <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-bg-subtle text-text-muted">
-                {icon}
-            </div>
-            <div>
-                <p className="text-2xl font-semibold text-text">{value}</p>
-                <p className="text-xs text-text-muted">{label}</p>
-            </div>
-        </button>
     );
 }
 
