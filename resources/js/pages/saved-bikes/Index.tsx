@@ -18,7 +18,8 @@ const SAVED_BIKES: ListingCardData[] = [
         condition: 'Excellent',
         kilometers: 1200,
         location: 'Lisbon, Portugal',
-        imageUrl: 'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600&h=450&fit=crop&q=80',
+        imageUrl:
+            'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600&h=450&fit=crop&q=80',
         imageAlt: 'Canyon Spectral mountain bike',
     },
     {
@@ -32,7 +33,8 @@ const SAVED_BIKES: ListingCardData[] = [
         condition: 'Good',
         kilometers: 3500,
         location: 'Porto, Portugal',
-        imageUrl: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&h=450&fit=crop&q=80',
+        imageUrl:
+            'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&h=450&fit=crop&q=80',
         imageAlt: 'Specialized Allez Sprint road bike',
     },
     {
@@ -45,7 +47,8 @@ const SAVED_BIKES: ListingCardData[] = [
         year: 2023,
         condition: 'New',
         location: 'Coimbra, Portugal',
-        imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=450&fit=crop&q=80',
+        imageUrl:
+            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=450&fit=crop&q=80',
         imageAlt: 'Trek FX city bike',
     },
     {
@@ -58,7 +61,8 @@ const SAVED_BIKES: ListingCardData[] = [
         year: 2024,
         condition: 'New',
         location: 'Faro, Portugal',
-        imageUrl: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&h=450&fit=crop&q=80',
+        imageUrl:
+            'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&h=450&fit=crop&q=80',
         imageAlt: 'Brose e-bike',
     },
 ];

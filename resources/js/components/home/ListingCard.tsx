@@ -127,8 +127,8 @@ export default function ListingCard({
                     >
                         <div>
                             <p className="mb-4 text-sm text-text">
-                                Are you sure you want to remove this bike from your
-                                saved list?
+                                Are you sure you want to remove this bike from
+                                your saved list?
                             </p>
                             <div className="flex justify-end gap-2">
                                 <button
