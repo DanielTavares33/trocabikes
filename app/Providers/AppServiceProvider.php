@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureExceptionHandling();
 
         BikeBrand::observe(BikeBrandObserver::class);
         BikeCategory::observe(BikeCategoryObserver::class);
@@ -53,5 +55,21 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null,
         );
+    }
+
+    protected function configureExceptionHandling(): void
+    {
+        Inertia::handleExceptionsUsing(function ($response) {
+            $status = $response->response->status();
+
+            if (in_array($status, [403, 401, 404, 419, 429, 500, 503])) {
+                return $response->render('Error', [
+                    'status' => $status,
+                    'message' => $response->exception->getMessage(),
+                ]);
+            }
+
+            return $response;
+        });
     }
 }
