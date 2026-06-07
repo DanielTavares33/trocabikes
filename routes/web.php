@@ -109,3 +109,11 @@ Route::middleware([Authenticate::class, EnsureEmailIsVerified::class])->group(fu
     // Create Listing
     Route::inertia('/listings/create', 'listings/Create')->name('listings.create');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Test Routes (Error Page Testing)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/test-error/{code}', fn (int $code) => abort($code))->name('test.error');
