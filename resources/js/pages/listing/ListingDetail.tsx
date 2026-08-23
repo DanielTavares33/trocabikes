@@ -121,7 +121,8 @@ export default function ListingDetail({
                                         className="h-full w-full object-cover"
                                     />
                                     <div className="absolute bottom-4 left-4 rounded-sm bg-bg/90 px-3 py-1.5 text-xs font-medium text-text">
-                                        {activeImageIndex + 1} / {galleryImages.length}
+                                        {activeImageIndex + 1} /{' '}
+                                        {galleryImages.length}
                                     </div>
                                 </div>
                                 {galleryImages.length > 1 && (
@@ -130,7 +131,9 @@ export default function ListingDetail({
                                             <button
                                                 key={image.id}
                                                 type="button"
-                                                onClick={() => setActiveImageIndex(index)}
+                                                onClick={() =>
+                                                    setActiveImageIndex(index)
+                                                }
                                                 className={`aspect-square overflow-hidden rounded-sm border ${
                                                     index === activeImageIndex
                                                         ? 'border-primary'

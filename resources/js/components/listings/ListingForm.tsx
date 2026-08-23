@@ -90,7 +90,10 @@ export default function ListingForm({
 
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="title" className="text-sm font-medium text-text">
+                        <label
+                            htmlFor="title"
+                            className="text-sm font-medium text-text"
+                        >
                             Title
                         </label>
                         <input
@@ -98,18 +101,25 @@ export default function ListingForm({
                             type="text"
                             name="title"
                             value={data.title}
-                            onChange={(event) => onChange('title', event.target.value)}
+                            onChange={(event) =>
+                                onChange('title', event.target.value)
+                            }
                             placeholder="e.g. Canyon Spectral CF 7 — Full Suspension MTB"
                             className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                         />
                         {errors.title && (
-                            <p className="text-sm text-red-600">{errors.title}</p>
+                            <p className="text-sm text-red-600">
+                                {errors.title}
+                            </p>
                         )}
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div className="flex flex-col gap-1.5">
-                            <label htmlFor="brand" className="text-sm font-medium text-text">
+                            <label
+                                htmlFor="brand"
+                                className="text-sm font-medium text-text"
+                            >
                                 Brand
                             </label>
                             <select
@@ -117,7 +127,10 @@ export default function ListingForm({
                                 name="bike_brand_id"
                                 value={data.bike_brand_id}
                                 onChange={(event) =>
-                                    onChange('bike_brand_id', event.target.value)
+                                    onChange(
+                                        'bike_brand_id',
+                                        event.target.value,
+                                    )
                                 }
                                 className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                             >
@@ -136,7 +149,10 @@ export default function ListingForm({
                         </div>
 
                         <div className="flex flex-col gap-1.5">
-                            <label htmlFor="category" className="text-sm font-medium text-text">
+                            <label
+                                htmlFor="category"
+                                className="text-sm font-medium text-text"
+                            >
                                 Category
                             </label>
                             <select
@@ -144,13 +160,19 @@ export default function ListingForm({
                                 name="bike_category_id"
                                 value={data.bike_category_id}
                                 onChange={(event) =>
-                                    onChange('bike_category_id', event.target.value)
+                                    onChange(
+                                        'bike_category_id',
+                                        event.target.value,
+                                    )
                                 }
                                 className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                             >
                                 <option value="">Select a category</option>
                                 {categories.map((category) => (
-                                    <option key={category.id} value={category.id}>
+                                    <option
+                                        key={category.id}
+                                        value={category.id}
+                                    >
                                         {category.name}
                                     </option>
                                 ))}
@@ -165,7 +187,10 @@ export default function ListingForm({
 
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div className="flex flex-col gap-1.5">
-                            <label htmlFor="condition" className="text-sm font-medium text-text">
+                            <label
+                                htmlFor="condition"
+                                className="text-sm font-medium text-text"
+                            >
                                 Condition
                             </label>
                             <select
@@ -179,13 +204,18 @@ export default function ListingForm({
                             >
                                 <option value="">Select condition</option>
                                 {conditions.map((condition) => (
-                                    <option key={condition.value} value={condition.value}>
+                                    <option
+                                        key={condition.value}
+                                        value={condition.value}
+                                    >
                                         {condition.label}
                                     </option>
                                 ))}
                             </select>
                             {errors.condition && (
-                                <p className="text-sm text-red-600">{errors.condition}</p>
+                                <p className="text-sm text-red-600">
+                                    {errors.condition}
+                                </p>
                             )}
                         </div>
 
@@ -201,13 +231,19 @@ export default function ListingForm({
                                 name="frame_material"
                                 value={data.frame_material}
                                 onChange={(event) =>
-                                    onChange('frame_material', event.target.value)
+                                    onChange(
+                                        'frame_material',
+                                        event.target.value,
+                                    )
                                 }
                                 className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                             >
                                 <option value="">Select material</option>
                                 {frameMaterials.map((material) => (
-                                    <option key={material.value} value={material.value}>
+                                    <option
+                                        key={material.value}
+                                        value={material.value}
+                                    >
                                         {material.label}
                                     </option>
                                 ))}
@@ -221,7 +257,10 @@ export default function ListingForm({
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="description" className="text-sm font-medium text-text">
+                        <label
+                            htmlFor="description"
+                            className="text-sm font-medium text-text"
+                        >
                             Description
                         </label>
                         <textarea
@@ -236,21 +275,28 @@ export default function ListingForm({
                             className="w-full resize-y rounded-sm border border-border bg-bg px-3 py-2 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                         />
                         {errors.description && (
-                            <p className="text-sm text-red-600">{errors.description}</p>
+                            <p className="text-sm text-red-600">
+                                {errors.description}
+                            </p>
                         )}
                     </div>
                 </div>
             </section>
 
             <section className="rounded-sm border border-border bg-surface p-6">
-                <h2 className="mb-1 text-lg font-semibold text-text">Bike specs</h2>
+                <h2 className="mb-1 text-lg font-semibold text-text">
+                    Bike specs
+                </h2>
                 <p className="mb-6 text-sm text-text-muted">
                     Technical details about your bike
                 </p>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="year" className="text-sm font-medium text-text">
+                        <label
+                            htmlFor="year"
+                            className="text-sm font-medium text-text"
+                        >
                             Year
                         </label>
                         <input
@@ -260,17 +306,24 @@ export default function ListingForm({
                             min={1990}
                             max={2026}
                             value={data.year}
-                            onChange={(event) => onChange('year', event.target.value)}
+                            onChange={(event) =>
+                                onChange('year', event.target.value)
+                            }
                             placeholder="2024"
                             className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                         />
                         {errors.year && (
-                            <p className="text-sm text-red-600">{errors.year}</p>
+                            <p className="text-sm text-red-600">
+                                {errors.year}
+                            </p>
                         )}
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="size" className="text-sm font-medium text-text">
+                        <label
+                            htmlFor="size"
+                            className="text-sm font-medium text-text"
+                        >
                             Size
                         </label>
                         <input
@@ -278,17 +331,24 @@ export default function ListingForm({
                             type="text"
                             name="size"
                             value={data.size}
-                            onChange={(event) => onChange('size', event.target.value)}
+                            onChange={(event) =>
+                                onChange('size', event.target.value)
+                            }
                             placeholder="e.g. M, 54cm"
                             className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                         />
                         {errors.size && (
-                            <p className="text-sm text-red-600">{errors.size}</p>
+                            <p className="text-sm text-red-600">
+                                {errors.size}
+                            </p>
                         )}
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="kilometers" className="text-sm font-medium text-text">
+                        <label
+                            htmlFor="kilometers"
+                            className="text-sm font-medium text-text"
+                        >
                             Kilometers
                         </label>
                         <input
@@ -304,7 +364,9 @@ export default function ListingForm({
                             className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                         />
                         {errors.kilometers && (
-                            <p className="text-sm text-red-600">{errors.kilometers}</p>
+                            <p className="text-sm text-red-600">
+                                {errors.kilometers}
+                            </p>
                         )}
                     </div>
                 </div>
@@ -320,7 +382,10 @@ export default function ListingForm({
 
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="price" className="text-sm font-medium text-text">
+                        <label
+                            htmlFor="price"
+                            className="text-sm font-medium text-text"
+                        >
                             Price (€)
                         </label>
                         <div className="relative">
@@ -334,19 +399,26 @@ export default function ListingForm({
                                 min={0}
                                 step="0.01"
                                 value={data.price}
-                                onChange={(event) => onChange('price', event.target.value)}
+                                onChange={(event) =>
+                                    onChange('price', event.target.value)
+                                }
                                 placeholder="0.00"
                                 className="h-10 w-full rounded-sm border border-border bg-bg pr-3 pl-8 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                             />
                         </div>
                         {errors.price && (
-                            <p className="text-sm text-red-600">{errors.price}</p>
+                            <p className="text-sm text-red-600">
+                                {errors.price}
+                            </p>
                         )}
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div className="flex flex-col gap-1.5">
-                            <label htmlFor="district" className="text-sm font-medium text-text">
+                            <label
+                                htmlFor="district"
+                                className="text-sm font-medium text-text"
+                            >
                                 District
                             </label>
                             <input
@@ -361,12 +433,17 @@ export default function ListingForm({
                                 className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                             />
                             {errors.district && (
-                                <p className="text-sm text-red-600">{errors.district}</p>
+                                <p className="text-sm text-red-600">
+                                    {errors.district}
+                                </p>
                             )}
                         </div>
 
                         <div className="flex flex-col gap-1.5">
-                            <label htmlFor="city" className="text-sm font-medium text-text">
+                            <label
+                                htmlFor="city"
+                                className="text-sm font-medium text-text"
+                            >
                                 City
                             </label>
                             <input
@@ -374,12 +451,16 @@ export default function ListingForm({
                                 type="text"
                                 name="city"
                                 value={data.city}
-                                onChange={(event) => onChange('city', event.target.value)}
+                                onChange={(event) =>
+                                    onChange('city', event.target.value)
+                                }
                                 placeholder="e.g. Oeiras"
                                 className="h-10 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                             />
                             {errors.city && (
-                                <p className="text-sm text-red-600">{errors.city}</p>
+                                <p className="text-sm text-red-600">
+                                    {errors.city}
+                                </p>
                             )}
                         </div>
                     </div>
@@ -440,10 +521,14 @@ export default function ListingForm({
                     </p>
                 </div>
 
-                {(visibleExistingImages.length > 0 || photoPreviews.length > 0) && (
+                {(visibleExistingImages.length > 0 ||
+                    photoPreviews.length > 0) && (
                     <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                         {visibleExistingImages.map((image) => (
-                            <div key={image.id} className="relative aspect-square">
+                            <div
+                                key={image.id}
+                                className="relative aspect-square"
+                            >
                                 <img
                                     src={image.url}
                                     alt=""
@@ -451,7 +536,9 @@ export default function ListingForm({
                                 />
                                 <button
                                     type="button"
-                                    onClick={() => onRemoveExistingPhoto(image.id)}
+                                    onClick={() =>
+                                        onRemoveExistingPhoto(image.id)
+                                    }
                                     className="absolute top-1 right-1 rounded-full bg-bg/90 p-1 text-text"
                                 >
                                     <X width={14} height={14} />
@@ -459,7 +546,10 @@ export default function ListingForm({
                             </div>
                         ))}
                         {photoPreviews.map((preview, index) => (
-                            <div key={preview} className="relative aspect-square">
+                            <div
+                                key={preview}
+                                className="relative aspect-square"
+                            >
                                 <img
                                     src={preview}
                                     alt=""
@@ -502,9 +592,12 @@ export default function ListingForm({
                             }
                             className="mt-0.5 h-4 w-4 rounded-sm border border-border bg-bg accent-primary"
                         />
-                        <label htmlFor="phone_visible" className="text-sm text-text-muted">
-                            Show your phone number on the listing so buyers can call
-                            you directly
+                        <label
+                            htmlFor="phone_visible"
+                            className="text-sm text-text-muted"
+                        >
+                            Show your phone number on the listing so buyers can
+                            call you directly
                         </label>
                     </div>
 

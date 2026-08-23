@@ -5,7 +5,7 @@ import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
 import ListingForm from '~/components/listings/ListingForm';
-import type {ListingFormData} from '~/components/listings/ListingForm';
+import type { ListingFormData } from '~/components/listings/ListingForm';
 
 interface CreateProps {
     brands: { id: number; name: string }[];

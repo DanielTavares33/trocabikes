@@ -5,7 +5,7 @@ import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
 import ListingForm from '~/components/listings/ListingForm';
-import type {ListingFormData} from '~/components/listings/ListingForm';
+import type { ListingFormData } from '~/components/listings/ListingForm';
 
 interface EditProps {
     listing: {
@@ -139,7 +139,10 @@ export default function Edit({
                                 )
                             }
                             onRemoveExistingPhoto={(id) =>
-                                setRemovedPhotoIds((current) => [...current, id])
+                                setRemovedPhotoIds((current) => [
+                                    ...current,
+                                    id,
+                                ])
                             }
                             onSubmit={handleSubmit}
                             submitLabel="Save changes"

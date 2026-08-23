@@ -5,7 +5,7 @@ import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
 import Pagination from '~/components/Pagination';
 import BrowseFilters from '~/pages/browse/BrowseFilters';
-import type {BrowseFiltersState} from '~/pages/browse/BrowseFilters';
+import type { BrowseFiltersState } from '~/pages/browse/BrowseFilters';
 import BrowseListings from '~/pages/browse/BrowseListings';
 
 interface PaginatedListings {

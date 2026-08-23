@@ -129,12 +129,11 @@ export default function BrowseFilters({
                 Filters
             </h2>
 
-            <form
-                onSubmit={applyFilters}
-                className="flex flex-col gap-6"
-            >
+            <form onSubmit={applyFilters} className="flex flex-col gap-6">
                 <div>
-                    <h3 className="mb-3 text-sm font-medium text-text">Brand</h3>
+                    <h3 className="mb-3 text-sm font-medium text-text">
+                        Brand
+                    </h3>
                     <select
                         value={localFilters.bike_brand_id}
                         onChange={(event) =>
@@ -178,7 +177,9 @@ export default function BrowseFilters({
                 </div>
 
                 <div>
-                    <h3 className="mb-3 text-sm font-medium text-text">Price</h3>
+                    <h3 className="mb-3 text-sm font-medium text-text">
+                        Price
+                    </h3>
                     <div className="flex flex-col gap-2">
                         {filterOptions.priceRanges.map((range) => (
                             <label
