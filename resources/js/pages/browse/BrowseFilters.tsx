@@ -2,10 +2,7 @@ import { router } from '@inertiajs/react';
 import type { SubmitEvent } from 'react';
 import { useState } from 'react';
 
-import {
-    LISTING_MAX_YEAR,
-    LISTING_MIN_YEAR,
-} from '@/lib/listing';
+import { LISTING_MAX_YEAR, LISTING_MIN_YEAR } from '@/lib/listing';
 import { browse } from '@/routes';
 
 interface FilterOption {
@@ -95,10 +92,14 @@ export default function BrowseFilters({
             params.sort = filters.sort;
         }
 
-        router.get(browse.url({ query: params }), {}, {
-            preserveState: true,
-            preserveScroll: true,
-        });
+        router.get(
+            browse.url({ query: params }),
+            {},
+            {
+                preserveState: true,
+                preserveScroll: true,
+            },
+        );
     };
 
     const clearFilters = () => {

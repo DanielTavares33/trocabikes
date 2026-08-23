@@ -48,10 +48,14 @@ export default function BrowseListings({
             params.location = filters.location;
         }
 
-        router.get(browse.url({ query: params }), {}, {
-            preserveState: true,
-            preserveScroll: true,
-        });
+        router.get(
+            browse.url({ query: params }),
+            {},
+            {
+                preserveState: true,
+                preserveScroll: true,
+            },
+        );
     };
 
     return (

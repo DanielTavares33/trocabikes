@@ -68,10 +68,14 @@ export default function Browse({
             params.sort = filters.sort;
         }
 
-        router.get(browse.url({ query: params }), {}, {
-            preserveState: true,
-            preserveScroll: true,
-        });
+        router.get(
+            browse.url({ query: params }),
+            {},
+            {
+                preserveState: true,
+                preserveScroll: true,
+            },
+        );
     };
 
     return (
