@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ListingCondition: string
+enum BikeCondition: string
 {
     case New = 'new';
     case Used = 'used';

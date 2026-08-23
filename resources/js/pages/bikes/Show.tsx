@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
-import { browse } from '@/routes';
+import { index as bikesIndex } from '@/routes/bikes';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
@@ -35,13 +35,13 @@ interface SellerData {
     avatarUrl: string;
 }
 
-interface ListingImageData {
+interface BikeImageData {
     id: number;
     url: string;
     alt: string;
 }
 
-interface ListingDetailData {
+interface BikeShowData {
     id: number;
     title: string;
     slug: string;
@@ -57,25 +57,25 @@ interface ListingDetailData {
     description: string;
     imageUrl: string;
     imageAlt: string;
-    images: ListingImageData[];
+    images: BikeImageData[];
     createdAt: string;
     views: number;
     seller: SellerData;
 }
 
-interface ListingDetailProps {
-    listing: ListingDetailData;
+interface BikeShowProps {
+    bike: BikeShowData;
 }
 
-export default function ListingDetail({
-    listing,
-}: Readonly<ListingDetailProps>) {
-    const seller = listing.seller;
+export default function BikeShow({
+    bike,
+}: Readonly<BikeShowProps>) {
+    const seller = bike.seller;
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const galleryImages =
-        listing.images.length > 0
-            ? listing.images
-            : [{ id: 0, url: listing.imageUrl, alt: listing.imageAlt }];
+        bike.images.length > 0
+            ? bike.images
+            : [{ id: 0, url: bike.imageUrl, alt: bike.imageAlt }];
     const activeImage = galleryImages[activeImageIndex] ?? galleryImages[0];
 
     const formatPrice = (price: number) => {
@@ -89,7 +89,7 @@ export default function ListingDetail({
 
     return (
         <Layout>
-            <Head title={`${listing.title} — Trocabikes`} />
+            <Head title={`${bike.title} — Trocabikes`} />
 
             <div className="flex min-h-screen flex-col bg-bg text-text">
                 <Navbar />
@@ -105,14 +105,14 @@ export default function ListingDetail({
                             </Link>
                             <span>/</span>
                             <Link
-                                href={browse.url()}
+                                href={bikesIndex.url()}
                                 className="transition-colors hover:text-text"
                             >
                                 Browse bikes
                             </Link>
                             <span>/</span>
                             <span className="truncate text-text">
-                                {listing.title}
+                                {bike.title}
                             </span>
                         </nav>
 
@@ -159,26 +159,26 @@ export default function ListingDetail({
                                 <div className="rounded-sm border border-border bg-surface p-6">
                                     <div className="mb-4">
                                         <p className="mb-1 text-xs font-medium tracking-wide text-text-subtle uppercase">
-                                            {listing.brand}
+                                            {bike.brand}
                                         </p>
                                         <h1 className="text-2xl leading-tight font-semibold text-text">
-                                            {listing.title}
+                                            {bike.title}
                                         </h1>
                                     </div>
 
                                     <div className="mb-6 flex items-baseline justify-between">
                                         <p className="text-3xl font-bold text-text">
-                                            {formatPrice(listing.price)}
+                                            {formatPrice(bike.price)}
                                         </p>
                                         <span
                                             className={`rounded-sm px-2.5 py-1 text-xs font-medium capitalize ${
                                                 conditionColors[
-                                                    listing.condition.toLowerCase()
+                                                    bike.condition.toLowerCase()
                                                 ] ||
                                                 'bg-bg-subtle text-text-muted'
                                             }`}
                                         >
-                                            {listing.condition}
+                                            {bike.condition}
                                         </span>
                                     </div>
 
@@ -188,7 +188,7 @@ export default function ListingDetail({
                                                 Year
                                             </p>
                                             <p className="font-medium text-text">
-                                                {listing.year}
+                                                {bike.year}
                                             </p>
                                         </div>
                                         <div>
@@ -196,7 +196,7 @@ export default function ListingDetail({
                                                 Size
                                             </p>
                                             <p className="font-medium text-text">
-                                                {listing.size}
+                                                {bike.size}
                                             </p>
                                         </div>
                                         <div>
@@ -204,7 +204,7 @@ export default function ListingDetail({
                                                 Frame
                                             </p>
                                             <p className="font-medium text-text">
-                                                {listing.frameMaterial}
+                                                {bike.frameMaterial}
                                             </p>
                                         </div>
                                         <div>
@@ -212,7 +212,7 @@ export default function ListingDetail({
                                                 Kilometers
                                             </p>
                                             <p className="font-medium text-text">
-                                                {listing.kilometers.toLocaleString(
+                                                {bike.kilometers.toLocaleString(
                                                     'pt-PT',
                                                 )}{' '}
                                                 km
@@ -222,7 +222,7 @@ export default function ListingDetail({
 
                                     <div className="mt-4 flex items-center gap-2 text-sm text-text-muted">
                                         <MapPin width={16} height={16} />
-                                        <span>{listing.location}</span>
+                                        <span>{bike.location}</span>
                                     </div>
                                 </div>
 
@@ -292,7 +292,7 @@ export default function ListingDetail({
 
                                 <div className="rounded-sm border border-border bg-surface p-4">
                                     <p className="mb-3 text-sm font-medium text-text">
-                                        Share this listing
+                                        Share this bike
                                     </p>
                                     <div className="flex gap-2">
                                         <button
@@ -348,7 +348,7 @@ export default function ListingDetail({
                                 Description
                             </h2>
                             <div className="whitespace-pre-wrap text-text-muted">
-                                {listing.description}
+                                {bike.description}
                             </div>
                         </div>
                     </div>

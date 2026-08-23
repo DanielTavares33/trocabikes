@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\Listing;
+use App\Models\Bike;
 use App\Models\User;
-use App\Support\ListingPresenter;
+use App\Support\BikePresenter;
 
 test('detail hides phone contact when phone is not visible', function () {
     $user = User::factory()->create([
@@ -11,12 +11,12 @@ test('detail hides phone contact when phone is not visible', function () {
         'email' => 'seller@example.com',
     ]);
 
-    $listing = Listing::factory()->for($user)->create([
+    $bike = Bike::factory()->for($user)->create([
         'phone_visible' => false,
         'email_visible' => true,
     ]);
 
-    $detail = ListingPresenter::detail($listing);
+    $detail = BikePresenter::detail($bike);
 
     expect($detail['seller']['phone'])->toBe('')
         ->and($detail['seller']['whatsapp'])->toBe('')
@@ -30,12 +30,12 @@ test('detail hides email when email is not visible', function () {
         'email' => 'seller@example.com',
     ]);
 
-    $listing = Listing::factory()->for($user)->create([
+    $bike = Bike::factory()->for($user)->create([
         'phone_visible' => true,
         'email_visible' => false,
     ]);
 
-    $detail = ListingPresenter::detail($listing);
+    $detail = BikePresenter::detail($bike);
 
     expect($detail['seller']['phone'])->toBe('+351912345678')
         ->and($detail['seller']['whatsapp'])->toBe('351912345678')
@@ -49,12 +49,12 @@ test('detail exposes all seller contact when both visibility flags are enabled',
         'email' => 'seller@example.com',
     ]);
 
-    $listing = Listing::factory()->for($user)->create([
+    $bike = Bike::factory()->for($user)->create([
         'phone_visible' => true,
         'email_visible' => true,
     ]);
 
-    $detail = ListingPresenter::detail($listing);
+    $detail = BikePresenter::detail($bike);
 
     expect($detail['seller']['phone'])->toBe('+351912345678')
         ->and($detail['seller']['whatsapp'])->toBe('351912345678')

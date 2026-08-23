@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
-class ListingImage extends Model
+class BikeImage extends Model
 {
     protected $fillable = [
-        'listing_id',
+        'bike_id',
         'path',
         'sort_order',
         'is_primary',
@@ -23,9 +23,9 @@ class ListingImage extends Model
         ];
     }
 
-    public function listing(): BelongsTo
+    public function bike(): BelongsTo
     {
-        return $this->belongsTo(Listing::class);
+        return $this->belongsTo(Bike::class);
     }
 
     public function url(): string

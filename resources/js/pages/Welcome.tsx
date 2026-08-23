@@ -1,14 +1,15 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
+import { index as bikesIndex } from '@/routes/bikes';
 import CategoriesGrid from '~/components/home/CategoriesGrid';
 import Footer from '~/components/home/Footer';
 import Hero from '~/components/home/Hero';
-import type { ListingCardData } from '~/components/home/ListingCard';
-import ListingCard from '~/components/home/ListingCard';
+import type { BikeCardData } from '~/components/home/BikeCard';
+import BikeCard from '~/components/home/BikeCard';
 import Navbar from '~/components/home/Navbar';
 import SearchSection from '~/components/home/SearchSection';
 import Layout from '~/components/layout/Layout';
 
-const recentListings: ListingCardData[] = [
+const recentBikes: BikeCardData[] = [
     {
         id: 1,
         title: 'Canyon Spectral CF 7 — Full Suspended MTB',
@@ -119,36 +120,36 @@ export default function Welcome() {
                             <div className="mb-12 flex items-end justify-between">
                                 <div>
                                     <h2 className="mb-2 text-3xl font-semibold text-text">
-                                        Recent listings
+                                        Recent bikes
                                     </h2>
                                     <p className="text-text-muted">
                                         Fresh bikes just listed in your area
                                     </p>
                                 </div>
-                                <a
-                                    href="#all-listings"
+                                <Link
+                                    href={bikesIndex.url()}
                                     className="hidden text-sm font-medium text-primary transition-colors hover:text-primary-hover sm:block"
                                 >
-                                    View all listings &rarr;
-                                </a>
+                                    View all bikes &rarr;
+                                </Link>
                             </div>
 
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                                {recentListings.map((listing) => (
-                                    <ListingCard
-                                        key={listing.id}
-                                        listing={listing}
+                                {recentBikes.map((bike) => (
+                                    <BikeCard
+                                        key={bike.id}
+                                        bike={bike}
                                     />
                                 ))}
                             </div>
 
                             <div className="mt-10 text-center sm:hidden">
-                                <a
-                                    href="#all-listings"
+                                <Link
+                                    href={bikesIndex.url()}
                                     className="inline-block rounded-sm border border-border px-6 py-2 text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg"
                                 >
-                                    View all listings &rarr;
-                                </a>
+                                    View all bikes &rarr;
+                                </Link>
                             </div>
                         </div>
                     </section>

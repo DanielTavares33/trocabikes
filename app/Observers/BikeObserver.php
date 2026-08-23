@@ -2,22 +2,22 @@
 
 namespace App\Observers;
 
-use App\Models\Listing;
+use App\Models\Bike;
 use Illuminate\Support\Str;
 
-class ListingObserver
+class BikeObserver
 {
-    public function creating(Listing $listing): void
+    public function creating(Bike $bike): void
     {
-        if (empty($listing->slug)) {
-            $listing->slug = $this->uniqueSlug($listing->title);
+        if (empty($bike->slug)) {
+            $bike->slug = $this->uniqueSlug($bike->title);
         }
     }
 
-    public function updating(Listing $listing): void
+    public function updating(Bike $bike): void
     {
-        if ($listing->isDirty('title') && ! $listing->isDirty('slug')) {
-            $listing->slug = $this->uniqueSlug($listing->title, $listing->id);
+        if ($bike->isDirty('title') && ! $bike->isDirty('slug')) {
+            $bike->slug = $this->uniqueSlug($bike->title, $bike->id);
         }
     }
 
@@ -28,7 +28,7 @@ class ListingObserver
         $counter = 1;
 
         while (
-            Listing::query()
+            Bike::query()
                 ->when($ignoreId, fn ($query) => $query->where('id', '!=', $ignoreId))
                 ->where('slug', $slug)
                 ->exists()

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ListingStatus;
-use App\Http\Requests\Listing\StoreListingRequest;
-use App\Http\Requests\Listing\UpdateListingRequest;
+use App\Enums\BikeStatus;
+use App\Http\Requests\Bike\StoreBikeRequest;
+use App\Http\Requests\Bike\UpdateBikeRequest;
+use App\Models\Bike;
 use App\Models\BikeBrand;
 use App\Models\BikeCategory;
-use App\Models\Listing;
-use App\Models\ListingImage;
-use App\Support\ListingPresenter;
+use App\Models\BikeImage;
+use App\Support\BikePresenter;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,122 +18,122 @@ use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class ListingController extends Controller
+class BikeController extends Controller
 {
     use AuthorizesRequests;
 
     public function index(Request $request): Response
     {
-        $this->authorize('viewAny', Listing::class);
+        $this->authorize('viewAny', Bike::class);
 
         $filters = $this->normalizeFilters($request);
 
-        $listings = Listing::query()
+        $bikes = Bike::query()
             ->active()
             ->with(['bikeBrand', 'bikeCategory', 'primaryImage'])
             ->filtered($request->merge($filters))
             ->sorted($request->input('sort', 'newest'))
             ->paginate(10)
             ->withQueryString()
-            ->through(fn (Listing $listing) => ListingPresenter::card($listing));
+            ->through(fn (Bike $bike) => BikePresenter::card($bike));
 
-        return Inertia::render('browse/Browse', [
-            'listings' => $listings,
+        return Inertia::render('bikes/Index', [
+            'bikes' => $bikes,
             'filters' => $filters,
             'filterOptions' => $this->filterOptions(),
         ]);
     }
 
-    public function show(Listing $listing): Response
+    public function show(Bike $bike): Response
     {
-        $this->authorize('view', $listing);
+        $this->authorize('view', $bike);
 
-        $this->recordView($listing);
+        $this->recordView($bike);
 
-        return Inertia::render('listing/ListingDetail', [
-            'listing' => ListingPresenter::detail($listing),
+        return Inertia::render('bikes/Show', [
+            'bike' => BikePresenter::detail($bike),
         ]);
     }
 
     public function create(): Response
     {
-        $this->authorize('create', Listing::class);
+        $this->authorize('create', Bike::class);
 
-        return Inertia::render('listings/Create', $this->formOptions());
+        return Inertia::render('bikes/Create', $this->formOptions());
     }
 
-    public function store(StoreListingRequest $request): RedirectResponse
+    public function store(StoreBikeRequest $request): RedirectResponse
     {
-        $listing = Listing::query()->create([
+        $bike = Bike::query()->create([
             ...$request->safe()->except(['photos']),
             'user_id' => $request->user()->id,
-            'status' => ListingStatus::Active,
+            'status' => BikeStatus::Active,
             'views' => 0,
         ]);
 
-        $this->storePhotos($listing, $request->file('photos', []));
+        $this->storePhotos($bike, $request->file('photos', []));
 
-        return redirect()
-            ->route('listings.show', $listing)
-            ->with('success', 'Listing published successfully.');
+        Inertia::flash('success', 'Your bike is live.');
+
+        return redirect()->route('bikes.show', $bike);
     }
 
-    public function edit(Listing $listing): Response
+    public function edit(Bike $bike): Response
     {
-        $this->authorize('update', $listing);
+        $this->authorize('update', $bike);
 
-        return Inertia::render('listings/Edit', [
-            ...$this->formOptions($listing),
-            'listing' => ListingPresenter::form($listing),
+        return Inertia::render('bikes/Edit', [
+            ...$this->formOptions($bike),
+            'bike' => BikePresenter::form($bike),
         ]);
     }
 
-    public function update(UpdateListingRequest $request, Listing $listing): RedirectResponse
+    public function update(UpdateBikeRequest $request, Bike $bike): RedirectResponse
     {
-        $listing->update($request->safe()->except(['photos', 'removed_photo_ids']));
-        $listing->refresh();
+        $bike->update($request->safe()->except(['photos', 'removed_photo_ids']));
+        $bike->refresh();
 
         if ($request->filled('removed_photo_ids')) {
-            $this->removePhotos($listing, $request->input('removed_photo_ids', []));
+            $this->removePhotos($bike, $request->input('removed_photo_ids', []));
         }
 
         if ($request->hasFile('photos')) {
-            $this->storePhotos($listing, $request->file('photos', []), $listing->images()->count());
+            $this->storePhotos($bike, $request->file('photos', []), $bike->images()->count());
         }
 
-        $this->ensurePrimaryImage($listing);
+        $this->ensurePrimaryImage($bike);
 
-        return redirect()
-            ->route('listings.show', $listing)
-            ->with('success', 'Listing updated successfully.');
+        Inertia::flash('success', 'Bike updated successfully.');
+
+        return redirect()->route('bikes.show', $bike);
     }
 
-    public function destroy(Listing $listing): RedirectResponse
+    public function destroy(Bike $bike): RedirectResponse
     {
-        $this->authorize('delete', $listing);
+        $this->authorize('delete', $bike);
 
-        foreach ($listing->images as $image) {
+        foreach ($bike->images as $image) {
             Storage::disk('public')->delete($image->path);
         }
 
-        $listing->delete();
+        $bike->delete();
 
-        return redirect()
-            ->route('my-bikes')
-            ->with('success', 'Listing deleted successfully.');
+        Inertia::flash('success', 'Bike removed successfully.');
+
+        return redirect()->route('my-bikes');
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function formOptions(?Listing $listing = null): array
+    private function formOptions(?Bike $bike = null): array
     {
         $brandsQuery = BikeBrand::query()->orderBy('name');
 
-        if ($listing !== null) {
-            $brandsQuery->where(function ($query) use ($listing): void {
+        if ($bike !== null) {
+            $brandsQuery->where(function ($query) use ($bike): void {
                 $query->where('is_active', true)
-                    ->orWhere('id', $listing->bike_brand_id);
+                    ->orWhere('id', $bike->bike_brand_id);
             });
         } else {
             $brandsQuery->where('is_active', true);
@@ -144,11 +144,11 @@ class ListingController extends Controller
             'categories' => BikeCategory::query()
                 ->orderBy('name')
                 ->get(['id', 'name']),
-            'conditions' => collect(ListingPresenter::conditionLabels())
+            'conditions' => collect(BikePresenter::conditionLabels())
                 ->map(fn (string $label, string $value) => ['value' => $value, 'label' => $label])
                 ->values()
                 ->all(),
-            'frameMaterials' => collect(ListingPresenter::frameMaterialLabels())
+            'frameMaterials' => collect(BikePresenter::frameMaterialLabels())
                 ->map(fn (string $label, string $value) => ['value' => $value, 'label' => $label])
                 ->values()
                 ->all(),
@@ -168,7 +168,7 @@ class ListingController extends Controller
             'categories' => BikeCategory::query()
                 ->orderBy('name')
                 ->get(['id', 'name']),
-            'conditions' => collect(ListingPresenter::conditionLabels())
+            'conditions' => collect(BikePresenter::conditionLabels())
                 ->map(fn (string $label, string $value) => ['value' => $value, 'label' => $label])
                 ->values()
                 ->all(),
@@ -246,16 +246,16 @@ class ListingController extends Controller
     /**
      * @param  array<int, UploadedFile>  $photos
      */
-    private function storePhotos(Listing $listing, array $photos, int $startingOrder = 0): void
+    private function storePhotos(Bike $bike, array $photos, int $startingOrder = 0): void
     {
         foreach ($photos as $index => $photo) {
-            $path = $photo->store("listings/{$listing->id}", 'public');
+            $path = $photo->store("bikes/{$bike->id}", 'public');
 
-            ListingImage::query()->create([
-                'listing_id' => $listing->id,
+            BikeImage::query()->create([
+                'bike_id' => $bike->id,
                 'path' => $path,
                 'sort_order' => $startingOrder + $index,
-                'is_primary' => $startingOrder === 0 && $index === 0 && ! $listing->images()->exists(),
+                'is_primary' => $startingOrder === 0 && $index === 0 && ! $bike->images()->exists(),
             ]);
         }
     }
@@ -263,9 +263,9 @@ class ListingController extends Controller
     /**
      * @param  array<int, int|string>  $photoIds
      */
-    private function removePhotos(Listing $listing, array $photoIds): void
+    private function removePhotos(Bike $bike, array $photoIds): void
     {
-        $images = $listing->images()->whereIn('id', $photoIds)->get();
+        $images = $bike->images()->whereIn('id', $photoIds)->get();
 
         foreach ($images as $image) {
             Storage::disk('public')->delete($image->path);
@@ -273,28 +273,28 @@ class ListingController extends Controller
         }
     }
 
-    private function ensurePrimaryImage(Listing $listing): void
+    private function ensurePrimaryImage(Bike $bike): void
     {
-        if ($listing->images()->where('is_primary', true)->exists()) {
+        if ($bike->images()->where('is_primary', true)->exists()) {
             return;
         }
 
-        $firstImage = $listing->images()->orderBy('sort_order')->first();
+        $firstImage = $bike->images()->orderBy('sort_order')->first();
 
         if ($firstImage !== null) {
             $firstImage->update(['is_primary' => true]);
         }
     }
 
-    private function recordView(Listing $listing): void
+    private function recordView(Bike $bike): void
     {
-        $viewedListings = session('viewed_listings', []);
+        $viewedBikes = session('viewed_bikes', []);
 
-        if (in_array($listing->id, $viewedListings, true)) {
+        if (in_array($bike->id, $viewedBikes, true)) {
             return;
         }
 
-        $listing->increment('views');
-        session()->push('viewed_listings', $listing->id);
+        $bike->increment('views');
+        session()->push('viewed_bikes', $bike->id);
     }
 }

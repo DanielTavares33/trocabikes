@@ -1,22 +1,22 @@
 import { router } from '@inertiajs/react';
 import { Search } from 'lucide-react';
 
-import { browse } from '@/routes';
-import type { ListingCardData } from '~/components/home/ListingCard';
-import ListingCard from '~/components/home/ListingCard';
-import type { BrowseFiltersState } from '~/pages/browse/BrowseFilters';
+import { index as bikesIndex } from '@/routes/bikes';
+import type { BikeCardData } from '~/components/home/BikeCard';
+import BikeCard from '~/components/home/BikeCard';
+import type { BikeFiltersState } from '~/pages/bikes/BikeFilters';
 
-interface BrowseListingsProps {
-    listings: ListingCardData[];
+interface BikeGridProps {
+    bikes: BikeCardData[];
     total: number;
-    filters: BrowseFiltersState;
+    filters: BikeFiltersState;
 }
 
-export default function BrowseListings({
-    listings,
+export default function BikeGrid({
+    bikes,
     total,
     filters,
-}: Readonly<BrowseListingsProps>) {
+}: Readonly<BikeGridProps>) {
     const handleSortChange = (sort: string) => {
         const params: Record<string, string | string[]> = { sort };
 
@@ -49,7 +49,7 @@ export default function BrowseListings({
         }
 
         router.get(
-            browse.url({ query: params }),
+            bikesIndex.url({ query: params }),
             {},
             {
                 preserveState: true,
@@ -77,7 +77,7 @@ export default function BrowseListings({
                 </select>
             </div>
 
-            {listings.length === 0 ? (
+            {bikes.length === 0 ? (
                 <div className="flex flex-col items-center justify-center rounded-sm border border-border bg-surface py-20 text-center">
                     <Search
                         width={48}
@@ -94,8 +94,8 @@ export default function BrowseListings({
                 </div>
             ) : (
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
-                    {listings.map((listing) => (
-                        <ListingCard key={listing.id} listing={listing} />
+                    {bikes.map((bike) => (
+                        <BikeCard key={bike.id} bike={bike} />
                     ))}
                 </div>
             )}

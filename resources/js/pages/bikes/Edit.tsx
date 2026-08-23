@@ -2,48 +2,67 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import type { SubmitEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 
-import { store } from '@/routes/listings';
+import { update } from '@/routes/bikes';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
-import ListingForm from '~/components/listings/ListingForm';
-import type { ListingFormData } from '~/components/listings/ListingForm';
+import BikeForm from '~/components/bikes/BikeForm';
+import type { BikeFormData } from '~/components/bikes/BikeForm';
 
-interface CreateProps {
+interface EditProps {
+    bike: {
+        id: number;
+        slug: string;
+        title: string;
+        bike_brand_id: number;
+        bike_category_id: number;
+        description: string;
+        price: number;
+        condition: string;
+        year: number;
+        size: string;
+        frame_material: string;
+        kilometers: string | null;
+        district: string;
+        city: string;
+        phone_visible: boolean;
+        email_visible: boolean;
+        images: { id: number; url: string }[];
+    };
     brands: { id: number; name: string }[];
     categories: { id: number; name: string }[];
     conditions: { value: string; label: string }[];
     frameMaterials: { value: string; label: string }[];
 }
 
-const emptyForm: ListingFormData = {
-    title: '',
-    bike_brand_id: '',
-    bike_category_id: '',
-    description: '',
-    price: '',
-    condition: '',
-    year: '',
-    size: '',
-    frame_material: '',
-    kilometers: '',
-    district: '',
-    city: '',
-    phone_visible: false,
-    email_visible: false,
-};
-
-export default function Create({
+export default function Edit({
+    bike,
     brands,
     categories,
     conditions,
     frameMaterials,
-}: Readonly<CreateProps>) {
+}: Readonly<EditProps>) {
     const { data, setData, post, processing, errors } = useForm({
-        ...emptyForm,
+        title: bike.title,
+        bike_brand_id: String(bike.bike_brand_id),
+        bike_category_id: String(bike.bike_category_id),
+        description: bike.description,
+        price: String(bike.price),
+        condition: bike.condition,
+        year: String(bike.year),
+        size: bike.size,
+        frame_material: bike.frame_material,
+        kilometers: bike.kilometers ?? '',
+        district: bike.district,
+        city: bike.city,
+        phone_visible: bike.phone_visible,
+        email_visible: bike.email_visible,
         photos: [] as File[],
+        removed_photo_ids: [] as number[],
+        _method: 'put',
     });
     const [photos, setPhotos] = useState<File[]>([]);
+    const [removedPhotoIds, setRemovedPhotoIds] = useState<number[]>([]);
     const photoPreviews = useMemo(
         () => photos.map((file) => URL.createObjectURL(file)),
         [photos],
@@ -54,13 +73,17 @@ export default function Create({
     }, [photos, setData]);
 
     useEffect(() => {
+        setData('removed_photo_ids', removedPhotoIds);
+    }, [removedPhotoIds, setData]);
+
+    useEffect(() => {
         return () => {
             photoPreviews.forEach((preview) => URL.revokeObjectURL(preview));
         };
     }, [photoPreviews]);
 
     const handleChange = (
-        field: keyof ListingFormData,
+        field: keyof BikeFormData,
         value: string | boolean,
     ) => {
         setData(field, value as never);
@@ -68,12 +91,12 @@ export default function Create({
 
     const handleSubmit = (event: SubmitEvent) => {
         event.preventDefault();
-        post(store.url(), { forceFormData: true });
+        post(update.url(bike.slug), { forceFormData: true });
     };
 
     return (
         <Layout>
-            <Head title="Sell your bike — Trocabikes" />
+            <Head title={`Edit ${bike.title} — Trocabikes`} />
 
             <div className="flex min-h-screen flex-col bg-bg text-text">
                 <Navbar />
@@ -82,26 +105,25 @@ export default function Create({
                     <div className="mx-auto max-w-2xl">
                         <nav className="mb-2 text-sm text-text-muted">
                             <Link
-                                href="/"
+                                href="/my-bikes"
                                 className="transition-colors hover:text-text"
                             >
-                                Home
+                                My bikes
                             </Link>
                             <span className="mx-2">/</span>
-                            <span className="text-text">Sell your bike</span>
+                            <span className="text-text">Edit bike</span>
                         </nav>
 
                         <div className="mb-8">
                             <h1 className="text-3xl font-semibold text-text">
-                                Sell your bike
+                                Edit bike
                             </h1>
                             <p className="mt-1 text-text-muted">
-                                Fill in the details below to list your bike on
-                                the marketplace
+                                Update your bike details
                             </p>
                         </div>
 
-                        <ListingForm
+                        <BikeForm
                             data={data}
                             errors={errors}
                             processing={processing}
@@ -111,7 +133,8 @@ export default function Create({
                             frameMaterials={frameMaterials}
                             photos={photos}
                             photoPreviews={photoPreviews}
-                            removedPhotoIds={[]}
+                            existingImages={bike.images}
+                            removedPhotoIds={removedPhotoIds}
                             onChange={handleChange}
                             onPhotosChange={setPhotos}
                             onRemovePhoto={(index) =>
@@ -119,9 +142,14 @@ export default function Create({
                                     current.filter((_, i) => i !== index),
                                 )
                             }
-                            onRemoveExistingPhoto={() => {}}
+                            onRemoveExistingPhoto={(id) =>
+                                setRemovedPhotoIds((current) => [
+                                    ...current,
+                                    id,
+                                ])
+                            }
                             onSubmit={handleSubmit}
-                            submitLabel="Publish listing"
+                            submitLabel="Save changes"
                         />
                     </div>
                 </main>

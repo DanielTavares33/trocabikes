@@ -2,8 +2,8 @@ import { router } from '@inertiajs/react';
 import type { SubmitEvent } from 'react';
 import { useState } from 'react';
 
-import { LISTING_MAX_YEAR, LISTING_MIN_YEAR } from '@/lib/listing';
-import { browse } from '@/routes';
+import { BIKE_MAX_YEAR, BIKE_MIN_YEAR } from '@/lib/bike';
+import { index as bikesIndex } from '@/routes/bikes';
 
 interface FilterOption {
     id: number;
@@ -20,7 +20,7 @@ interface PriceRange {
     value: string;
 }
 
-export interface BrowseFiltersState {
+export interface BikeFiltersState {
     bike_brand_id?: string;
     bike_category_id?: string;
     price?: string;
@@ -31,8 +31,8 @@ export interface BrowseFiltersState {
     sort?: string;
 }
 
-interface BrowseFiltersProps {
-    filters: BrowseFiltersState;
+interface BikeFiltersProps {
+    filters: BikeFiltersState;
     filterOptions: {
         brands: FilterOption[];
         categories: FilterOption[];
@@ -41,11 +41,11 @@ interface BrowseFiltersProps {
     };
 }
 
-export default function BrowseFilters({
+export default function BikeFilters({
     filters,
     filterOptions,
-}: Readonly<BrowseFiltersProps>) {
-    const [localFilters, setLocalFilters] = useState<BrowseFiltersState>({
+}: Readonly<BikeFiltersProps>) {
+    const [localFilters, setLocalFilters] = useState<BikeFiltersState>({
         bike_brand_id: filters.bike_brand_id ?? '',
         bike_category_id: filters.bike_category_id ?? '',
         price: filters.price ?? '',
@@ -93,7 +93,7 @@ export default function BrowseFilters({
         }
 
         router.get(
-            browse.url({ query: params }),
+            bikesIndex.url({ query: params }),
             {},
             {
                 preserveState: true,
@@ -114,7 +114,7 @@ export default function BrowseFilters({
         });
 
         router.get(
-            browse.url({
+            bikesIndex.url({
                 query: filters.sort ? { sort: filters.sort } : {},
             }),
             {},
@@ -273,8 +273,8 @@ export default function BrowseFilters({
                         <input
                             type="number"
                             name="year_from"
-                            min={String(LISTING_MIN_YEAR)}
-                            max={String(LISTING_MAX_YEAR)}
+                            min={String(BIKE_MIN_YEAR)}
+                            max={String(BIKE_MAX_YEAR)}
                             placeholder="From"
                             value={localFilters.year_from}
                             onChange={(event) =>
@@ -289,8 +289,8 @@ export default function BrowseFilters({
                         <input
                             type="number"
                             name="year_to"
-                            min={String(LISTING_MIN_YEAR)}
-                            max={String(LISTING_MAX_YEAR)}
+                            min={String(BIKE_MIN_YEAR)}
+                            max={String(BIKE_MAX_YEAR)}
                             placeholder="To"
                             value={localFilters.year_to}
                             onChange={(event) =>

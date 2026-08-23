@@ -1,3 +1,7 @@
+import { Link } from '@inertiajs/react';
+
+import { create, index as bikesIndex } from '@/routes/bikes';
+
 export default function Footer() {
     return (
         <footer className="border-t border-border bg-bg px-6 py-12 lg:px-12">
@@ -18,20 +22,20 @@ export default function Footer() {
                         </h4>
                         <ul className="space-y-2">
                             <li>
-                                <a
-                                    href="#"
+                                <Link
+                                    href={bikesIndex.url()}
                                     className="text-sm text-text-muted transition-colors hover:text-text"
                                 >
                                     Browse bikes
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a
-                                    href="#"
+                                <Link
+                                    href={create.url()}
                                     className="text-sm text-text-muted transition-colors hover:text-text"
                                 >
-                                    Post a listing
-                                </a>
+                                    Sell your bike
+                                </Link>
                             </li>
                             <li>
                                 <a

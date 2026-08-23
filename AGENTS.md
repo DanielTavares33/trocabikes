@@ -29,7 +29,7 @@ Laravel 13 / Inertia 3 / React 19 / Tailwind CSS 4 / Pest 4. Dev uses MySQL (Doc
 
 ## Domain
 
-Models with factories: `User` (SoftDeletes), `BikeBrand`, `BikeCategory`, `Listing` (belongs to user/brand/category). Enums: `FrameMaterial`, `ListingCondition`, `ListingStatus`. Observers: `BikeBrandObserver`, `BikeCategoryObserver` (auto-slug generation).
+Models with factories: `User` (SoftDeletes), `BikeBrand`, `BikeCategory`, `Bike` (belongs to user/brand/category). Enums: `FrameMaterial`, `BikeCondition`, `BikeStatus`. Observers: `BikeBrandObserver`, `BikeCategoryObserver`, `BikeObserver` (auto-slug generation).
 
 ## Style
 

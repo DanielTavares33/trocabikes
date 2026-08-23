@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
+use App\Models\Bike;
 use App\Models\BikeBrand;
 use App\Models\BikeCategory;
-use App\Models\Listing;
-use App\Models\ListingImage;
+use App\Models\BikeImage;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 
-class ListingSeeder extends Seeder
+class BikeSeeder extends Seeder
 {
     private const SAMPLE_IMAGE = 'seeders/assets/listing-sample.jpg';
 
@@ -38,7 +38,7 @@ class ListingSeeder extends Seeder
 
         $sampleImage = File::get($sampleImagePath);
 
-        $listings = Listing::factory()
+        $bikes = Bike::factory()
             ->count(30)
             ->recycle($user)
             ->state(fn () => [
@@ -47,13 +47,13 @@ class ListingSeeder extends Seeder
             ])
             ->create();
 
-        foreach ($listings as $listing) {
-            $path = "listings/{$listing->id}/seed.jpg";
+        foreach ($bikes as $bike) {
+            $path = "bikes/{$bike->id}/seed.jpg";
 
             Storage::disk('public')->put($path, $sampleImage);
 
-            ListingImage::query()->create([
-                'listing_id' => $listing->id,
+            BikeImage::query()->create([
+                'bike_id' => $bike->id,
                 'path' => $path,
                 'sort_order' => 0,
                 'is_primary' => true,

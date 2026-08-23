@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\BikeCondition;
+use App\Enums\BikeStatus;
 use App\Enums\FrameMaterial;
-use App\Enums\ListingCondition;
-use App\Enums\ListingStatus;
 use Carbon\CarbonImmutable;
-use Database\Factories\ListingFactory;
+use Database\Factories\BikeFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,17 +16,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Request;
 
 /**
- * @property ListingCondition $condition
+ * @property BikeCondition $condition
  * @property FrameMaterial $frame_material
- * @property ListingStatus $status
+ * @property BikeStatus $status
  * @property-read BikeBrand|null $bikeBrand
  * @property-read BikeCategory|null $bikeCategory
  * @property-read User|null $user
  *
- * @method static \Database\Factories\ListingFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing query()
+ * @method static \Database\Factories\BikeFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bike newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bike newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bike query()
  *
  * @property int $id
  * @property int $user_id
@@ -49,9 +49,9 @@ use Illuminate\Http\Request;
  *
  * @mixin \Eloquent
  */
-class Listing extends Model
+class Bike extends Model
 {
-    /** @use HasFactory<ListingFactory> */
+    /** @use HasFactory<BikeFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -79,9 +79,9 @@ class Listing extends Model
     {
         return [
             'price' => 'decimal:2',
-            'condition' => ListingCondition::class,
+            'condition' => BikeCondition::class,
             'frame_material' => FrameMaterial::class,
-            'status' => ListingStatus::class,
+            'status' => BikeStatus::class,
             'phone_visible' => 'boolean',
             'email_visible' => 'boolean',
             'views' => 'integer',
@@ -105,26 +105,26 @@ class Listing extends Model
 
     public function images(): HasMany
     {
-        return $this->hasMany(ListingImage::class)->orderBy('sort_order');
+        return $this->hasMany(BikeImage::class)->orderBy('sort_order');
     }
 
     public function primaryImage(): HasOne
     {
-        return $this->hasOne(ListingImage::class)
+        return $this->hasOne(BikeImage::class)
             ->where('is_primary', true)
             ->orderBy('sort_order');
     }
 
     /**
-     * @param  Builder<Listing>  $query
+     * @param  Builder<Bike>  $query
      */
     public function scopeActive(Builder $query): void
     {
-        $query->where('status', ListingStatus::Active);
+        $query->where('status', BikeStatus::Active);
     }
 
     /**
-     * @param  Builder<Listing>  $query
+     * @param  Builder<Bike>  $query
      */
     public function scopeFiltered(Builder $query, Request $request): void
     {
@@ -177,7 +177,7 @@ class Listing extends Model
     }
 
     /**
-     * @param  Builder<Listing>  $query
+     * @param  Builder<Bike>  $query
      */
     public function scopeSorted(Builder $query, ?string $sort = 'newest'): void
     {

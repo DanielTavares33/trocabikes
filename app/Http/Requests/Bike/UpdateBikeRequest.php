@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Http\Requests\Listing;
+namespace App\Http\Requests\Bike;
 
+use App\Enums\BikeCondition;
 use App\Enums\FrameMaterial;
-use App\Enums\ListingCondition;
-use App\Models\Listing;
+use App\Models\Bike;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
-class UpdateListingRequest extends FormRequest
+class UpdateBikeRequest extends FormRequest
 {
     public const MAX_PHOTOS = 10;
 
     public function authorize(): bool
     {
-        return $this->user()?->can('update', $this->route('listing')) ?? false;
+        return $this->user()?->can('update', $this->route('bike')) ?? false;
     }
 
     public function rules(): array
@@ -26,7 +26,7 @@ class UpdateListingRequest extends FormRequest
             'bike_category_id' => ['required', 'integer', 'exists:bike_categories,id'],
             'description' => ['required', 'string', 'max:5000'],
             'price' => ['required', 'numeric', 'min:0', 'max:999999.99'],
-            'condition' => ['required', Rule::enum(ListingCondition::class)],
+            'condition' => ['required', Rule::enum(BikeCondition::class)],
             'year' => ['required', 'integer', 'min:1990', 'max:'.(date('Y') + 1)],
             'size' => ['required', 'string', 'max:50'],
             'frame_material' => ['required', Rule::enum(FrameMaterial::class)],
@@ -38,16 +38,16 @@ class UpdateListingRequest extends FormRequest
             'photos' => ['sometimes', 'array'],
             'photos.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'removed_photo_ids' => ['sometimes', 'array'],
-            'removed_photo_ids.*' => ['integer', 'exists:listing_images,id'],
+            'removed_photo_ids.*' => ['integer', 'exists:bike_images,id'],
         ];
     }
 
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
-            $listing = $this->route('listing');
+            $bike = $this->route('bike');
 
-            if (! $listing instanceof Listing) {
+            if (! $bike instanceof Bike) {
                 return;
             }
 
@@ -56,17 +56,17 @@ class UpdateListingRequest extends FormRequest
             $newPhotoCount = count($this->file('photos', []));
 
             if ($removedIds !== []) {
-                $validRemovalCount = $listing->images()->whereIn('id', $removedIds)->count();
+                $validRemovalCount = $bike->images()->whereIn('id', $removedIds)->count();
 
                 if ($validRemovalCount !== count($removedIds)) {
                     $validator->errors()->add(
                         'removed_photo_ids',
-                        'One or more photos do not belong to this listing.',
+                        'One or more photos do not belong to this bike.',
                     );
                 }
             }
 
-            $remainingCount = $listing->images()
+            $remainingCount = $bike->images()
                 ->whereNotIn('id', $removedIds)
                 ->count();
             $totalAfterUpdate = $remainingCount + $newPhotoCount;
@@ -78,7 +78,7 @@ class UpdateListingRequest extends FormRequest
             if ($totalAfterUpdate > self::MAX_PHOTOS) {
                 $validator->errors()->add(
                     'photos',
-                    'A listing may have at most '.self::MAX_PHOTOS.' photos.',
+                    'A bike may have at most '.self::MAX_PHOTOS.' photos.',
                 );
             }
         });

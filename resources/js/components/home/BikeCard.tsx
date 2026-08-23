@@ -2,10 +2,10 @@ import { Link } from '@inertiajs/react';
 import { Heart, MapPin, Trash } from 'lucide-react';
 
 import { useModal } from '@/hooks/useModal';
-import { show } from '@/routes/listings';
+import { show } from '@/routes/bikes';
 import Modal from '../ui/Modal';
 
-export interface ListingCardData {
+export interface BikeCardData {
     id: number;
     title: string;
     slug: string;
@@ -26,30 +26,30 @@ type ConditionColor = {
 
 const conditionColors: ConditionColor = {
     nova: 'bg-accent-muted text-accent',
-    excellente: 'bg-orange-100 text-orange-700',
+    excelente: 'bg-orange-100 text-orange-700',
     boa: 'bg-stone-100 text-stone-700',
     regular: 'bg-amber-100 text-amber-700',
     usada: 'bg-stone-100 text-stone-700',
 };
 
-export default function ListingCard({
-    listing,
+export default function BikeCard({
+    bike,
     saved = false,
 }: {
-    readonly listing: ListingCardData;
+    readonly bike: BikeCardData;
     readonly saved?: boolean;
 }) {
     const modal = useModal();
 
     return (
         <Link
-            href={show.url(listing.slug)}
+            href={show.url(bike.slug)}
             className="group relative flex flex-col overflow-hidden rounded-sm border border-border bg-surface transition-all hover:border-border-strong hover:shadow-lg"
         >
             <div className="aspect-[4/3] overflow-hidden bg-bg-subtle">
                 <img
-                    src={listing.imageUrl}
-                    alt={listing.imageAlt}
+                    src={bike.imageUrl}
+                    alt={bike.imageAlt}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
             </div>
@@ -58,32 +58,32 @@ export default function ListingCard({
                 <div className="mb-1 flex items-start justify-between gap-2">
                     <div className="min-w-0">
                         <p className="truncate text-xs font-medium tracking-wide text-text-subtle uppercase">
-                            {listing.brand}
+                            {bike.brand}
                         </p>
                         <h3 className="mt-0.5 line-clamp-2 text-base font-semibold text-text">
-                            {listing.title}
+                            {bike.title}
                         </h3>
                     </div>
                     <p className="text-lg font-semibold whitespace-nowrap text-text">
-                        €{listing.price.toLocaleString('pt-PT')}
+                        €{bike.price.toLocaleString('pt-PT')}
                     </p>
                 </div>
 
                 <div className="mt-auto flex flex-wrap items-center gap-2">
                     <span
                         className={`rounded-sm px-2 py-0.5 text-xs font-medium capitalize ${
-                            conditionColors[listing.condition.toLowerCase()] ||
+                            conditionColors[bike.condition.toLowerCase()] ||
                             'bg-bg-subtle text-text-muted'
                         }`}
                     >
-                        {listing.condition}
+                        {bike.condition}
                     </span>
                     <span className="text-xs text-text-muted">
-                        {listing.year}
+                        {bike.year}
                     </span>
-                    {listing.kilometers && (
+                    {bike.kilometers && (
                         <span className="text-xs text-text-muted">
-                            {listing.kilometers.toLocaleString('pt-PT')} km
+                            {bike.kilometers.toLocaleString('pt-PT')} km
                         </span>
                     )}
                 </div>
@@ -91,7 +91,7 @@ export default function ListingCard({
                 <div className="mt-3 flex items-center justify-between">
                     <div className="flex items-center gap-1 text-xs text-text-muted">
                         <MapPin width={12} height={12} />
-                        <span>{listing.location}</span>
+                        <span>{bike.location}</span>
                     </div>
                     <button
                         onClick={(e) => {

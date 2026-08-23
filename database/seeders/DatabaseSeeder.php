@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             BikeBrandSeeder::class,
             BikeCategorySeeder::class,
-            ListingSeeder::class,
+            BikeSeeder::class,
         ]);
     }
 }

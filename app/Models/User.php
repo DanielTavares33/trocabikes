@@ -100,8 +100,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         ));
     }
 
-    public function listings(): HasMany
+    public function bikes(): HasMany
     {
-        return $this->hasMany(Listing::class);
+        return $this->hasMany(Bike::class);
     }
 }

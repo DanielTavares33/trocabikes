@@ -1,9 +1,9 @@
 <?php
 
-use App\Enums\ListingStatus;
+use App\Enums\BikeStatus;
+use App\Models\Bike;
 use App\Models\BikeBrand;
 use App\Models\BikeCategory;
-use App\Models\Listing;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -12,28 +12,28 @@ use Inertia\Testing\AssertableInertia as Assert;
 /**
  * @return array<string, mixed>
  */
-function validListingUpdatePayload(Listing $listing, array $overrides = []): array
+function validBikeUpdatePayload(Bike $bike, array $overrides = []): array
 {
     return array_merge([
-        'title' => $listing->title,
-        'bike_brand_id' => $listing->bike_brand_id,
-        'bike_category_id' => $listing->bike_category_id,
-        'description' => $listing->description,
-        'price' => $listing->price,
-        'condition' => $listing->condition->value,
-        'year' => $listing->year,
-        'size' => $listing->size,
-        'frame_material' => $listing->frame_material->value,
-        'district' => $listing->district,
-        'city' => $listing->city,
+        'title' => $bike->title,
+        'bike_brand_id' => $bike->bike_brand_id,
+        'bike_category_id' => $bike->bike_category_id,
+        'description' => $bike->description,
+        'price' => $bike->price,
+        'condition' => $bike->condition->value,
+        'year' => $bike->year,
+        'size' => $bike->size,
+        'frame_material' => $bike->frame_material->value,
+        'district' => $bike->district,
+        'city' => $bike->city,
     ], $overrides);
 }
 
-function seedListingPhoto(Listing $listing): void
+function seedBikePhoto(Bike $bike): void
 {
-    $path = UploadedFile::fake()->image('bike.jpg')->store("listings/{$listing->id}", 'public');
+    $path = UploadedFile::fake()->image('bike.jpg')->store("bikes/{$bike->id}", 'public');
 
-    $listing->images()->create([
+    $bike->images()->create([
         'path' => $path,
         'sort_order' => 0,
         'is_primary' => true,
@@ -41,16 +41,16 @@ function seedListingPhoto(Listing $listing): void
 }
 
 test('browse returns paginated active listings', function () {
-    $active = Listing::factory()->create(['status' => ListingStatus::Active]);
-    Listing::factory()->sold()->create();
+    $active = Bike::factory()->create(['status' => BikeStatus::Active]);
+    Bike::factory()->sold()->create();
 
-    $response = $this->get(route('browse'));
+    $response = $this->get(route('bikes.index'));
 
     $response->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('browse/Browse')
-            ->has('listings.data', 1)
-            ->where('listings.data.0.id', $active->id)
+            ->component('bikes/Index')
+            ->has('bikes.data', 1)
+            ->where('bikes.data.0.id', $active->id)
             ->has('filterOptions.brands')
             ->has('filterOptions.categories')
         );
@@ -61,7 +61,7 @@ test('browse filters by brand category price condition and location', function (
     $otherBrand = BikeBrand::factory()->create();
     $category = BikeCategory::factory()->create();
 
-    $match = Listing::factory()->create([
+    $match = Bike::factory()->create([
         'bike_brand_id' => $brand->id,
         'bike_category_id' => $category->id,
         'price' => 750,
@@ -71,7 +71,7 @@ test('browse filters by brand category price condition and location', function (
         'year' => 2022,
     ]);
 
-    Listing::factory()->create([
+    Bike::factory()->create([
         'bike_brand_id' => $otherBrand->id,
         'bike_category_id' => $category->id,
         'price' => 3000,
@@ -81,7 +81,7 @@ test('browse filters by brand category price condition and location', function (
         'year' => 2018,
     ]);
 
-    $response = $this->get(route('browse', [
+    $response = $this->get(route('bikes.index', [
         'bike_brand_id' => $brand->id,
         'bike_category_id' => $category->id,
         'price' => '500-1000',
@@ -93,44 +93,44 @@ test('browse filters by brand category price condition and location', function (
 
     $response->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->has('listings.data', 1)
-            ->where('listings.data.0.id', $match->id)
+            ->has('bikes.data', 1)
+            ->where('bikes.data.0.id', $match->id)
         );
 });
 
 test('browse respects sort and pagination', function () {
-    Listing::factory()->create(['price' => 100, 'created_at' => now()->subDay()]);
-    Listing::factory()->create(['price' => 900, 'created_at' => now()]);
+    Bike::factory()->create(['price' => 100, 'created_at' => now()->subDay()]);
+    Bike::factory()->create(['price' => 900, 'created_at' => now()]);
 
-    $this->get(route('browse', ['sort' => 'price_desc']))
+    $this->get(route('bikes.index', ['sort' => 'price_desc']))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->where('listings.data.0.price', 900)
+            ->where('bikes.data.0.price', 900)
         );
 
-    Listing::factory()->count(10)->create();
+    Bike::factory()->count(10)->create();
 
-    $this->get(route('browse'))
+    $this->get(route('bikes.index'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->where('listings.per_page', 10)
-            ->where('listings.current_page', 1)
+            ->where('bikes.per_page', 10)
+            ->where('bikes.current_page', 1)
         );
 });
 
 test('show displays listing and increments views', function () {
-    $listing = Listing::factory()->create(['views' => 5]);
+    $bike = Bike::factory()->create(['views' => 5]);
 
-    $response = $this->get(route('listings.show', $listing));
+    $response = $this->get(route('bikes.show', $bike));
 
     $response->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('listing/ListingDetail')
-            ->where('listing.id', $listing->id)
-            ->where('listing.views', 6)
+            ->component('bikes/Show')
+            ->where('bike.id', $bike->id)
+            ->where('bike.views', 6)
         );
 
-    expect($listing->fresh()->views)->toBe(6);
+    expect($bike->fresh()->views)->toBe(6);
 });
 
 test('verified user can store listing with photos', function () {
@@ -140,8 +140,8 @@ test('verified user can store listing with photos', function () {
     $brand = BikeBrand::factory()->create();
     $category = BikeCategory::factory()->create();
 
-    $response = $this->actingAs($user)->post(route('listings.store'), [
-        'title' => 'Test Bike Listing',
+    $response = $this->actingAs($user)->post(route('bikes.store'), [
+        'title' => 'Test Bike',
         'bike_brand_id' => $brand->id,
         'bike_category_id' => $category->id,
         'description' => 'A great bike for sale.',
@@ -159,22 +159,23 @@ test('verified user can store listing with photos', function () {
         ],
     ]);
 
-    $listing = Listing::query()->where('title', 'Test Bike Listing')->first();
+    $bike = Bike::query()->where('title', 'Test Bike')->first();
 
-    $response->assertRedirect(route('listings.show', $listing));
+    $response->assertRedirect(route('bikes.show', $bike));
+    $response->assertInertiaFlash('success', 'Your bike is live.');
 
-    expect($listing)->not->toBeNull()
-        ->and($listing->user_id)->toBe($user->id)
-        ->and($listing->images)->toHaveCount(1);
+    expect($bike)->not->toBeNull()
+        ->and($bike->user_id)->toBe($user->id)
+        ->and($bike->images)->toHaveCount(1);
 
-    Storage::disk('public')->assertExists($listing->images->first()->path);
+    Storage::disk('public')->assertExists($bike->images->first()->path);
 });
 
 test('store validates required fields and photo rules', function () {
     $user = User::factory()->create(['email_verified_at' => now()]);
 
     $this->actingAs($user)
-        ->post(route('listings.store'), [])
+        ->post(route('bikes.store'), [])
         ->assertSessionHasErrors([
             'title',
             'bike_brand_id',
@@ -196,70 +197,74 @@ test('owner can update and delete listing but others cannot', function () {
 
     $owner = User::factory()->create(['email_verified_at' => now()]);
     $other = User::factory()->create(['email_verified_at' => now()]);
-    $listing = Listing::factory()->for($owner)->create(['title' => 'Original Title']);
-    seedListingPhoto($listing);
+    $bike = Bike::factory()->for($owner)->create(['title' => 'Original Title']);
+    seedBikePhoto($bike);
 
     $this->actingAs($other)
-        ->put(route('listings.update', $listing), validListingUpdatePayload($listing, [
+        ->put(route('bikes.update', $bike), validBikeUpdatePayload($bike, [
             'title' => 'Hacked Title',
         ]))
         ->assertForbidden();
 
-    $this->actingAs($owner)
-        ->put(route('listings.update', $listing), validListingUpdatePayload($listing, [
+    $updateResponse = $this->actingAs($owner)
+        ->put(route('bikes.update', $bike), validBikeUpdatePayload($bike, [
             'title' => 'Updated Title',
-        ]))
-        ->assertRedirect(route('listings.show', $listing->fresh()));
+        ]));
 
-    expect($listing->fresh()->title)->toBe('Updated Title');
+    $updateResponse->assertRedirect(route('bikes.show', $bike->fresh()));
+    $updateResponse->assertInertiaFlash('success', 'Bike updated successfully.');
 
-    $path = UploadedFile::fake()->image('bike.jpg')->store("listings/{$listing->id}", 'public');
-    $image = $listing->images()->create([
+    expect($bike->fresh()->title)->toBe('Updated Title');
+
+    $path = UploadedFile::fake()->image('bike.jpg')->store("bikes/{$bike->id}", 'public');
+    $image = $bike->images()->create([
         'path' => $path,
         'sort_order' => 0,
         'is_primary' => true,
     ]);
 
-    $this->actingAs($owner)
-        ->delete(route('listings.destroy', $listing->fresh()))
-        ->assertRedirect(route('my-bikes'));
+    $destroyResponse = $this->actingAs($owner)
+        ->delete(route('bikes.destroy', $bike->fresh()));
+
+    $destroyResponse->assertRedirect(route('my-bikes'));
+    $destroyResponse->assertInertiaFlash('success', 'Bike removed successfully.');
 
     Storage::disk('public')->assertMissing($path);
-    expect(Listing::query()->find($listing->id))->toBeNull()
-        ->and($listing->images()->find($image->id))->toBeNull();
+    expect(Bike::query()->find($bike->id))->toBeNull()
+        ->and($bike->images()->find($image->id))->toBeNull();
 });
 
 test('guests cannot view sold or archived listings', function () {
-    $sold = Listing::factory()->sold()->create();
-    $archived = Listing::factory()->archived()->create();
+    $sold = Bike::factory()->sold()->create();
+    $archived = Bike::factory()->archived()->create();
 
-    $this->get(route('listings.show', $sold))->assertForbidden();
-    $this->get(route('listings.show', $archived))->assertForbidden();
+    $this->get(route('bikes.show', $sold))->assertForbidden();
+    $this->get(route('bikes.show', $archived))->assertForbidden();
 });
 
 test('owner can view their sold listing', function () {
     $user = User::factory()->create(['email_verified_at' => now()]);
-    $listing = Listing::factory()->for($user)->sold()->create();
+    $bike = Bike::factory()->for($user)->sold()->create();
 
     $this->actingAs($user)
-        ->get(route('listings.show', $listing))
+        ->get(route('bikes.show', $bike))
         ->assertOk();
 });
 
 test('show increments views only once per session', function () {
-    $listing = Listing::factory()->create(['views' => 5]);
+    $bike = Bike::factory()->create(['views' => 5]);
 
-    $this->get(route('listings.show', $listing))->assertOk();
-    $this->get(route('listings.show', $listing))->assertOk();
+    $this->get(route('bikes.show', $bike))->assertOk();
+    $this->get(route('bikes.show', $bike))->assertOk();
 
-    expect($listing->fresh()->views)->toBe(6);
+    expect($bike->fresh()->views)->toBe(6);
 });
 
-test('unverified user cannot create a listing', function () {
+test('unverified user cannot create a bike', function () {
     $user = User::factory()->unverified()->create();
 
     $this->actingAs($user)
-        ->get(route('listings.create'))
+        ->get(route('bikes.create'))
         ->assertRedirect(route('verification.notice'));
 });
 
@@ -267,32 +272,32 @@ test('update rejects removing all photos', function () {
     Storage::fake('public');
 
     $owner = User::factory()->create(['email_verified_at' => now()]);
-    $listing = Listing::factory()->for($owner)->create();
-    $path = UploadedFile::fake()->image('bike.jpg')->store("listings/{$listing->id}", 'public');
-    $image = $listing->images()->create([
+    $bike = Bike::factory()->for($owner)->create();
+    $path = UploadedFile::fake()->image('bike.jpg')->store("bikes/{$bike->id}", 'public');
+    $image = $bike->images()->create([
         'path' => $path,
         'sort_order' => 0,
         'is_primary' => true,
     ]);
 
     $this->actingAs($owner)
-        ->put(route('listings.update', $listing), validListingUpdatePayload($listing, [
+        ->put(route('bikes.update', $bike), validBikeUpdatePayload($bike, [
             'removed_photo_ids' => [$image->id],
         ]))
         ->assertSessionHasErrors('photos');
 
-    expect($listing->fresh()->images)->toHaveCount(1);
+    expect($bike->fresh()->images)->toHaveCount(1);
 });
 
 test('update rejects more than ten photos total', function () {
     Storage::fake('public');
 
     $owner = User::factory()->create(['email_verified_at' => now()]);
-    $listing = Listing::factory()->for($owner)->create();
+    $bike = Bike::factory()->for($owner)->create();
 
     foreach (range(1, 8) as $index) {
-        $path = UploadedFile::fake()->image("bike-{$index}.jpg")->store("listings/{$listing->id}", 'public');
-        $listing->images()->create([
+        $path = UploadedFile::fake()->image("bike-{$index}.jpg")->store("bikes/{$bike->id}", 'public');
+        $bike->images()->create([
             'path' => $path,
             'sort_order' => $index - 1,
             'is_primary' => $index === 1,
@@ -300,7 +305,7 @@ test('update rejects more than ten photos total', function () {
     }
 
     $this->actingAs($owner)
-        ->put(route('listings.update', $listing), validListingUpdatePayload($listing, [
+        ->put(route('bikes.update', $bike), validBikeUpdatePayload($bike, [
             'photos' => [
                 UploadedFile::fake()->image('new-1.jpg'),
                 UploadedFile::fake()->image('new-2.jpg'),
@@ -309,62 +314,62 @@ test('update rejects more than ten photos total', function () {
         ]))
         ->assertSessionHasErrors('photos');
 
-    expect($listing->fresh()->images)->toHaveCount(8);
+    expect($bike->fresh()->images)->toHaveCount(8);
 });
 
 test('owner can update listing photos', function () {
     Storage::fake('public');
 
     $owner = User::factory()->create(['email_verified_at' => now()]);
-    $listing = Listing::factory()->for($owner)->create();
+    $bike = Bike::factory()->for($owner)->create();
 
-    $keepPath = UploadedFile::fake()->image('keep.jpg')->store("listings/{$listing->id}", 'public');
-    $removePath = UploadedFile::fake()->image('remove.jpg')->store("listings/{$listing->id}", 'public');
+    $keepPath = UploadedFile::fake()->image('keep.jpg')->store("bikes/{$bike->id}", 'public');
+    $removePath = UploadedFile::fake()->image('remove.jpg')->store("bikes/{$bike->id}", 'public');
 
-    $keepImage = $listing->images()->create([
+    $keepImage = $bike->images()->create([
         'path' => $keepPath,
         'sort_order' => 0,
         'is_primary' => true,
     ]);
-    $removeImage = $listing->images()->create([
+    $removeImage = $bike->images()->create([
         'path' => $removePath,
         'sort_order' => 1,
         'is_primary' => false,
     ]);
 
     $this->actingAs($owner)
-        ->put(route('listings.update', $listing), validListingUpdatePayload($listing, [
+        ->put(route('bikes.update', $bike), validBikeUpdatePayload($bike, [
             'removed_photo_ids' => [$removeImage->id],
             'photos' => [
                 UploadedFile::fake()->image('added.jpg'),
             ],
         ]))
-        ->assertRedirect(route('listings.show', $listing));
+        ->assertRedirect(route('bikes.show', $bike));
 
-    $listing->refresh();
+    $bike->refresh();
 
-    expect($listing->images)->toHaveCount(2)
-        ->and($listing->images->pluck('id')->all())->toContain($keepImage->id)
-        ->and($listing->images->pluck('id')->all())->not->toContain($removeImage->id);
+    expect($bike->images)->toHaveCount(2)
+        ->and($bike->images->pluck('id')->all())->toContain($keepImage->id)
+        ->and($bike->images->pluck('id')->all())->not->toContain($removeImage->id);
 
     Storage::disk('public')->assertMissing($removePath);
-    Storage::disk('public')->assertExists($listing->images->last()->path);
+    Storage::disk('public')->assertExists($bike->images->last()->path);
 });
 
 test('updating title regenerates slug', function () {
     Storage::fake('public');
 
     $owner = User::factory()->create(['email_verified_at' => now()]);
-    $listing = Listing::factory()->for($owner)->create(['title' => 'Original Title']);
-    seedListingPhoto($listing);
+    $bike = Bike::factory()->for($owner)->create(['title' => 'Original Title']);
+    seedBikePhoto($bike);
 
     $this->actingAs($owner)
-        ->put(route('listings.update', $listing), validListingUpdatePayload($listing, [
+        ->put(route('bikes.update', $bike), validBikeUpdatePayload($bike, [
             'title' => 'Brand New Title',
         ]))
-        ->assertRedirect(route('listings.show', ['listing' => 'brand-new-title']));
+        ->assertRedirect(route('bikes.show', ['bike' => 'brand-new-title']));
 
-    expect($listing->fresh())
+    expect($bike->fresh())
         ->title->toBe('Brand New Title')
         ->slug->toBe('brand-new-title');
 });
@@ -372,13 +377,13 @@ test('updating title regenerates slug', function () {
 test('edit includes inactive brand assigned to listing', function () {
     $owner = User::factory()->create(['email_verified_at' => now()]);
     $brand = BikeBrand::factory()->inactive()->create(['name' => 'Legacy Brand']);
-    $listing = Listing::factory()->for($owner)->create(['bike_brand_id' => $brand->id]);
+    $bike = Bike::factory()->for($owner)->create(['bike_brand_id' => $brand->id]);
 
     $this->actingAs($owner)
-        ->get(route('listings.edit', $listing))
+        ->get(route('bikes.edit', $bike))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('listings/Edit')
+            ->component('bikes/Edit')
             ->where('brands', fn ($brands) => collect($brands)->contains(
                 fn (array $item) => $item['id'] === $brand->id && $item['name'] === 'Legacy Brand',
             ))

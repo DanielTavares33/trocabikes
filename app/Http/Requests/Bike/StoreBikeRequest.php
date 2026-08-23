@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Requests\Listing;
+namespace App\Http\Requests\Bike;
 
+use App\Enums\BikeCondition;
 use App\Enums\FrameMaterial;
-use App\Enums\ListingCondition;
-use App\Models\Listing;
+use App\Models\Bike;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreListingRequest extends FormRequest
+class StoreBikeRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('create', Listing::class) ?? false;
+        return $this->user()?->can('create', Bike::class) ?? false;
     }
 
     public function rules(): array
@@ -23,7 +23,7 @@ class StoreListingRequest extends FormRequest
             'bike_category_id' => ['required', 'integer', 'exists:bike_categories,id'],
             'description' => ['required', 'string', 'max:5000'],
             'price' => ['required', 'numeric', 'min:0', 'max:999999.99'],
-            'condition' => ['required', Rule::enum(ListingCondition::class)],
+            'condition' => ['required', Rule::enum(BikeCondition::class)],
             'year' => ['required', 'integer', 'min:1990', 'max:'.(date('Y') + 1)],
             'size' => ['required', 'string', 'max:50'],
             'frame_material' => ['required', Rule::enum(FrameMaterial::class)],

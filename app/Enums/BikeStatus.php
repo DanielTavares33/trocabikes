@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ListingStatus: string
+enum BikeStatus: string
 {
     case Active = 'active';
     case Sold = 'sold';

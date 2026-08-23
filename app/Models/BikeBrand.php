@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property-read Collection<int, Listing> $listings
- * @property-read int|null $listings_count
+ * @property-read Collection<int, Bike> $bikes
+ * @property-read int|null $bikes_count
  *
  * @method static \Database\Factories\BikeBrandFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BikeBrand newModelQuery()
@@ -54,8 +54,8 @@ class BikeBrand extends Model
         ];
     }
 
-    public function listings(): HasMany
+    public function bikes(): HasMany
     {
-        return $this->hasMany(Listing::class);
+        return $this->hasMany(Bike::class);
     }
 }

@@ -10,14 +10,14 @@ import {
 } from 'lucide-react';
 import React from 'react';
 
-import { create, edit } from '@/routes/listings';
+import { create, edit } from '@/routes/bikes';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
 
 type BikeStatus = 'active' | 'sold' | 'archived';
 
-interface MyBikeListing {
+interface MyBike {
     id: number;
     title: string;
     slug: string;
@@ -33,7 +33,7 @@ interface MyBikeListing {
     imageAlt: string;
 }
 
-const MY_BIKES: MyBikeListing[] = [
+const MY_BIKES: MyBike[] = [
     {
         id: 1,
         title: 'Canyon Spectral CF 7 — Full Suspended MTB',
@@ -207,7 +207,7 @@ export default function MyBikes() {
                                     height={18}
                                     strokeWidth={2.5}
                                 />
-                                Create New Listing
+                                Sell a bike
                             </Link>
                         </div>
 
@@ -242,7 +242,7 @@ export default function MyBikes() {
                         ) : (
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(340px,1fr))]">
                                 {filteredBikes.map((bike) => (
-                                    <BikeCard key={bike.id} bike={bike} />
+                                    <MyBikeCard key={bike.id} bike={bike} />
                                 ))}
                             </div>
                         )}
@@ -255,7 +255,7 @@ export default function MyBikes() {
     );
 }
 
-function BikeCard({ bike }: { bike: MyBikeListing }) {
+function MyBikeCard({ bike }: { bike: MyBike }) {
     const status = statusConfig[bike.status];
 
     return (
@@ -374,7 +374,7 @@ function EmptyState({ hasFilter }: { hasFilter: boolean }) {
             <p className="mb-4 text-sm text-text-muted">
                 {hasFilter
                     ? 'Try selecting a different filter above.'
-                    : 'Start by creating your first listing.'}
+                    : 'Start by selling your first bike.'}
             </p>
             {!hasFilter && (
                 <Link
@@ -382,7 +382,7 @@ function EmptyState({ hasFilter }: { hasFilter: boolean }) {
                     className="inline-flex items-center gap-2 rounded-sm bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
                 >
                     <Plus width={18} height={18} strokeWidth={2.5} />
-                    Create New Listing
+                    Sell a bike
                 </Link>
             )}
         </div>

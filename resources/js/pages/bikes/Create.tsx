@@ -2,67 +2,48 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import type { SubmitEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 
-import { update } from '@/routes/listings';
+import { store } from '@/routes/bikes';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
-import ListingForm from '~/components/listings/ListingForm';
-import type { ListingFormData } from '~/components/listings/ListingForm';
+import BikeForm from '~/components/bikes/BikeForm';
+import type { BikeFormData } from '~/components/bikes/BikeForm';
 
-interface EditProps {
-    listing: {
-        id: number;
-        slug: string;
-        title: string;
-        bike_brand_id: number;
-        bike_category_id: number;
-        description: string;
-        price: number;
-        condition: string;
-        year: number;
-        size: string;
-        frame_material: string;
-        kilometers: string | null;
-        district: string;
-        city: string;
-        phone_visible: boolean;
-        email_visible: boolean;
-        images: { id: number; url: string }[];
-    };
+interface CreateProps {
     brands: { id: number; name: string }[];
     categories: { id: number; name: string }[];
     conditions: { value: string; label: string }[];
     frameMaterials: { value: string; label: string }[];
 }
 
-export default function Edit({
-    listing,
+const emptyForm: BikeFormData = {
+    title: '',
+    bike_brand_id: '',
+    bike_category_id: '',
+    description: '',
+    price: '',
+    condition: '',
+    year: '',
+    size: '',
+    frame_material: '',
+    kilometers: '',
+    district: '',
+    city: '',
+    phone_visible: false,
+    email_visible: false,
+};
+
+export default function Create({
     brands,
     categories,
     conditions,
     frameMaterials,
-}: Readonly<EditProps>) {
+}: Readonly<CreateProps>) {
     const { data, setData, post, processing, errors } = useForm({
-        title: listing.title,
-        bike_brand_id: String(listing.bike_brand_id),
-        bike_category_id: String(listing.bike_category_id),
-        description: listing.description,
-        price: String(listing.price),
-        condition: listing.condition,
-        year: String(listing.year),
-        size: listing.size,
-        frame_material: listing.frame_material,
-        kilometers: listing.kilometers ?? '',
-        district: listing.district,
-        city: listing.city,
-        phone_visible: listing.phone_visible,
-        email_visible: listing.email_visible,
+        ...emptyForm,
         photos: [] as File[],
-        removed_photo_ids: [] as number[],
-        _method: 'put',
     });
     const [photos, setPhotos] = useState<File[]>([]);
-    const [removedPhotoIds, setRemovedPhotoIds] = useState<number[]>([]);
     const photoPreviews = useMemo(
         () => photos.map((file) => URL.createObjectURL(file)),
         [photos],
@@ -73,17 +54,13 @@ export default function Edit({
     }, [photos, setData]);
 
     useEffect(() => {
-        setData('removed_photo_ids', removedPhotoIds);
-    }, [removedPhotoIds, setData]);
-
-    useEffect(() => {
         return () => {
             photoPreviews.forEach((preview) => URL.revokeObjectURL(preview));
         };
     }, [photoPreviews]);
 
     const handleChange = (
-        field: keyof ListingFormData,
+        field: keyof BikeFormData,
         value: string | boolean,
     ) => {
         setData(field, value as never);
@@ -91,12 +68,12 @@ export default function Edit({
 
     const handleSubmit = (event: SubmitEvent) => {
         event.preventDefault();
-        post(update.url(listing.slug), { forceFormData: true });
+        post(store.url(), { forceFormData: true });
     };
 
     return (
         <Layout>
-            <Head title={`Edit ${listing.title} — Trocabikes`} />
+            <Head title="Sell your bike — Trocabikes" />
 
             <div className="flex min-h-screen flex-col bg-bg text-text">
                 <Navbar />
@@ -105,25 +82,26 @@ export default function Edit({
                     <div className="mx-auto max-w-2xl">
                         <nav className="mb-2 text-sm text-text-muted">
                             <Link
-                                href="/my-bikes"
+                                href="/"
                                 className="transition-colors hover:text-text"
                             >
-                                My bikes
+                                Home
                             </Link>
                             <span className="mx-2">/</span>
-                            <span className="text-text">Edit listing</span>
+                            <span className="text-text">Sell your bike</span>
                         </nav>
 
                         <div className="mb-8">
                             <h1 className="text-3xl font-semibold text-text">
-                                Edit listing
+                                Sell your bike
                             </h1>
                             <p className="mt-1 text-text-muted">
-                                Update your listing details
+                                Fill in the details below to list your bike on
+                                the marketplace
                             </p>
                         </div>
 
-                        <ListingForm
+                        <BikeForm
                             data={data}
                             errors={errors}
                             processing={processing}
@@ -133,8 +111,7 @@ export default function Edit({
                             frameMaterials={frameMaterials}
                             photos={photos}
                             photoPreviews={photoPreviews}
-                            existingImages={listing.images}
-                            removedPhotoIds={removedPhotoIds}
+                            removedPhotoIds={[]}
                             onChange={handleChange}
                             onPhotosChange={setPhotos}
                             onRemovePhoto={(index) =>
@@ -142,14 +119,9 @@ export default function Edit({
                                     current.filter((_, i) => i !== index),
                                 )
                             }
-                            onRemoveExistingPhoto={(id) =>
-                                setRemovedPhotoIds((current) => [
-                                    ...current,
-                                    id,
-                                ])
-                            }
+                            onRemoveExistingPhoto={() => {}}
                             onSubmit={handleSubmit}
-                            submitLabel="Save changes"
+                            submitLabel="Publish bike"
                         />
                     </div>
                 </main>

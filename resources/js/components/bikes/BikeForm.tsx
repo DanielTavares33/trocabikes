@@ -3,17 +3,17 @@ import type { SubmitEvent } from 'react';
 import { useRef, useState } from 'react';
 
 import {
-    LISTING_MAX_PHOTOS,
-    LISTING_MAX_YEAR,
-    LISTING_MIN_YEAR,
-} from '@/lib/listing';
+    BIKE_MAX_PHOTOS,
+    BIKE_MAX_YEAR,
+    BIKE_MIN_YEAR,
+} from '@/lib/bike';
 
 interface ExistingImage {
     id: number;
     url: string;
 }
 
-export interface ListingFormData {
+export interface BikeFormData {
     title: string;
     bike_brand_id: string;
     bike_category_id: string;
@@ -30,8 +30,8 @@ export interface ListingFormData {
     email_visible: boolean;
 }
 
-interface ListingFormProps {
-    data: ListingFormData;
+interface BikeFormProps {
+    data: BikeFormData;
     errors: Record<string, string>;
     processing: boolean;
     brands: { id: number; name: string }[];
@@ -42,7 +42,7 @@ interface ListingFormProps {
     photoPreviews: string[];
     existingImages?: ExistingImage[];
     removedPhotoIds: number[];
-    onChange: (field: keyof ListingFormData, value: string | boolean) => void;
+    onChange: (field: keyof BikeFormData, value: string | boolean) => void;
     onPhotosChange: (files: File[]) => void;
     onRemovePhoto: (index: number) => void;
     onRemoveExistingPhoto: (id: number) => void;
@@ -50,7 +50,7 @@ interface ListingFormProps {
     submitLabel: string;
 }
 
-export default function ListingForm({
+export default function BikeForm({
     data,
     errors,
     processing,
@@ -68,7 +68,7 @@ export default function ListingForm({
     onRemoveExistingPhoto,
     onSubmit,
     submitLabel,
-}: Readonly<ListingFormProps>) {
+}: Readonly<BikeFormProps>) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [dragOver, setDragOver] = useState(false);
 
@@ -83,7 +83,7 @@ export default function ListingForm({
 
         const maxNewPhotos = Math.max(
             0,
-            LISTING_MAX_PHOTOS - visibleExistingImages.length,
+            BIKE_MAX_PHOTOS - visibleExistingImages.length,
         );
         const nextFiles = [...photos, ...Array.from(fileList)].slice(
             0,
@@ -317,8 +317,8 @@ export default function ListingForm({
                             id="year"
                             type="number"
                             name="year"
-                            min={LISTING_MIN_YEAR}
-                            max={LISTING_MAX_YEAR}
+                            min={BIKE_MIN_YEAR}
+                            max={BIKE_MAX_YEAR}
                             value={data.year}
                             onChange={(event) =>
                                 onChange('year', event.target.value)
@@ -484,7 +484,7 @@ export default function ListingForm({
             <section className="rounded-sm border border-border bg-surface p-6">
                 <h2 className="mb-1 text-lg font-semibold text-text">Photos</h2>
                 <p className="mb-6 text-sm text-text-muted">
-                    Add up to {LISTING_MAX_PHOTOS} photos of your bike
+                    Add up to {BIKE_MAX_PHOTOS} photos of your bike
                 </p>
 
                 <input
@@ -610,7 +610,7 @@ export default function ListingForm({
                             htmlFor="phone_visible"
                             className="text-sm text-text-muted"
                         >
-                            Show your phone number and WhatsApp on the listing
+                            Show your phone number and WhatsApp on the bike
                         </label>
                     </div>
 
@@ -629,7 +629,7 @@ export default function ListingForm({
                             htmlFor="email_visible"
                             className="text-sm text-text-muted"
                         >
-                            Show your email address on the listing
+                            Show your email address on the bike
                         </label>
                     </div>
 

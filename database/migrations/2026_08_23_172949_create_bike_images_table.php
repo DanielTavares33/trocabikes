@@ -8,9 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('listing_images', function (Blueprint $table) {
+        Schema::create('bike_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('listing_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('bike_id')->constrained()->cascadeOnDelete();
             $table->string('path');
             $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('is_primary')->default(false);
@@ -20,6 +20,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('listing_images');
+        Schema::dropIfExists('bike_images');
     }
 };

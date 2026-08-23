@@ -1,25 +1,25 @@
 import { Head, Link, router } from '@inertiajs/react';
 
-import { browse } from '@/routes';
+import { index as bikesIndex } from '@/routes/bikes';
 import Footer from '~/components/home/Footer';
-import type { ListingCardData } from '~/components/home/ListingCard';
+import type { BikeCardData } from '~/components/home/BikeCard';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
 import Pagination from '~/components/Pagination';
-import BrowseFilters from '~/pages/browse/BrowseFilters';
-import type { BrowseFiltersState } from '~/pages/browse/BrowseFilters';
-import BrowseListings from '~/pages/browse/BrowseListings';
+import BikeFilters from '~/pages/bikes/BikeFilters';
+import type { BikeFiltersState } from '~/pages/bikes/BikeFilters';
+import BikeGrid from '~/pages/bikes/BikeGrid';
 
-interface PaginatedListings {
-    data: ListingCardData[];
+interface PaginatedBikes {
+    data: BikeCardData[];
     current_page: number;
     last_page: number;
     total: number;
 }
 
-interface BrowseProps {
-    listings: PaginatedListings;
-    filters: BrowseFiltersState;
+interface BikesIndexProps {
+    bikes: PaginatedBikes;
+    filters: BikeFiltersState;
     filterOptions: {
         brands: { id: number; name: string }[];
         categories: { id: number; name: string }[];
@@ -28,11 +28,11 @@ interface BrowseProps {
     };
 }
 
-export default function Browse({
-    listings,
+export default function BikesIndex({
+    bikes,
     filters,
     filterOptions,
-}: Readonly<BrowseProps>) {
+}: Readonly<BikesIndexProps>) {
     const handlePageChange = (page: number) => {
         const params: Record<string, string | string[] | number> = { page };
 
@@ -69,7 +69,7 @@ export default function Browse({
         }
 
         router.get(
-            browse.url({ query: params }),
+            bikesIndex.url({ query: params }),
             {},
             {
                 preserveState: true,
@@ -105,21 +105,21 @@ export default function Browse({
 
                         <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
                             <div className="lg:w-56 lg:shrink-0">
-                                <BrowseFilters
+                                <BikeFilters
                                     key={JSON.stringify(filters)}
                                     filters={filters}
                                     filterOptions={filterOptions}
                                 />
                             </div>
                             <div className="flex flex-1 flex-col">
-                                <BrowseListings
-                                    listings={listings.data}
-                                    total={listings.total}
+                                <BikeGrid
+                                    bikes={bikes.data}
+                                    total={bikes.total}
                                     filters={filters}
                                 />
                                 <Pagination
-                                    currentPage={listings.current_page}
-                                    totalPages={listings.last_page}
+                                    currentPage={bikes.current_page}
+                                    totalPages={bikes.last_page}
                                     onPageChange={handlePageChange}
                                 />
                             </div>

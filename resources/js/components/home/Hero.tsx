@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
 
-import { browse } from '@/routes';
-import { create } from '@/routes/listings';
+import { index as bikesIndex } from '@/routes/bikes';
+import { create } from '@/routes/bikes';
 
 export default function Hero() {
     return (
@@ -28,7 +28,7 @@ export default function Hero() {
                 </p>
                 <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                     <Link
-                        href={browse.url()}
+                        href={bikesIndex.url()}
                         className="rounded-sm bg-primary px-8 py-3 text-base font-medium text-white transition-colors hover:bg-primary-hover"
                     >
                         Browse bikes

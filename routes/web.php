@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\BikeController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\GoogleAuthController;
-use App\Http\Controllers\ListingController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ProfileController;
@@ -22,8 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Welcome')->name('home');
 
-Route::get('/browse', [ListingController::class, 'index'])->name('browse');
-Route::get('/browse/{listing:slug}', [ListingController::class, 'show'])->name('listings.show');
+Route::get('/bikes', [BikeController::class, 'index'])->name('bikes.index');
 
 /*
 |--------------------------------------------------------------------------
@@ -101,19 +100,21 @@ Route::middleware([Authenticate::class, EnsureEmailIsVerified::class])->group(fu
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    // User Listings
+    // User bikes
     Route::inertia('/my-bikes', 'my-bikes/Index')->name('my-bikes');
 
-    // Saved Bikes
+    // Saved bikes
     Route::inertia('/saved-bikes', 'saved-bikes/Index')->name('saved-bikes');
 
-    // Create Listing
-    Route::get('/listings/create', [ListingController::class, 'create'])->name('listings.create');
-    Route::post('/listings', [ListingController::class, 'store'])->name('listings.store');
-    Route::get('/listings/{listing:slug}/edit', [ListingController::class, 'edit'])->name('listings.edit');
-    Route::put('/listings/{listing:slug}', [ListingController::class, 'update'])->name('listings.update');
-    Route::delete('/listings/{listing:slug}', [ListingController::class, 'destroy'])->name('listings.destroy');
+    // Sell a bike (must be registered before /bikes/{bike:slug})
+    Route::get('/bikes/create', [BikeController::class, 'create'])->name('bikes.create');
+    Route::post('/bikes', [BikeController::class, 'store'])->name('bikes.store');
+    Route::get('/bikes/{bike:slug}/edit', [BikeController::class, 'edit'])->name('bikes.edit');
+    Route::put('/bikes/{bike:slug}', [BikeController::class, 'update'])->name('bikes.update');
+    Route::delete('/bikes/{bike:slug}', [BikeController::class, 'destroy'])->name('bikes.destroy');
 });
+
+Route::get('/bikes/{bike:slug}', [BikeController::class, 'show'])->name('bikes.show');
 
 /*
 |--------------------------------------------------------------------------

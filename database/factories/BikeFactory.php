@@ -2,20 +2,20 @@
 
 namespace Database\Factories;
 
+use App\Enums\BikeCondition;
+use App\Enums\BikeStatus;
 use App\Enums\FrameMaterial;
-use App\Enums\ListingCondition;
-use App\Enums\ListingStatus;
+use App\Models\Bike;
 use App\Models\BikeBrand;
 use App\Models\BikeCategory;
-use App\Models\Listing;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<Listing>
+ * @extends Factory<Bike>
  */
-class ListingFactory extends Factory
+class BikeFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -34,7 +34,7 @@ class ListingFactory extends Factory
             'slug' => fn (array $attributes) => Str::slug($attributes['title']),
             'description' => fake()->paragraph(),
             'price' => fake()->randomFloat(2, 50, 5000),
-            'condition' => fake()->randomElement(ListingCondition::cases()),
+            'condition' => fake()->randomElement(BikeCondition::cases()),
             'year' => fake()->numberBetween(2000, 2026),
             'size' => fake()->randomElement(['XS', 'S', 'M', 'L', 'XL']),
             'frame_material' => fake()->randomElement(FrameMaterial::cases()),
@@ -43,7 +43,7 @@ class ListingFactory extends Factory
             'city' => fake()->city(),
             'phone_visible' => fake()->boolean(),
             'email_visible' => fake()->boolean(),
-            'status' => ListingStatus::Active,
+            'status' => BikeStatus::Active,
             'views' => fake()->numberBetween(0, 500),
         ];
     }
@@ -51,14 +51,14 @@ class ListingFactory extends Factory
     public function sold(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => ListingStatus::Sold,
+            'status' => BikeStatus::Sold,
         ]);
     }
 
     public function archived(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => ListingStatus::Archived,
+            'status' => BikeStatus::Archived,
         ]);
     }
 }
