@@ -1,10 +1,10 @@
 import { Head, Link } from '@inertiajs/react';
 import { index as bikesIndex } from '@/routes/bikes';
+import type { BikeCardData } from '~/components/home/BikeCard';
+import BikeCard from '~/components/home/BikeCard';
 import CategoriesGrid from '~/components/home/CategoriesGrid';
 import Footer from '~/components/home/Footer';
 import Hero from '~/components/home/Hero';
-import type { BikeCardData } from '~/components/home/BikeCard';
-import BikeCard from '~/components/home/BikeCard';
 import Navbar from '~/components/home/Navbar';
 import SearchSection from '~/components/home/SearchSection';
 import Layout from '~/components/layout/Layout';
@@ -136,10 +136,7 @@ export default function Welcome() {
 
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                                 {recentBikes.map((bike) => (
-                                    <BikeCard
-                                        key={bike.id}
-                                        bike={bike}
-                                    />
+                                    <BikeCard key={bike.id} bike={bike} />
                                 ))}
                             </div>
 

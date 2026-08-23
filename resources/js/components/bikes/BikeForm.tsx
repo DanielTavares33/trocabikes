@@ -2,11 +2,7 @@ import { Image, X } from 'lucide-react';
 import type { SubmitEvent } from 'react';
 import { useRef, useState } from 'react';
 
-import {
-    BIKE_MAX_PHOTOS,
-    BIKE_MAX_YEAR,
-    BIKE_MIN_YEAR,
-} from '@/lib/bike';
+import { BIKE_MAX_PHOTOS, BIKE_MAX_YEAR, BIKE_MIN_YEAR } from '@/lib/bike';
 
 interface ExistingImage {
     id: number;

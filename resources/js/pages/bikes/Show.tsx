@@ -67,9 +67,7 @@ interface BikeShowProps {
     bike: BikeShowData;
 }
 
-export default function BikeShow({
-    bike,
-}: Readonly<BikeShowProps>) {
+export default function BikeShow({ bike }: Readonly<BikeShowProps>) {
     const seller = bike.seller;
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const galleryImages =

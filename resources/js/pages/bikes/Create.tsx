@@ -3,11 +3,11 @@ import type { SubmitEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 
 import { store } from '@/routes/bikes';
+import BikeForm from '~/components/bikes/BikeForm';
+import type { BikeFormData } from '~/components/bikes/BikeForm';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
-import BikeForm from '~/components/bikes/BikeForm';
-import type { BikeFormData } from '~/components/bikes/BikeForm';
 
 interface CreateProps {
     brands: { id: number; name: string }[];

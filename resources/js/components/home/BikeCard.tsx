@@ -78,9 +78,7 @@ export default function BikeCard({
                     >
                         {bike.condition}
                     </span>
-                    <span className="text-xs text-text-muted">
-                        {bike.year}
-                    </span>
+                    <span className="text-xs text-text-muted">{bike.year}</span>
                     {bike.kilometers && (
                         <span className="text-xs text-text-muted">
                             {bike.kilometers.toLocaleString('pt-PT')} km

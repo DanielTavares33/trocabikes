@@ -1,8 +1,8 @@
 import { Head, Link, router } from '@inertiajs/react';
 
 import { index as bikesIndex } from '@/routes/bikes';
-import Footer from '~/components/home/Footer';
 import type { BikeCardData } from '~/components/home/BikeCard';
+import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
 import Pagination from '~/components/Pagination';

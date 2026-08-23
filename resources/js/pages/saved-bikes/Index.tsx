@@ -1,8 +1,8 @@
 import { Head, Link } from '@inertiajs/react';
 import { Heart } from 'lucide-react';
-import Footer from '~/components/home/Footer';
 import type { BikeCardData } from '~/components/home/BikeCard';
 import BikeCard from '~/components/home/BikeCard';
+import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
 
@@ -118,10 +118,7 @@ export default function SavedBikes() {
                         ) : (
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
                                 {SAVED_BIKES.map((bike) => (
-                                    <BikeCard
-                                        key={bike.id}
-                                        bike={bike}
-                                    />
+                                    <BikeCard key={bike.id} bike={bike} />
                                 ))}
                             </div>
                         )}
