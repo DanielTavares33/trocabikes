@@ -1,14 +1,57 @@
+import { router } from '@inertiajs/react';
 import { Search } from 'lucide-react';
 import type { ListingCardData } from '~/components/home/ListingCard';
 import ListingCard from '~/components/home/ListingCard';
+import type { BrowseFiltersState } from '~/pages/browse/BrowseFilters';
+
+interface BrowseListingsProps {
+    listings: ListingCardData[];
+    total: number;
+    filters: BrowseFiltersState;
+}
 
 export default function BrowseListings({
     listings,
     total,
-}: {
-    listings: ListingCardData[];
-    total: number;
-}) {
+    filters,
+}: Readonly<BrowseListingsProps>) {
+    const handleSortChange = (sort: string) => {
+        const params: Record<string, string | string[]> = { sort };
+
+        if (filters.bike_brand_id) {
+            params.bike_brand_id = filters.bike_brand_id;
+        }
+
+        if (filters.bike_category_id) {
+            params.bike_category_id = filters.bike_category_id;
+        }
+
+        if (filters.price) {
+            params.price = filters.price;
+        }
+
+        if (filters.condition && filters.condition.length > 0) {
+            params.condition = filters.condition;
+        }
+
+        if (filters.year_from) {
+            params.year_from = filters.year_from;
+        }
+
+        if (filters.year_to) {
+            params.year_to = filters.year_to;
+        }
+
+        if (filters.location) {
+            params.location = filters.location;
+        }
+
+        router.get('/browse', params, {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
+
     return (
         <div className="flex flex-1 flex-col">
             <div className="mb-4 flex items-center justify-between gap-4">
@@ -17,7 +60,11 @@ export default function BrowseListings({
                     found
                 </p>
 
-                <select className="h-9 rounded-sm border border-border bg-surface px-3 text-sm text-text focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none">
+                <select
+                    value={filters.sort ?? 'newest'}
+                    onChange={(event) => handleSortChange(event.target.value)}
+                    className="h-9 rounded-sm border border-border bg-surface px-3 text-sm text-text focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                >
                     <option value="newest">Newest first</option>
                     <option value="price_asc">Price: low to high</option>
                     <option value="price_desc">Price: high to low</option>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\ListingController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ProfileController;
@@ -21,8 +22,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Welcome')->name('home');
 
-Route::inertia('/browse', 'browse/Browse')->name('browse');
-Route::inertia('/browse/{listing:slug}', 'listing/ListingDetail')->name('listings.show');
+Route::get('/browse', [ListingController::class, 'index'])->name('browse');
+Route::get('/browse/{listing:slug}', [ListingController::class, 'show'])->name('listings.show');
 
 /*
 |--------------------------------------------------------------------------
@@ -107,7 +108,11 @@ Route::middleware([Authenticate::class, EnsureEmailIsVerified::class])->group(fu
     Route::inertia('/saved-bikes', 'saved-bikes/Index')->name('saved-bikes');
 
     // Create Listing
-    Route::inertia('/listings/create', 'listings/Create')->name('listings.create');
+    Route::get('/listings/create', [ListingController::class, 'create'])->name('listings.create');
+    Route::post('/listings', [ListingController::class, 'store'])->name('listings.store');
+    Route::get('/listings/{listing:slug}/edit', [ListingController::class, 'edit'])->name('listings.edit');
+    Route::put('/listings/{listing:slug}', [ListingController::class, 'update'])->name('listings.update');
+    Route::delete('/listings/{listing:slug}', [ListingController::class, 'destroy'])->name('listings.destroy');
 });
 
 /*

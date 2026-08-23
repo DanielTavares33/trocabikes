@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             BikeBrandSeeder::class,
             BikeCategorySeeder::class,
+            ListingSeeder::class,
         ]);
 
         User::factory()->create([

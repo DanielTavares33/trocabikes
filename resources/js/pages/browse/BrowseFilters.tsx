@@ -1,62 +1,186 @@
-const categories = [
-    'All',
-    'Mountain Bike',
-    'Road Bike',
-    'City Bike',
-    'E-Bike',
-    'Kids Bike',
-    'BMX',
-];
+import { router } from '@inertiajs/react';
+import type { SubmitEvent } from 'react';
+import { useState } from 'react';
 
-const conditions = ['Nova', 'Excelente', 'Boa', 'Regular'];
-const priceRanges = [
-    { label: 'Any', value: '' },
-    { label: 'Under €500', value: '0-500' },
-    { label: '€500 – €1,000', value: '500-1000' },
-    { label: '€1,000 – €2,000', value: '1000-2000' },
-    { label: '€2,000 – €5,000', value: '2000-5000' },
-    { label: 'Over €5,000', value: '5000-' },
-];
+interface FilterOption {
+    id: number;
+    name: string;
+}
 
-export default function BrowseFilters() {
+interface ConditionOption {
+    value: string;
+    label: string;
+}
+
+interface PriceRange {
+    label: string;
+    value: string;
+}
+
+export interface BrowseFiltersState {
+    bike_brand_id?: string;
+    bike_category_id?: string;
+    price?: string;
+    condition?: string[];
+    year_from?: string;
+    year_to?: string;
+    location?: string;
+    sort?: string;
+}
+
+interface BrowseFiltersProps {
+    filters: BrowseFiltersState;
+    filterOptions: {
+        brands: FilterOption[];
+        categories: FilterOption[];
+        conditions: ConditionOption[];
+        priceRanges: PriceRange[];
+    };
+}
+
+export default function BrowseFilters({
+    filters,
+    filterOptions,
+}: Readonly<BrowseFiltersProps>) {
+    const [localFilters, setLocalFilters] = useState<BrowseFiltersState>({
+        bike_brand_id: filters.bike_brand_id ?? '',
+        bike_category_id: filters.bike_category_id ?? '',
+        price: filters.price ?? '',
+        condition: filters.condition ?? [],
+        year_from: filters.year_from ?? '',
+        year_to: filters.year_to ?? '',
+        location: filters.location ?? '',
+    });
+
+    const applyFilters = (event?: SubmitEvent) => {
+        event?.preventDefault();
+
+        const params: Record<string, string | string[]> = {};
+
+        if (localFilters.bike_brand_id) {
+            params.bike_brand_id = localFilters.bike_brand_id;
+        }
+
+        if (localFilters.bike_category_id) {
+            params.bike_category_id = localFilters.bike_category_id;
+        }
+
+        if (localFilters.price) {
+            params.price = localFilters.price;
+        }
+
+        if (localFilters.condition && localFilters.condition.length > 0) {
+            params.condition = localFilters.condition;
+        }
+
+        if (localFilters.year_from) {
+            params.year_from = localFilters.year_from;
+        }
+
+        if (localFilters.year_to) {
+            params.year_to = localFilters.year_to;
+        }
+
+        if (localFilters.location) {
+            params.location = localFilters.location;
+        }
+
+        if (filters.sort) {
+            params.sort = filters.sort;
+        }
+
+        router.get('/browse', params, {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
+
+    const clearFilters = () => {
+        setLocalFilters({
+            bike_brand_id: '',
+            bike_category_id: '',
+            price: '',
+            condition: [],
+            year_from: '',
+            year_to: '',
+            location: '',
+        });
+
+        router.get('/browse', filters.sort ? { sort: filters.sort } : {}, {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
+
+    const toggleCondition = (value: string) => {
+        setLocalFilters((current) => {
+            const conditions = current.condition ?? [];
+            const next = conditions.includes(value)
+                ? conditions.filter((item) => item !== value)
+                : [...conditions, value];
+
+            return { ...current, condition: next };
+        });
+    };
+
     return (
         <aside className="w-full rounded-sm border border-border bg-surface p-6">
             <h2 className="mb-5 text-sm font-semibold tracking-wide text-text uppercase">
                 Filters
             </h2>
 
-            <div className="flex flex-col gap-6">
+            <form
+                onSubmit={applyFilters}
+                className="flex flex-col gap-6"
+            >
                 <div>
-                    <h3 className="mb-3 text-sm font-medium text-text">
-                        Category
-                    </h3>
-                    <div className="flex flex-col gap-2">
-                        {categories.map((cat) => (
-                            <label
-                                key={cat}
-                                className="flex cursor-pointer items-center gap-2"
-                            >
-                                <input
-                                    type="radio"
-                                    name="category"
-                                    value={cat}
-                                    defaultChecked={cat === 'All'}
-                                    className="h-4 w-4 accent-primary"
-                                />
-                                <span className="text-sm text-text-muted">
-                                    {cat}
-                                </span>
-                            </label>
+                    <h3 className="mb-3 text-sm font-medium text-text">Brand</h3>
+                    <select
+                        value={localFilters.bike_brand_id}
+                        onChange={(event) =>
+                            setLocalFilters((current) => ({
+                                ...current,
+                                bike_brand_id: event.target.value,
+                            }))
+                        }
+                        className="h-9 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                    >
+                        <option value="">All brands</option>
+                        {filterOptions.brands.map((brand) => (
+                            <option key={brand.id} value={brand.id}>
+                                {brand.name}
+                            </option>
                         ))}
-                    </div>
+                    </select>
                 </div>
 
                 <div>
                     <h3 className="mb-3 text-sm font-medium text-text">
-                        Price
+                        Category
                     </h3>
+                    <select
+                        value={localFilters.bike_category_id}
+                        onChange={(event) =>
+                            setLocalFilters((current) => ({
+                                ...current,
+                                bike_category_id: event.target.value,
+                            }))
+                        }
+                        className="h-9 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                    >
+                        <option value="">All categories</option>
+                        {filterOptions.categories.map((category) => (
+                            <option key={category.id} value={category.id}>
+                                {category.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div>
+                    <h3 className="mb-3 text-sm font-medium text-text">Price</h3>
                     <div className="flex flex-col gap-2">
-                        {priceRanges.map((range) => (
+                        {filterOptions.priceRanges.map((range) => (
                             <label
                                 key={range.value}
                                 className="flex cursor-pointer items-center gap-2"
@@ -65,7 +189,13 @@ export default function BrowseFilters() {
                                     type="radio"
                                     name="price"
                                     value={range.value}
-                                    defaultChecked={range.value === ''}
+                                    checked={localFilters.price === range.value}
+                                    onChange={(event) =>
+                                        setLocalFilters((current) => ({
+                                            ...current,
+                                            price: event.target.value,
+                                        }))
+                                    }
                                     className="h-4 w-4 accent-primary"
                                 />
                                 <span className="text-sm text-text-muted">
@@ -81,23 +211,46 @@ export default function BrowseFilters() {
                         Condition
                     </h3>
                     <div className="flex flex-col gap-2">
-                        {conditions.map((cond) => (
+                        {filterOptions.conditions.map((cond) => (
                             <label
-                                key={cond}
+                                key={cond.value}
                                 className="flex cursor-pointer items-center gap-2"
                             >
                                 <input
                                     type="checkbox"
                                     name="condition"
-                                    value={cond}
+                                    value={cond.value}
+                                    checked={localFilters.condition?.includes(
+                                        cond.value,
+                                    )}
+                                    onChange={() => toggleCondition(cond.value)}
                                     className="h-4 w-4 accent-primary"
                                 />
                                 <span className="text-sm text-text-muted">
-                                    {cond}
+                                    {cond.label}
                                 </span>
                             </label>
                         ))}
                     </div>
+                </div>
+
+                <div>
+                    <h3 className="mb-3 text-sm font-medium text-text">
+                        Location
+                    </h3>
+                    <input
+                        type="text"
+                        name="location"
+                        value={localFilters.location}
+                        onChange={(event) =>
+                            setLocalFilters((current) => ({
+                                ...current,
+                                location: event.target.value,
+                            }))
+                        }
+                        placeholder="City or district"
+                        className="h-9 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                    />
                 </div>
 
                 <div>
@@ -109,6 +262,13 @@ export default function BrowseFilters() {
                             min="1990"
                             max="2026"
                             placeholder="From"
+                            value={localFilters.year_from}
+                            onChange={(event) =>
+                                setLocalFilters((current) => ({
+                                    ...current,
+                                    year_from: event.target.value,
+                                }))
+                            }
                             className="h-9 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                         />
                         <span className="text-text-muted">–</span>
@@ -118,18 +278,33 @@ export default function BrowseFilters() {
                             min="1990"
                             max="2026"
                             placeholder="To"
+                            value={localFilters.year_to}
+                            onChange={(event) =>
+                                setLocalFilters((current) => ({
+                                    ...current,
+                                    year_to: event.target.value,
+                                }))
+                            }
                             className="h-9 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                         />
                     </div>
                 </div>
 
                 <button
+                    type="submit"
+                    className="h-9 w-full rounded-sm bg-primary text-sm font-medium text-white transition-colors hover:bg-primary-hover"
+                >
+                    Apply filters
+                </button>
+
+                <button
                     type="button"
-                    className="mt-2 h-9 w-full rounded-sm border border-border text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle"
+                    onClick={clearFilters}
+                    className="h-9 w-full rounded-sm border border-border text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle"
                 >
                     Clear filters
                 </button>
-            </div>
+            </form>
         </aside>
     );
 }

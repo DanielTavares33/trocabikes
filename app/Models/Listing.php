@@ -7,9 +7,13 @@ use App\Enums\ListingCondition;
 use App\Enums\ListingStatus;
 use Carbon\CarbonImmutable;
 use Database\Factories\ListingFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Http\Request;
 
 /**
  * @property ListingCondition $condition
@@ -41,27 +45,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $views
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
- *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereBikeBrandId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereBikeCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereCondition($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereDistrict($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereFrameMaterial($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereKilometers($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing wherePhoneVisible($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereSize($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereViews($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Listing whereYear($value)
  *
  * @mixin \Eloquent
  */
@@ -115,5 +98,90 @@ class Listing extends Model
     public function bikeCategory(): BelongsTo
     {
         return $this->belongsTo(BikeCategory::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(ListingImage::class)->orderBy('sort_order');
+    }
+
+    public function primaryImage(): HasOne
+    {
+        return $this->hasOne(ListingImage::class)
+            ->where('is_primary', true)
+            ->orderBy('sort_order');
+    }
+
+    /**
+     * @param  Builder<Listing>  $query
+     */
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('status', ListingStatus::Active);
+    }
+
+    /**
+     * @param  Builder<Listing>  $query
+     */
+    public function scopeFiltered(Builder $query, Request $request): void
+    {
+        if ($request->filled('bike_brand_id')) {
+            $query->where('bike_brand_id', $request->integer('bike_brand_id'));
+        }
+
+        if ($request->filled('bike_category_id')) {
+            $query->where('bike_category_id', $request->integer('bike_category_id'));
+        }
+
+        if ($request->filled('price_min')) {
+            $query->where('price', '>=', $request->input('price_min'));
+        }
+
+        if ($request->filled('price_max')) {
+            $query->where('price', '<=', $request->input('price_max'));
+        }
+
+        $conditions = $request->input('condition', []);
+
+        if (is_array($conditions) && $conditions !== []) {
+            $query->whereIn('condition', $conditions);
+        }
+
+        if ($request->filled('year_from')) {
+            $query->where('year', '>=', $request->integer('year_from'));
+        }
+
+        if ($request->filled('year_to')) {
+            $query->where('year', '<=', $request->integer('year_to'));
+        }
+
+        if ($request->filled('location')) {
+            $location = $request->string('location')->toString();
+
+            $query->where(function (Builder $builder) use ($location): void {
+                $builder->where('city', 'like', "%{$location}%")
+                    ->orWhere('district', 'like', "%{$location}%");
+            });
+        }
+
+        if ($request->filled('district')) {
+            $query->where('district', 'like', '%'.$request->string('district')->toString().'%');
+        }
+
+        if ($request->filled('city')) {
+            $query->where('city', 'like', '%'.$request->string('city')->toString().'%');
+        }
+    }
+
+    /**
+     * @param  Builder<Listing>  $query
+     */
+    public function scopeSorted(Builder $query, ?string $sort = 'newest'): void
+    {
+        match ($sort) {
+            'price_asc' => $query->orderBy('price'),
+            'price_desc' => $query->orderByDesc('price'),
+            default => $query->orderByDesc('created_at'),
+        };
     }
 }

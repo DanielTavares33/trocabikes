@@ -1,3 +1,4 @@
+import { Link } from '@inertiajs/react';
 import { Heart, MapPin, Trash } from 'lucide-react';
 import { useModal } from '@/hooks/useModal';
 import Modal from '../ui/Modal';
@@ -39,7 +40,7 @@ export default function ListingCard({
     const modal = useModal();
 
     return (
-        <a
+        <Link
             href={`/browse/${listing.slug}`}
             className="group relative flex flex-col overflow-hidden rounded-sm border border-border bg-surface transition-all hover:border-border-strong hover:shadow-lg"
         >
@@ -151,6 +152,6 @@ export default function ListingCard({
                     </Modal>
                 </div>
             </div>
-        </a>
+        </Link>
     );
 }

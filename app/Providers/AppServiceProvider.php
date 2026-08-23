@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\BikeBrand;
 use App\Models\BikeCategory;
+use App\Models\Listing;
 use App\Observers\BikeBrandObserver;
 use App\Observers\BikeCategoryObserver;
+use App\Observers\ListingObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -33,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
 
         BikeBrand::observe(BikeBrandObserver::class);
         BikeCategory::observe(BikeCategoryObserver::class);
+        Listing::observe(ListingObserver::class);
     }
 
     /**

@@ -7,9 +7,19 @@ import {
     MessageCircle,
     Phone,
 } from 'lucide-react';
+import { useState } from 'react';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
+
+const conditionColors: Record<string, string> = {
+    nova: 'bg-accent-muted text-accent',
+    excelente: 'bg-orange-100 text-orange-700',
+    boa: 'bg-stone-100 text-stone-700',
+    regular: 'bg-amber-100 text-amber-700',
+    usada: 'bg-stone-100 text-stone-700',
+    mau: 'bg-stone-100 text-stone-700',
+};
 
 interface SellerData {
     name: string;
@@ -21,6 +31,12 @@ interface SellerData {
     memberSince: string;
     location: string;
     avatarUrl: string;
+}
+
+interface ListingImageData {
+    id: number;
+    url: string;
+    alt: string;
 }
 
 interface ListingDetailData {
@@ -39,56 +55,24 @@ interface ListingDetailData {
     description: string;
     imageUrl: string;
     imageAlt: string;
+    images: ListingImageData[];
     createdAt: string;
     views: number;
     seller: SellerData;
 }
 
-const conditionColors: Record<string, string> = {
-    nova: 'bg-accent-muted text-accent',
-    excelente: 'bg-orange-100 text-orange-700',
-    boa: 'bg-stone-100 text-stone-700',
-    regular: 'bg-amber-100 text-amber-700',
-    usada: 'bg-stone-100 text-stone-700',
-};
-
-const mockListing: ListingDetailData = {
-    id: 1,
-    title: 'Canyon Spectral CF 7 — Full Suspended MTB',
-    slug: 'canyon-spectral-cf-7-full-suspended-mtb',
-    brand: 'Canyon',
-    category: 'Mountain Bike',
-    price: 2850,
-    year: 2022,
-    condition: 'Excelente',
-    size: 'L',
-    frameMaterial: 'Carbon',
-    kilometers: 450,
-    location: 'Lisboa',
-    description:
-        'Vendo Canyon Spectral CF 7 em excelente estado. Bike todaajada, mantida com cuidado e sempre guardada em local seco.\n\nInclui:\n- Bicicleta completa original\n- Manual do utilizador\n- Ferramentas de manutenção básica\n\nA bike foi usada em trilhos intermédios, nunca em competição. Por isso mesmo está em óptimo estado, sem danos estruturais ou estéticos.\n\nMotivo da venda: upgrade para bike mais recente.\n\nEntrego na zona de Lisboa ou aceito envio via transportadora.',
-    imageUrl:
-        'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&h=600&fit=crop&q=80',
-    imageAlt: 'Canyon Spectral mountain bike',
-    createdAt: '2024-03-15',
-    views: 234,
-    seller: {
-        name: 'Miguel Santos',
-        phone: '+351 912 345 678',
-        whatsapp: '+351912345678',
-        email: 'miguel.santos@email.com',
-        type: 'particular',
-        isVerified: true,
-        memberSince: 'January 2023',
-        location: 'Lisboa',
-        avatarUrl:
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&q=80&crop=faces',
-    },
-};
-
-export default function ListingDetail() {
-    const listing = mockListing;
+export default function ListingDetail({
+    listing,
+}: {
+    listing: ListingDetailData;
+}) {
     const seller = listing.seller;
+    const [activeImageIndex, setActiveImageIndex] = useState(0);
+    const galleryImages =
+        listing.images.length > 0
+            ? listing.images
+            : [{ id: 0, url: listing.imageUrl, alt: listing.imageAlt }];
+    const activeImage = galleryImages[activeImageIndex] ?? galleryImages[0];
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('pt-PT', {
@@ -132,14 +116,36 @@ export default function ListingDetail() {
                             <div className="lg:col-span-2">
                                 <div className="relative aspect-[4/3] overflow-hidden rounded-sm border border-border bg-bg-subtle">
                                     <img
-                                        src={listing.imageUrl}
-                                        alt={listing.imageAlt}
+                                        src={activeImage.url}
+                                        alt={activeImage.alt}
                                         className="h-full w-full object-cover"
                                     />
                                     <div className="absolute bottom-4 left-4 rounded-sm bg-bg/90 px-3 py-1.5 text-xs font-medium text-text">
-                                        1 / 1
+                                        {activeImageIndex + 1} / {galleryImages.length}
                                     </div>
                                 </div>
+                                {galleryImages.length > 1 && (
+                                    <div className="mt-3 grid grid-cols-4 gap-2">
+                                        {galleryImages.map((image, index) => (
+                                            <button
+                                                key={image.id}
+                                                type="button"
+                                                onClick={() => setActiveImageIndex(index)}
+                                                className={`aspect-square overflow-hidden rounded-sm border ${
+                                                    index === activeImageIndex
+                                                        ? 'border-primary'
+                                                        : 'border-border'
+                                                }`}
+                                            >
+                                                <img
+                                                    src={image.url}
+                                                    alt={image.alt}
+                                                    className="h-full w-full object-cover"
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex flex-col gap-6">
@@ -242,25 +248,29 @@ export default function ListingDetail() {
                                     </div>
 
                                     <div className="flex flex-col gap-3">
-                                        <a
-                                            href={`tel:${seller.phone}`}
-                                            className="flex items-center justify-center gap-2 rounded-sm bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
-                                        >
-                                            <Phone width={18} height={18} />
-                                            Call
-                                        </a>
-                                        <a
-                                            href={`https://wa.me/${seller.whatsapp}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center justify-center gap-2 rounded-sm bg-green-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-green-600"
-                                        >
-                                            <MessageCircle
-                                                width={18}
-                                                height={18}
-                                            />
-                                            WhatsApp
-                                        </a>
+                                        {seller.phone && (
+                                            <a
+                                                href={`tel:${seller.phone}`}
+                                                className="flex items-center justify-center gap-2 rounded-sm bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
+                                            >
+                                                <Phone width={18} height={18} />
+                                                Call
+                                            </a>
+                                        )}
+                                        {seller.whatsapp && (
+                                            <a
+                                                href={`https://wa.me/${seller.whatsapp}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center justify-center gap-2 rounded-sm bg-green-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-green-600"
+                                            >
+                                                <MessageCircle
+                                                    width={18}
+                                                    height={18}
+                                                />
+                                                WhatsApp
+                                            </a>
+                                        )}
                                         <a
                                             href={`mailto:${seller.email}`}
                                             className="flex items-center justify-center gap-2 rounded-sm border border-border px-4 py-2.5 text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle"

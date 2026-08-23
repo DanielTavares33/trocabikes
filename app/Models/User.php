@@ -11,6 +11,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
@@ -97,5 +98,10 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         $this->notify(new ResetPasswordNotification(
             route('password.reset', ['token' => $token, 'email' => $this->email])
         ));
+    }
+
+    public function listings(): HasMany
+    {
+        return $this->hasMany(Listing::class);
     }
 }
