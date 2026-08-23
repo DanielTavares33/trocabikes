@@ -5,11 +5,17 @@ namespace Database\Seeders;
 use App\Models\BikeBrand;
 use App\Models\BikeCategory;
 use App\Models\Listing;
+use App\Models\ListingImage;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 
 class ListingSeeder extends Seeder
 {
+    private const SAMPLE_IMAGE = 'seeders/assets/listing-sample.jpg';
+
     public function run(): void
     {
         $user = User::query()->first() ?? User::factory()->create([
@@ -24,7 +30,15 @@ class ListingSeeder extends Seeder
             return;
         }
 
-        Listing::factory()
+        $sampleImagePath = database_path(self::SAMPLE_IMAGE);
+
+        if (! File::isFile($sampleImagePath)) {
+            throw new RuntimeException("Sample listing image not found at [{$sampleImagePath}].");
+        }
+
+        $sampleImage = File::get($sampleImagePath);
+
+        $listings = Listing::factory()
             ->count(30)
             ->recycle($user)
             ->state(fn () => [
@@ -32,5 +46,18 @@ class ListingSeeder extends Seeder
                 'bike_category_id' => $categoryIds->random(),
             ])
             ->create();
+
+        foreach ($listings as $listing) {
+            $path = "listings/{$listing->id}/seed.jpg";
+
+            Storage::disk('public')->put($path, $sampleImage);
+
+            ListingImage::query()->create([
+                'listing_id' => $listing->id,
+                'path' => $path,
+                'sort_order' => 0,
+                'is_primary' => true,
+            ]);
+        }
     }
 }

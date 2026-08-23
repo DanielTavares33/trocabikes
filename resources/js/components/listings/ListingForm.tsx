@@ -2,6 +2,12 @@ import { Image, X } from 'lucide-react';
 import type { SubmitEvent } from 'react';
 import { useRef, useState } from 'react';
 
+import {
+    LISTING_MAX_PHOTOS,
+    LISTING_MAX_YEAR,
+    LISTING_MIN_YEAR,
+} from '@/lib/listing';
+
 interface ExistingImage {
     id: number;
     url: string;
@@ -21,6 +27,7 @@ export interface ListingFormData {
     district: string;
     city: string;
     phone_visible: boolean;
+    email_visible: boolean;
 }
 
 interface ListingFormProps {
@@ -65,18 +72,25 @@ export default function ListingForm({
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [dragOver, setDragOver] = useState(false);
 
+    const visibleExistingImages = existingImages.filter(
+        (image) => !removedPhotoIds.includes(image.id),
+    );
+
     const handleFiles = (fileList: FileList | null) => {
         if (!fileList) {
             return;
         }
 
-        const nextFiles = [...photos, ...Array.from(fileList)].slice(0, 10);
+        const maxNewPhotos = Math.max(
+            0,
+            LISTING_MAX_PHOTOS - visibleExistingImages.length,
+        );
+        const nextFiles = [...photos, ...Array.from(fileList)].slice(
+            0,
+            maxNewPhotos,
+        );
         onPhotosChange(nextFiles);
     };
-
-    const visibleExistingImages = existingImages.filter(
-        (image) => !removedPhotoIds.includes(image.id),
-    );
 
     return (
         <form onSubmit={onSubmit} className="flex flex-col gap-8">
@@ -303,8 +317,8 @@ export default function ListingForm({
                             id="year"
                             type="number"
                             name="year"
-                            min={1990}
-                            max={2026}
+                            min={LISTING_MIN_YEAR}
+                            max={LISTING_MAX_YEAR}
                             value={data.year}
                             onChange={(event) =>
                                 onChange('year', event.target.value)
@@ -470,7 +484,7 @@ export default function ListingForm({
             <section className="rounded-sm border border-border bg-surface p-6">
                 <h2 className="mb-1 text-lg font-semibold text-text">Photos</h2>
                 <p className="mb-6 text-sm text-text-muted">
-                    Add up to 10 photos of your bike
+                    Add up to {LISTING_MAX_PHOTOS} photos of your bike
                 </p>
 
                 <input
@@ -596,8 +610,26 @@ export default function ListingForm({
                             htmlFor="phone_visible"
                             className="text-sm text-text-muted"
                         >
-                            Show your phone number on the listing so buyers can
-                            call you directly
+                            Show your phone number and WhatsApp on the listing
+                        </label>
+                    </div>
+
+                    <div className="flex items-start gap-2">
+                        <input
+                            id="email_visible"
+                            type="checkbox"
+                            name="email_visible"
+                            checked={data.email_visible}
+                            onChange={(event) =>
+                                onChange('email_visible', event.target.checked)
+                            }
+                            className="mt-0.5 h-4 w-4 rounded-sm border border-border bg-bg accent-primary"
+                        />
+                        <label
+                            htmlFor="email_visible"
+                            className="text-sm text-text-muted"
+                        >
+                            Show your email address on the listing
                         </label>
                     </div>
 

@@ -1,6 +1,8 @@
 import { Link } from '@inertiajs/react';
 import { Heart, MapPin, Trash } from 'lucide-react';
+
 import { useModal } from '@/hooks/useModal';
+import { show } from '@/routes/listings';
 import Modal from '../ui/Modal';
 
 export interface ListingCardData {
@@ -41,7 +43,7 @@ export default function ListingCard({
 
     return (
         <Link
-            href={`/browse/${listing.slug}`}
+            href={show.url(listing.slug)}
             className="group relative flex flex-col overflow-hidden rounded-sm border border-border bg-surface transition-all hover:border-border-strong hover:shadow-lg"
         >
             <div className="aspect-[4/3] overflow-hidden bg-bg-subtle">

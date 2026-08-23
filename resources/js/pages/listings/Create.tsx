@@ -1,6 +1,8 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { SubmitEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
+
+import { store } from '@/routes/listings';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
@@ -28,6 +30,7 @@ const emptyForm: ListingFormData = {
     district: '',
     city: '',
     phone_visible: false,
+    email_visible: false,
 };
 
 export default function Create({
@@ -65,7 +68,7 @@ export default function Create({
 
     const handleSubmit = (event: SubmitEvent) => {
         event.preventDefault();
-        post('/listings', { forceFormData: true });
+        post(store.url(), { forceFormData: true });
     };
 
     return (

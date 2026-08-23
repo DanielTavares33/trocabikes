@@ -1,6 +1,8 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { SubmitEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
+
+import { update } from '@/routes/listings';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
@@ -24,6 +26,7 @@ interface EditProps {
         district: string;
         city: string;
         phone_visible: boolean;
+        email_visible: boolean;
         images: { id: number; url: string }[];
     };
     brands: { id: number; name: string }[];
@@ -53,6 +56,7 @@ export default function Edit({
         district: listing.district,
         city: listing.city,
         phone_visible: listing.phone_visible,
+        email_visible: listing.email_visible,
         photos: [] as File[],
         removed_photo_ids: [] as number[],
         _method: 'put',
@@ -87,7 +91,7 @@ export default function Edit({
 
     const handleSubmit = (event: SubmitEvent) => {
         event.preventDefault();
-        post(`/listings/${listing.slug}`, { forceFormData: true });
+        post(update.url(listing.slug), { forceFormData: true });
     };
 
     return (

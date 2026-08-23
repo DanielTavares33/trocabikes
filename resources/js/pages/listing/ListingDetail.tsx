@@ -8,6 +8,8 @@ import {
     Phone,
 } from 'lucide-react';
 import { useState } from 'react';
+
+import { browse } from '@/routes';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
@@ -61,11 +63,13 @@ interface ListingDetailData {
     seller: SellerData;
 }
 
+interface ListingDetailProps {
+    listing: ListingDetailData;
+}
+
 export default function ListingDetail({
     listing,
-}: {
-    listing: ListingDetailData;
-}) {
+}: Readonly<ListingDetailProps>) {
     const seller = listing.seller;
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const galleryImages =
@@ -101,7 +105,7 @@ export default function ListingDetail({
                             </Link>
                             <span>/</span>
                             <Link
-                                href="/browse"
+                                href={browse.url()}
                                 className="transition-colors hover:text-text"
                             >
                                 Browse bikes
@@ -274,13 +278,15 @@ export default function ListingDetail({
                                                 WhatsApp
                                             </a>
                                         )}
-                                        <a
-                                            href={`mailto:${seller.email}`}
-                                            className="flex items-center justify-center gap-2 rounded-sm border border-border px-4 py-2.5 text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle"
-                                        >
-                                            <Mail width={18} height={18} />
-                                            Email
-                                        </a>
+                                        {seller.email && (
+                                            <a
+                                                href={`mailto:${seller.email}`}
+                                                className="flex items-center justify-center gap-2 rounded-sm border border-border px-4 py-2.5 text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle"
+                                            >
+                                                <Mail width={18} height={18} />
+                                                Email
+                                            </a>
+                                        )}
                                     </div>
                                 </div>
 

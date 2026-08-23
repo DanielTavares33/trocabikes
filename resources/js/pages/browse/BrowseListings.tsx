@@ -1,5 +1,7 @@
 import { router } from '@inertiajs/react';
 import { Search } from 'lucide-react';
+
+import { browse } from '@/routes';
 import type { ListingCardData } from '~/components/home/ListingCard';
 import ListingCard from '~/components/home/ListingCard';
 import type { BrowseFiltersState } from '~/pages/browse/BrowseFilters';
@@ -46,7 +48,7 @@ export default function BrowseListings({
             params.location = filters.location;
         }
 
-        router.get('/browse', params, {
+        router.get(browse.url({ query: params }), {}, {
             preserveState: true,
             preserveScroll: true,
         });

@@ -31,6 +31,7 @@ class StoreListingRequest extends FormRequest
             'district' => ['required', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
             'phone_visible' => ['sometimes', 'boolean'],
+            'email_visible' => ['sometimes', 'boolean'],
             'photos' => ['required', 'array', 'min:1', 'max:10'],
             'photos.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
         ];
@@ -40,6 +41,7 @@ class StoreListingRequest extends FormRequest
     {
         $this->merge([
             'phone_visible' => $this->boolean('phone_visible'),
+            'email_visible' => $this->boolean('email_visible'),
         ]);
     }
 }

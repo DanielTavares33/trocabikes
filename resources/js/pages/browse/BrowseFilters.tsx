@@ -2,6 +2,12 @@ import { router } from '@inertiajs/react';
 import type { SubmitEvent } from 'react';
 import { useState } from 'react';
 
+import {
+    LISTING_MAX_YEAR,
+    LISTING_MIN_YEAR,
+} from '@/lib/listing';
+import { browse } from '@/routes';
+
 interface FilterOption {
     id: number;
     name: string;
@@ -89,7 +95,7 @@ export default function BrowseFilters({
             params.sort = filters.sort;
         }
 
-        router.get('/browse', params, {
+        router.get(browse.url({ query: params }), {}, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -106,10 +112,16 @@ export default function BrowseFilters({
             location: '',
         });
 
-        router.get('/browse', filters.sort ? { sort: filters.sort } : {}, {
-            preserveState: true,
-            preserveScroll: true,
-        });
+        router.get(
+            browse.url({
+                query: filters.sort ? { sort: filters.sort } : {},
+            }),
+            {},
+            {
+                preserveState: true,
+                preserveScroll: true,
+            },
+        );
     };
 
     const toggleCondition = (value: string) => {
@@ -260,8 +272,8 @@ export default function BrowseFilters({
                         <input
                             type="number"
                             name="year_from"
-                            min="1990"
-                            max="2026"
+                            min={String(LISTING_MIN_YEAR)}
+                            max={String(LISTING_MAX_YEAR)}
                             placeholder="From"
                             value={localFilters.year_from}
                             onChange={(event) =>
@@ -276,8 +288,8 @@ export default function BrowseFilters({
                         <input
                             type="number"
                             name="year_to"
-                            min="1990"
-                            max="2026"
+                            min={String(LISTING_MIN_YEAR)}
+                            max={String(LISTING_MAX_YEAR)}
                             placeholder="To"
                             value={localFilters.year_to}
                             onChange={(event) =>

@@ -47,6 +47,7 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
             "@php artisan migrate --force",
+            "@php -r \"$target='../storage/app/public'; $link='public/storage'; if (is_link($link)) { unlink($link); } elseif (file_exists($link)) { fwrite(STDERR, 'public/storage exists and is not a symlink.'.PHP_EOL); exit(1); } symlink($target, $link); echo 'Storage link created.'.PHP_EOL;\"",
             "bun install",
             "bun run build"
         ],

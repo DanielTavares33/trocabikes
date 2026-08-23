@@ -42,6 +42,7 @@ use Illuminate\Http\Request;
  * @property string $district
  * @property string $city
  * @property bool $phone_visible
+ * @property bool $email_visible
  * @property int $views
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
@@ -69,6 +70,7 @@ class Listing extends Model
         'district',
         'city',
         'phone_visible',
+        'email_visible',
         'status',
         'views',
     ];
@@ -81,6 +83,7 @@ class Listing extends Model
             'frame_material' => FrameMaterial::class,
             'status' => ListingStatus::class,
             'phone_visible' => 'boolean',
+            'email_visible' => 'boolean',
             'views' => 'integer',
         ];
     }

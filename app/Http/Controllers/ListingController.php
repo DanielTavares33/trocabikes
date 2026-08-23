@@ -48,7 +48,7 @@ class ListingController extends Controller
     {
         $this->authorize('view', $listing);
 
-        $listing->increment('views');
+        $this->recordView($listing);
 
         return Inertia::render('listing/ListingDetail', [
             'listing' => ListingPresenter::detail($listing),
@@ -83,7 +83,7 @@ class ListingController extends Controller
         $this->authorize('update', $listing);
 
         return Inertia::render('listings/Edit', [
-            ...$this->formOptions(),
+            ...$this->formOptions($listing),
             'listing' => ListingPresenter::form($listing),
         ]);
     }
@@ -126,13 +126,21 @@ class ListingController extends Controller
     /**
      * @return array<string, mixed>
      */
-    private function formOptions(): array
+    private function formOptions(?Listing $listing = null): array
     {
+        $brandsQuery = BikeBrand::query()->orderBy('name');
+
+        if ($listing !== null) {
+            $brandsQuery->where(function ($query) use ($listing): void {
+                $query->where('is_active', true)
+                    ->orWhere('id', $listing->bike_brand_id);
+            });
+        } else {
+            $brandsQuery->where('is_active', true);
+        }
+
         return [
-            'brands' => BikeBrand::query()
-                ->where('is_active', true)
-                ->orderBy('name')
-                ->get(['id', 'name']),
+            'brands' => $brandsQuery->get(['id', 'name']),
             'categories' => BikeCategory::query()
                 ->orderBy('name')
                 ->get(['id', 'name']),
@@ -276,5 +284,17 @@ class ListingController extends Controller
         if ($firstImage !== null) {
             $firstImage->update(['is_primary' => true]);
         }
+    }
+
+    private function recordView(Listing $listing): void
+    {
+        $viewedListings = session('viewed_listings', []);
+
+        if (in_array($listing->id, $viewedListings, true)) {
+            return;
+        }
+
+        $listing->increment('views');
+        session()->push('viewed_listings', $listing->id);
     }
 }

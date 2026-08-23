@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('district');
             $table->string('city');
             $table->boolean('phone_visible');
+            $table->boolean('email_visible')->default(false);
             $table->enum('status', array_column(ListingStatus::cases(), 'value'))->default(ListingStatus::Active->value);
             $table->integer('views')->default(0);
             $table->timestamps();

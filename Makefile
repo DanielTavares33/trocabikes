@@ -1,5 +1,5 @@
 .PHONY: help build up up-d down restart rebuild ps logs logs-app logs-mysql shell setup fresh destroy \
-	artisan composer bun test lint migrate wayfinder ci
+	artisan composer bun test lint migrate wayfinder ci storage-link
 
 COMPOSE := docker compose
 APP := app
@@ -81,6 +81,9 @@ lint: ## Run PHP and JS linters
 
 migrate: ## Run database migrations
 	$(COMPOSE) exec $(APP) php artisan migrate
+
+storage-link: ## Create the public/storage symlink (relative, for php artisan serve)
+	$(COMPOSE) exec $(APP) php -r "$$target='../storage/app/public'; $$link='public/storage'; if (is_link($$link)) { unlink($$link); } elseif (file_exists($$link)) { fwrite(STDERR, 'public/storage exists and is not a symlink.'.PHP_EOL); exit(1); } symlink($$target, $$link); echo 'Storage link created.'.PHP_EOL;"
 
 wayfinder: ## Regenerate Wayfinder TypeScript routes
 	$(COMPOSE) exec $(APP) php artisan wayfinder:generate

@@ -119,7 +119,7 @@ class ListingPresenter
                 'name' => $listing->user?->name ?? '',
                 'phone' => $listing->phone_visible ? ($listing->user?->phone ?? '') : '',
                 'whatsapp' => $listing->phone_visible ? ($listing->user?->whatsapp ?? '') : '',
-                'email' => $listing->user?->email ?? '',
+                'email' => $listing->email_visible ? ($listing->user?->email ?? '') : '',
                 'type' => $listing->user?->type === 'professional' ? 'professional' : 'particular',
                 'isVerified' => (bool) ($listing->user?->is_verified ?? false),
                 'memberSince' => $listing->user?->created_at?->format('Y') ?? '',
@@ -154,6 +154,7 @@ class ListingPresenter
             'district' => $listing->district,
             'city' => $listing->city,
             'phone_visible' => $listing->phone_visible,
+            'email_visible' => $listing->email_visible,
             'images' => $listing->images->map(fn ($image) => [
                 'id' => $image->id,
                 'url' => $image->url(),

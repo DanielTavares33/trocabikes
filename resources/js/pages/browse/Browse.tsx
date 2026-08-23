@@ -1,4 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
+
+import { browse } from '@/routes';
 import Footer from '~/components/home/Footer';
 import type { ListingCardData } from '~/components/home/ListingCard';
 import Navbar from '~/components/home/Navbar';
@@ -66,7 +68,7 @@ export default function Browse({
             params.sort = filters.sort;
         }
 
-        router.get('/browse', params, {
+        router.get(browse.url({ query: params }), {}, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -100,6 +102,7 @@ export default function Browse({
                         <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
                             <div className="lg:w-56 lg:shrink-0">
                                 <BrowseFilters
+                                    key={JSON.stringify(filters)}
                                     filters={filters}
                                     filterOptions={filterOptions}
                                 />

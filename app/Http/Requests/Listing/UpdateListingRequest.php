@@ -4,11 +4,15 @@ namespace App\Http\Requests\Listing;
 
 use App\Enums\FrameMaterial;
 use App\Enums\ListingCondition;
+use App\Models\Listing;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class UpdateListingRequest extends FormRequest
 {
+    public const MAX_PHOTOS = 10;
+
     public function authorize(): bool
     {
         return $this->user()?->can('update', $this->route('listing')) ?? false;
@@ -30,17 +34,61 @@ class UpdateListingRequest extends FormRequest
             'district' => ['required', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
             'phone_visible' => ['sometimes', 'boolean'],
-            'photos' => ['sometimes', 'array', 'max:10'],
+            'email_visible' => ['sometimes', 'boolean'],
+            'photos' => ['sometimes', 'array'],
             'photos.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'removed_photo_ids' => ['sometimes', 'array'],
             'removed_photo_ids.*' => ['integer', 'exists:listing_images,id'],
         ];
     }
 
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            $listing = $this->route('listing');
+
+            if (! $listing instanceof Listing) {
+                return;
+            }
+
+            /** @var array<int, int|string> $removedIds */
+            $removedIds = $this->input('removed_photo_ids', []);
+            $newPhotoCount = count($this->file('photos', []));
+
+            if ($removedIds !== []) {
+                $validRemovalCount = $listing->images()->whereIn('id', $removedIds)->count();
+
+                if ($validRemovalCount !== count($removedIds)) {
+                    $validator->errors()->add(
+                        'removed_photo_ids',
+                        'One or more photos do not belong to this listing.',
+                    );
+                }
+            }
+
+            $remainingCount = $listing->images()
+                ->whereNotIn('id', $removedIds)
+                ->count();
+            $totalAfterUpdate = $remainingCount + $newPhotoCount;
+
+            if ($totalAfterUpdate < 1) {
+                $validator->errors()->add('photos', 'At least one photo is required.');
+            }
+
+            if ($totalAfterUpdate > self::MAX_PHOTOS) {
+                $validator->errors()->add(
+                    'photos',
+                    'A listing may have at most '.self::MAX_PHOTOS.' photos.',
+                );
+            }
+        });
+    }
+
     protected function prepareForValidation(): void
     {
         $this->merge([
             'phone_visible' => $this->boolean('phone_visible'),
+            'email_visible' => $this->boolean('email_visible'),
         ]);
     }
 }

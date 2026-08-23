@@ -9,6 +9,8 @@ import {
     TrendingUp,
 } from 'lucide-react';
 import React from 'react';
+
+import { create, edit } from '@/routes/listings';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
@@ -197,7 +199,7 @@ export default function MyBikes() {
                                 My Bikes
                             </h1>
                             <Link
-                                href="/listings/create"
+                                href={create.url()}
                                 className="inline-flex items-center gap-2 rounded-sm bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
                             >
                                 <Plus
@@ -325,7 +327,7 @@ function BikeCard({ bike }: { bike: MyBikeListing }) {
 
                 <div className="mt-auto grid grid-cols-4 gap-2 border-t border-border pt-4">
                     <Link
-                        href={`/listings/${bike.slug}/edit`}
+                        href={edit.url(bike.slug)}
                         className="flex items-center justify-center gap-1.5 rounded-sm border border-border px-3 py-2 text-xs font-medium text-text-subtle transition-all hover:border-border-strong hover:bg-bg-subtle hover:text-text"
                     >
                         <Edit width={14} height={14} strokeWidth={1.5} />
@@ -376,7 +378,7 @@ function EmptyState({ hasFilter }: { hasFilter: boolean }) {
             </p>
             {!hasFilter && (
                 <Link
-                    href="/listings/create"
+                    href={create.url()}
                     className="inline-flex items-center gap-2 rounded-sm bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
                 >
                     <Plus width={18} height={18} strokeWidth={2.5} />

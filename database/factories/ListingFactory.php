@@ -42,6 +42,7 @@ class ListingFactory extends Factory
             'district' => fake()->city(),
             'city' => fake()->city(),
             'phone_visible' => fake()->boolean(),
+            'email_visible' => fake()->boolean(),
             'status' => ListingStatus::Active,
             'views' => fake()->numberBetween(0, 500),
         ];
