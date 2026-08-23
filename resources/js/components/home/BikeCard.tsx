@@ -1,9 +1,7 @@
 import { Link } from '@inertiajs/react';
-import { Heart, MapPin, Trash } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
-import { useModal } from '@/hooks/useModal';
 import { show } from '@/routes/bikes';
-import Modal from '../ui/Modal';
 
 export interface BikeCardData {
     id: number;
@@ -32,15 +30,7 @@ const conditionColors: ConditionColor = {
     usada: 'bg-stone-100 text-stone-700',
 };
 
-export default function BikeCard({
-    bike,
-    saved = false,
-}: {
-    readonly bike: BikeCardData;
-    readonly saved?: boolean;
-}) {
-    const modal = useModal();
-
+export default function BikeCard({ bike }: { readonly bike: BikeCardData }) {
     return (
         <Link
             href={show.url(bike.slug)}
@@ -79,7 +69,7 @@ export default function BikeCard({
                         {bike.condition}
                     </span>
                     <span className="text-xs text-text-muted">{bike.year}</span>
-                    {bike.kilometers && (
+                    {bike.kilometers != null && (
                         <span className="text-xs text-text-muted">
                             {bike.kilometers.toLocaleString('pt-PT')} km
                         </span>
@@ -91,65 +81,6 @@ export default function BikeCard({
                         <MapPin width={12} height={12} />
                         <span>{bike.location}</span>
                     </div>
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            modal.open();
-                        }}
-                        className="text-text-subtle transition-colors hover:text-error"
-                        aria-label={
-                            saved ? 'Remove from saved' : 'Save to saved bikes'
-                        }
-                    >
-                        {saved ? (
-                            <Heart
-                                width={16}
-                                height={16}
-                                className="fill-error text-error"
-                                strokeWidth={2}
-                            />
-                        ) : (
-                            <Trash
-                                width={16}
-                                height={16}
-                                className="fill-none text-text-subtle"
-                                strokeWidth={2}
-                            />
-                        )}
-                    </button>
-                    <Modal
-                        isOpen={modal.isOpen}
-                        onClose={modal.close}
-                        title="Confirm Removal"
-                        size="md"
-                        closeOnBackdrop={true}
-                        closeOnEsc={true}
-                    >
-                        <div>
-                            <p className="mb-4 text-sm text-text">
-                                Are you sure you want to remove this bike from
-                                your saved list?
-                            </p>
-                            <div className="flex justify-end gap-2">
-                                <button
-                                    onClick={modal.close}
-                                    className="rounded-md bg-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        // Add your removal logic here
-                                        modal.close();
-                                    }}
-                                    className="rounded-md bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
-                                >
-                                    Remove
-                                </button>
-                            </div>
-                        </div>
-                    </Modal>
                 </div>
             </div>
         </Link>
