@@ -51,6 +51,7 @@ test('browse returns paginated active listings', function () {
             ->component('bikes/Index')
             ->has('bikes.data', 1)
             ->where('bikes.data.0.id', $active->id)
+            ->where('filters.sort', 'newest')
             ->has('filterOptions.brands')
             ->has('filterOptions.categories')
         );
@@ -95,6 +96,8 @@ test('browse filters by brand category price condition and location', function (
         ->assertInertia(fn (Assert $page) => $page
             ->has('bikes.data', 1)
             ->where('bikes.data.0.id', $match->id)
+            ->where('filters.bike_brand_id', (string) $brand->id)
+            ->where('filters.bike_category_id', (string) $category->id)
         );
 });
 
@@ -106,6 +109,7 @@ test('browse respects sort and pagination', function () {
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->where('bikes.data.0.price', 900)
+            ->where('filters.sort', 'price_desc')
         );
 
     Bike::factory()->count(10)->create();
@@ -238,8 +242,8 @@ test('guests cannot view sold or archived listings', function () {
     $sold = Bike::factory()->sold()->create();
     $archived = Bike::factory()->archived()->create();
 
-    $this->get(route('bikes.show', $sold))->assertForbidden();
-    $this->get(route('bikes.show', $archived))->assertForbidden();
+    $this->get(route('bikes.show', $sold))->assertNotFound();
+    $this->get(route('bikes.show', $archived))->assertNotFound();
 });
 
 test('owner can view their sold listing', function () {
@@ -388,4 +392,101 @@ test('edit includes inactive brand assigned to listing', function () {
                 fn (array $item) => $item['id'] === $brand->id && $item['name'] === 'Legacy Brand',
             ))
         );
+});
+
+test('home page shows recent active bikes', function () {
+    $recent = Bike::factory()->create(['created_at' => now()]);
+    Bike::factory()->sold()->create();
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Welcome')
+            ->has('recentBikes', 1)
+            ->where('recentBikes.0.id', $recent->id)
+        );
+});
+
+test('my bikes lists authenticated user listings', function () {
+    $user = User::factory()->create(['email_verified_at' => now()]);
+    $mine = Bike::factory()->for($user)->create();
+    Bike::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('my-bikes'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('my-bikes/Index')
+            ->has('bikes', 1)
+            ->where('bikes.0.id', $mine->id)
+        );
+});
+
+test('show exposes can manage for owner', function () {
+    $owner = User::factory()->create(['email_verified_at' => now()]);
+    $bike = Bike::factory()->for($owner)->create();
+
+    $this->actingAs($owner)
+        ->get(route('bikes.show', $bike))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('canManage', true)
+        );
+});
+
+test('show hides manage actions for guests', function () {
+    $bike = Bike::factory()->create();
+
+    $this->get(route('bikes.show', $bike))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('canManage', false)
+        );
+});
+
+test('store rejects inactive brand', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create(['email_verified_at' => now()]);
+    $brand = BikeBrand::factory()->inactive()->create();
+    $category = BikeCategory::factory()->create();
+
+    $this->actingAs($user)
+        ->post(route('bikes.store'), [
+            'title' => 'Test Bike',
+            'bike_brand_id' => $brand->id,
+            'bike_category_id' => $category->id,
+            'description' => 'A great bike for sale.',
+            'price' => 1200,
+            'condition' => 'excellent',
+            'year' => 2023,
+            'size' => 'M',
+            'frame_material' => 'carbon',
+            'district' => 'Lisboa',
+            'city' => 'Lisboa',
+            'photos' => [
+                UploadedFile::fake()->image('bike.jpg'),
+            ],
+        ])
+        ->assertSessionHasErrors('bike_brand_id');
+});
+
+test('non owner cannot delete listing', function () {
+    $owner = User::factory()->create(['email_verified_at' => now()]);
+    $other = User::factory()->create(['email_verified_at' => now()]);
+    $bike = Bike::factory()->for($owner)->create();
+
+    $this->actingAs($other)
+        ->delete(route('bikes.destroy', $bike))
+        ->assertForbidden();
+
+    expect(Bike::query()->find($bike->id))->not->toBeNull();
+});
+
+test('duplicate titles receive unique slugs', function () {
+    $first = Bike::factory()->create(['title' => 'Same Title']);
+    $second = Bike::factory()->create(['title' => 'Same Title']);
+
+    expect($first->slug)->toBe('same-title')
+        ->and($second->slug)->toBe('same-title-1');
 });

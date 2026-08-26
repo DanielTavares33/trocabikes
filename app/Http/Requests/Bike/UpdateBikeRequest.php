@@ -20,9 +20,22 @@ class UpdateBikeRequest extends FormRequest
 
     public function rules(): array
     {
+        /** @var Bike|null $bike */
+        $bike = $this->route('bike');
+
         return [
             'title' => ['required', 'string', 'max:255'],
-            'bike_brand_id' => ['required', 'integer', 'exists:bike_brands,id'],
+            'bike_brand_id' => [
+                'required',
+                'integer',
+                Rule::exists('bike_brands', 'id')->where(function ($query) use ($bike): void {
+                    $query->where('is_active', true);
+
+                    if ($bike instanceof Bike) {
+                        $query->orWhere('id', $bike->bike_brand_id);
+                    }
+                }),
+            ],
             'bike_category_id' => ['required', 'integer', 'exists:bike_categories,id'],
             'description' => ['required', 'string', 'max:5000'],
             'price' => ['required', 'numeric', 'min:0', 'max:999999.99'],

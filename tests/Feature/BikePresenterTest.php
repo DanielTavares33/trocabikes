@@ -60,3 +60,11 @@ test('detail exposes all seller contact when both visibility flags are enabled',
         ->and($detail['seller']['whatsapp'])->toBe('351912345678')
         ->and($detail['seller']['email'])->toBe('seller@example.com');
 });
+
+test('detail keeps kilometers null when not provided', function () {
+    $bike = Bike::factory()->create(['kilometers' => null]);
+
+    $detail = BikePresenter::detail($bike);
+
+    expect($detail['kilometers'])->toBeNull();
+});

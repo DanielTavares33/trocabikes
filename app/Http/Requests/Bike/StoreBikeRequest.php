@@ -19,7 +19,11 @@ class StoreBikeRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'bike_brand_id' => ['required', 'integer', 'exists:bike_brands,id'],
+            'bike_brand_id' => [
+                'required',
+                'integer',
+                Rule::exists('bike_brands', 'id')->where('is_active', true),
+            ],
             'bike_category_id' => ['required', 'integer', 'exists:bike_categories,id'],
             'description' => ['required', 'string', 'max:5000'],
             'price' => ['required', 'numeric', 'min:0', 'max:999999.99'],

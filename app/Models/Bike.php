@@ -159,20 +159,20 @@ class Bike extends Model
         }
 
         if ($request->filled('location')) {
-            $location = $request->string('location')->toString();
+            $location = self::escapeLike($request->string('location')->toString());
 
             $query->where(function (Builder $builder) use ($location): void {
-                $builder->where('city', 'like', "%{$location}%")
-                    ->orWhere('district', 'like', "%{$location}%");
+                $builder->where('city', 'like', '%'.$location.'%')
+                    ->orWhere('district', 'like', '%'.$location.'%');
             });
         }
 
         if ($request->filled('district')) {
-            $query->where('district', 'like', '%'.$request->string('district')->toString().'%');
+            $query->where('district', 'like', '%'.self::escapeLike($request->string('district')->toString()).'%');
         }
 
         if ($request->filled('city')) {
-            $query->where('city', 'like', '%'.$request->string('city')->toString().'%');
+            $query->where('city', 'like', '%'.self::escapeLike($request->string('city')->toString()).'%');
         }
     }
 
@@ -186,5 +186,10 @@ class Bike extends Model
             'price_desc' => $query->orderByDesc('price'),
             default => $query->orderByDesc('created_at'),
         };
+    }
+
+    private static function escapeLike(string $value): string
+    {
+        return str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $value);
     }
 }

@@ -42,7 +42,7 @@ export default function Edit({
     conditions,
     frameMaterials,
 }: Readonly<EditProps>) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, transform, post, processing, errors } = useForm({
         title: bike.title,
         bike_brand_id: String(bike.bike_brand_id),
         bike_category_id: String(bike.bike_category_id),
@@ -69,14 +69,6 @@ export default function Edit({
     );
 
     useEffect(() => {
-        setData('photos', photos);
-    }, [photos, setData]);
-
-    useEffect(() => {
-        setData('removed_photo_ids', removedPhotoIds);
-    }, [removedPhotoIds, setData]);
-
-    useEffect(() => {
         return () => {
             photoPreviews.forEach((preview) => URL.revokeObjectURL(preview));
         };
@@ -88,6 +80,20 @@ export default function Edit({
     ) => {
         setData(field, value as never);
     };
+
+    const handlePhotosChange = (files: File[]) => {
+        setPhotos(files);
+    };
+
+    const handleRemoveExistingPhoto = (id: number) => {
+        setRemovedPhotoIds((current) => [...current, id]);
+    };
+
+    transform((formData) => ({
+        ...formData,
+        photos,
+        removed_photo_ids: removedPhotoIds,
+    }));
 
     const handleSubmit = (event: SubmitEvent) => {
         event.preventDefault();
@@ -136,18 +142,14 @@ export default function Edit({
                             existingImages={bike.images}
                             removedPhotoIds={removedPhotoIds}
                             onChange={handleChange}
-                            onPhotosChange={setPhotos}
-                            onRemovePhoto={(index) =>
-                                setPhotos((current) =>
-                                    current.filter((_, i) => i !== index),
-                                )
-                            }
-                            onRemoveExistingPhoto={(id) =>
-                                setRemovedPhotoIds((current) => [
-                                    ...current,
-                                    id,
-                                ])
-                            }
+                            onPhotosChange={handlePhotosChange}
+                            onRemovePhoto={(index) => {
+                                const next = photos.filter(
+                                    (_, i) => i !== index,
+                                );
+                                handlePhotosChange(next);
+                            }}
+                            onRemoveExistingPhoto={handleRemoveExistingPhoto}
                             onSubmit={handleSubmit}
                             submitLabel="Save changes"
                         />

@@ -9,100 +9,11 @@ import Navbar from '~/components/home/Navbar';
 import SearchSection from '~/components/home/SearchSection';
 import Layout from '~/components/layout/Layout';
 
-const recentBikes: BikeCardData[] = [
-    {
-        id: 1,
-        title: 'Canyon Spectral CF 7 — Full Suspended MTB',
-        slug: 'canyon-spectral-cf-7-full-suspended-mtb',
-        brand: 'Canyon',
-        category: 'Mountain Bike',
-        price: 2850,
-        year: 2022,
-        condition: 'Excelente',
-        kilometers: 450,
-        location: 'Lisboa',
-        imageUrl:
-            'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600&h=450&fit=crop&q=80',
-        imageAlt: 'Canyon Spectral mountain bike',
-    },
-    {
-        id: 2,
-        title: 'Specialized Allez Sprint — Road Racing',
-        slug: 'specialized-allez-sprint-road-racing',
-        brand: 'Specialized',
-        category: 'Road Bike',
-        price: 1950,
-        year: 2021,
-        condition: 'Boa',
-        kilometers: 1200,
-        location: 'Porto',
-        imageUrl:
-            'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&h=450&fit=crop&q=80',
-        imageAlt: 'Specialized Allez Sprint road bike',
-    },
-    {
-        id: 3,
-        title: 'Trek FX 3 — City Hybrid Commuter',
-        slug: 'trek-fx-3-city-hybrid-commuter',
-        brand: 'Trek',
-        category: 'City Bike',
-        price: 650,
-        year: 2023,
-        condition: 'Nova',
-        kilometers: 0,
-        location: 'Braga',
-        imageUrl:
-            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=450&fit=crop&q=80',
-        imageAlt: 'Trek FX city bike',
-    },
-    {
-        id: 4,
-        title: 'Brose S Mag — Urban E-Bike 2024',
-        slug: 'brose-s-mag-urban-e-bike-2024',
-        brand: 'Brose',
-        category: 'E-Bike',
-        price: 3200,
-        year: 2024,
-        condition: 'Nova',
-        kilometers: 0,
-        location: 'Coimbra',
-        imageUrl:
-            'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&h=450&fit=crop&q=80',
-        imageAlt: 'Brose e-bike',
-    },
-    {
-        id: 5,
-        title: 'Giant Trance X Advanced — Carbon MTB',
-        slug: 'giant-trance-x-advanced-carbon-mtb',
-        brand: 'Giant',
-        category: 'Mountain Bike',
-        price: 4100,
-        year: 2023,
-        condition: 'Excelente',
-        kilometers: 200,
-        location: 'Lisboa',
-        imageUrl:
-            'https://images.unsplash.com/photo-1597326556223-28c6a7a2a7e8?w=600&h=450&fit=crop&q=80',
-        imageAlt: 'Giant mountain bike',
-    },
-    {
-        id: 6,
-        title: 'Pinasca BMX Race — Chromoly Frame',
-        slug: 'pinasca-bmx-race-chromoly-frame',
-        brand: 'Pinasca',
-        category: 'BMX',
-        price: 380,
-        year: 2020,
-        condition: 'Boa',
-        kilometers: 0,
-        location: 'Porto',
-        imageUrl:
-            'https://images.unsplash.com/photo-1558981408-600d5c4f2db8?w=600&h=450&fit=crop&q=80',
-        imageAlt: 'BMX race bike',
-    },
-];
+interface WelcomeProps {
+    recentBikes: BikeCardData[];
+}
 
-export default function Welcome() {
+export default function Welcome({ recentBikes }: Readonly<WelcomeProps>) {
     return (
         <Layout>
             <Head title="Trocabikes — Find your next bike" />
@@ -134,11 +45,20 @@ export default function Welcome() {
                                 </Link>
                             </div>
 
-                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                                {recentBikes.map((bike) => (
-                                    <BikeCard key={bike.id} bike={bike} />
-                                ))}
-                            </div>
+                            {recentBikes.length === 0 ? (
+                                <div className="rounded-sm border border-border bg-surface py-16 text-center">
+                                    <p className="text-sm text-text-muted">
+                                        No bikes listed yet. Be the first to
+                                        sell!
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                                    {recentBikes.map((bike) => (
+                                        <BikeCard key={bike.id} bike={bike} />
+                                    ))}
+                                </div>
+                            )}
 
                             <div className="mt-10 text-center sm:hidden">
                                 <Link

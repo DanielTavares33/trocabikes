@@ -39,7 +39,7 @@ export default function Create({
     conditions,
     frameMaterials,
 }: Readonly<CreateProps>) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, transform, post, processing, errors } = useForm({
         ...emptyForm,
         photos: [] as File[],
     });
@@ -48,10 +48,6 @@ export default function Create({
         () => photos.map((file) => URL.createObjectURL(file)),
         [photos],
     );
-
-    useEffect(() => {
-        setData('photos', photos);
-    }, [photos, setData]);
 
     useEffect(() => {
         return () => {
@@ -65,6 +61,15 @@ export default function Create({
     ) => {
         setData(field, value as never);
     };
+
+    const handlePhotosChange = (files: File[]) => {
+        setPhotos(files);
+    };
+
+    transform((formData) => ({
+        ...formData,
+        photos,
+    }));
 
     const handleSubmit = (event: SubmitEvent) => {
         event.preventDefault();
@@ -113,12 +118,13 @@ export default function Create({
                             photoPreviews={photoPreviews}
                             removedPhotoIds={[]}
                             onChange={handleChange}
-                            onPhotosChange={setPhotos}
-                            onRemovePhoto={(index) =>
-                                setPhotos((current) =>
-                                    current.filter((_, i) => i !== index),
-                                )
-                            }
+                            onPhotosChange={handlePhotosChange}
+                            onRemovePhoto={(index) => {
+                                const next = photos.filter(
+                                    (_, i) => i !== index,
+                                );
+                                handlePhotosChange(next);
+                            }}
                             onRemoveExistingPhoto={() => {}}
                             onSubmit={handleSubmit}
                             submitLabel="Publish bike"

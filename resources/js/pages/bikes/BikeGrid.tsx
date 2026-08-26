@@ -5,6 +5,7 @@ import { index as bikesIndex } from '@/routes/bikes';
 import type { BikeCardData } from '~/components/home/BikeCard';
 import BikeCard from '~/components/home/BikeCard';
 import type { BikeFiltersState } from '~/pages/bikes/BikeFilters';
+import { normalizeBikeSortValue } from '~/pages/bikes/BikeFilters';
 
 interface BikeGridProps {
     bikes: BikeCardData[];
@@ -17,6 +18,8 @@ export default function BikeGrid({
     total,
     filters,
 }: Readonly<BikeGridProps>) {
+    const sortValue = normalizeBikeSortValue(filters.sort);
+
     const handleSortChange = (sort: string) => {
         const params: Record<string, string | string[]> = { sort };
 
@@ -67,7 +70,7 @@ export default function BikeGrid({
                 </p>
 
                 <select
-                    value={filters.sort ?? 'newest'}
+                    value={sortValue}
                     onChange={(event) => handleSortChange(event.target.value)}
                     className="h-9 rounded-sm border border-border bg-surface px-3 text-sm text-text focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
                 >

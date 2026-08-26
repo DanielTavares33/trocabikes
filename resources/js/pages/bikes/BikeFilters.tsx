@@ -31,6 +31,29 @@ export interface BikeFiltersState {
     sort?: string;
 }
 
+export const BIKE_SORT_OPTIONS = ['newest', 'price_asc', 'price_desc'] as const;
+
+export type BikeSortOption = (typeof BIKE_SORT_OPTIONS)[number];
+
+export function normalizeBikeSortValue(sort: unknown): BikeSortOption {
+    return typeof sort === 'string' &&
+        (BIKE_SORT_OPTIONS as readonly string[]).includes(sort)
+        ? (sort as BikeSortOption)
+        : 'newest';
+}
+
+export function normalizeFilterSelectValue(value: unknown): string {
+    if (value === null || value === undefined) {
+        return '';
+    }
+
+    if (Array.isArray(value) || typeof value === 'object') {
+        return '';
+    }
+
+    return String(value);
+}
+
 interface BikeFiltersProps {
     filters: BikeFiltersState;
     filterOptions: {
@@ -46,8 +69,8 @@ export default function BikeFilters({
     filterOptions,
 }: Readonly<BikeFiltersProps>) {
     const [localFilters, setLocalFilters] = useState<BikeFiltersState>({
-        bike_brand_id: filters.bike_brand_id ?? '',
-        bike_category_id: filters.bike_category_id ?? '',
+        bike_brand_id: normalizeFilterSelectValue(filters.bike_brand_id),
+        bike_category_id: normalizeFilterSelectValue(filters.bike_category_id),
         price: filters.price ?? '',
         condition: filters.condition ?? [],
         year_from: filters.year_from ?? '',
@@ -148,7 +171,9 @@ export default function BikeFilters({
                         Brand
                     </h3>
                     <select
-                        value={localFilters.bike_brand_id}
+                        value={normalizeFilterSelectValue(
+                            localFilters.bike_brand_id,
+                        )}
                         onChange={(event) =>
                             setLocalFilters((current) => ({
                                 ...current,
@@ -159,7 +184,7 @@ export default function BikeFilters({
                     >
                         <option value="">All brands</option>
                         {filterOptions.brands.map((brand) => (
-                            <option key={brand.id} value={brand.id}>
+                            <option key={brand.id} value={String(brand.id)}>
                                 {brand.name}
                             </option>
                         ))}
@@ -171,7 +196,9 @@ export default function BikeFilters({
                         Category
                     </h3>
                     <select
-                        value={localFilters.bike_category_id}
+                        value={normalizeFilterSelectValue(
+                            localFilters.bike_category_id,
+                        )}
                         onChange={(event) =>
                             setLocalFilters((current) => ({
                                 ...current,
@@ -182,7 +209,10 @@ export default function BikeFilters({
                     >
                         <option value="">All categories</option>
                         {filterOptions.categories.map((category) => (
-                            <option key={category.id} value={category.id}>
+                            <option
+                                key={category.id}
+                                value={String(category.id)}
+                            >
                                 {category.name}
                             </option>
                         ))}

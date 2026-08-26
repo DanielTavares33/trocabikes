@@ -10,7 +10,6 @@ use App\Models\BikeBrand;
 use App\Models\BikeCategory;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Bike>
@@ -31,7 +30,6 @@ class BikeFactory extends Factory
             'bike_brand_id' => BikeBrand::factory(),
             'bike_category_id' => BikeCategory::factory(),
             'title' => ucfirst($title),
-            'slug' => fn (array $attributes) => Str::slug($attributes['title']),
             'description' => fake()->paragraph(),
             'price' => fake()->randomFloat(2, 50, 5000),
             'condition' => fake()->randomElement(BikeCondition::cases()),

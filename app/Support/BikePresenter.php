@@ -86,11 +86,36 @@ class BikePresenter
     /**
      * @return array<string, mixed>
      */
+    public static function myBike(Bike $bike): array
+    {
+        $bike->loadMissing(['bikeBrand', 'primaryImage']);
+
+        $image = $bike->primaryImage;
+
+        return [
+            'id' => $bike->id,
+            'title' => $bike->title,
+            'slug' => $bike->slug,
+            'brand' => $bike->bikeBrand?->name ?? '',
+            'price' => (float) $bike->price,
+            'year' => $bike->year,
+            'condition' => self::conditionLabel($bike->condition),
+            'status' => $bike->status->value,
+            'views' => $bike->views,
+            'createdAt' => $bike->created_at?->toDateString() ?? '',
+            'imageUrl' => $image?->url() ?? '',
+            'imageAlt' => $bike->title,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
     public static function detail(Bike $bike): array
     {
         $bike->loadMissing(['bikeBrand', 'bikeCategory', 'images', 'user']);
 
-        $primaryImage = $bike->primaryImage ?? $bike->images->first();
+        $primaryImage = $bike->images->firstWhere('is_primary', true) ?? $bike->images->first();
 
         return [
             'id' => $bike->id,
@@ -103,7 +128,7 @@ class BikePresenter
             'condition' => self::conditionLabel($bike->condition),
             'size' => $bike->size,
             'frameMaterial' => self::frameMaterialLabel($bike->frame_material),
-            'kilometers' => $bike->kilometers !== null ? (int) $bike->kilometers : 0,
+            'kilometers' => $bike->kilometers !== null ? (int) $bike->kilometers : null,
             'location' => self::location($bike),
             'description' => $bike->description,
             'imageUrl' => $primaryImage?->url() ?? '',
@@ -126,7 +151,7 @@ class BikePresenter
                 'location' => trim(($bike->user?->city ?? '').', '.($bike->user?->district ?? ''), ', '),
                 'avatarUrl' => $bike->user?->avatar
                     ? Storage::disk('public')->url($bike->user->avatar)
-                    : '',
+                    : null,
             ],
         ];
     }

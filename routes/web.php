@@ -3,6 +3,7 @@
 use App\Http\Controllers\BikeController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ProfileController;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::inertia('/', 'Welcome')->name('home');
+Route::get('/', HomeController::class)->name('home');
 
 Route::get('/bikes', [BikeController::class, 'index'])->name('bikes.index');
 
@@ -101,16 +102,20 @@ Route::middleware([Authenticate::class, EnsureEmailIsVerified::class])->group(fu
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // User bikes
-    Route::inertia('/my-bikes', 'my-bikes/Index')->name('my-bikes');
+    Route::get('/my-bikes', [BikeController::class, 'myBikes'])->name('my-bikes');
 
     // Saved bikes
     Route::inertia('/saved-bikes', 'saved-bikes/Index')->name('saved-bikes');
 
     // Sell a bike (must be registered before /bikes/{bike:slug})
     Route::get('/bikes/create', [BikeController::class, 'create'])->name('bikes.create');
-    Route::post('/bikes', [BikeController::class, 'store'])->name('bikes.store');
+    Route::post('/bikes', [BikeController::class, 'store'])
+        ->middleware(ThrottleRequests::class.':10,1')
+        ->name('bikes.store');
     Route::get('/bikes/{bike:slug}/edit', [BikeController::class, 'edit'])->name('bikes.edit');
-    Route::put('/bikes/{bike:slug}', [BikeController::class, 'update'])->name('bikes.update');
+    Route::put('/bikes/{bike:slug}', [BikeController::class, 'update'])
+        ->middleware(ThrottleRequests::class.':10,1')
+        ->name('bikes.update');
     Route::delete('/bikes/{bike:slug}', [BikeController::class, 'destroy'])->name('bikes.destroy');
 });
 

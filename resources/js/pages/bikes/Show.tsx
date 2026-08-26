@@ -1,15 +1,17 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import {
     BadgeCheck,
+    Edit,
     Link as LinkIcon,
     Mail,
     MapPin,
     MessageCircle,
     Phone,
+    Trash2,
 } from 'lucide-react';
 import { useState } from 'react';
 
-import { index as bikesIndex } from '@/routes/bikes';
+import { destroy, edit, index as bikesIndex } from '@/routes/bikes';
 import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
@@ -32,7 +34,7 @@ interface SellerData {
     isVerified: boolean;
     memberSince: string;
     location: string;
-    avatarUrl: string;
+    avatarUrl: string | null;
 }
 
 interface BikeImageData {
@@ -52,7 +54,7 @@ interface BikeShowData {
     condition: string;
     size: string;
     frameMaterial: string;
-    kilometers: number;
+    kilometers: number | null;
     location: string;
     description: string;
     imageUrl: string;
@@ -65,9 +67,10 @@ interface BikeShowData {
 
 interface BikeShowProps {
     bike: BikeShowData;
+    canManage: boolean;
 }
 
-export default function BikeShow({ bike }: Readonly<BikeShowProps>) {
+export default function BikeShow({ bike, canManage }: Readonly<BikeShowProps>) {
     const seller = bike.seller;
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const galleryImages =
@@ -83,6 +86,18 @@ export default function BikeShow({ bike }: Readonly<BikeShowProps>) {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
         }).format(price);
+    };
+
+    const handleDelete = () => {
+        if (
+            !window.confirm(
+                'Are you sure you want to delete this bike? This cannot be undone.',
+            )
+        ) {
+            return;
+        }
+
+        router.delete(destroy.url(bike.slug));
     };
 
     return (
@@ -113,6 +128,26 @@ export default function BikeShow({ bike }: Readonly<BikeShowProps>) {
                                 {bike.title}
                             </span>
                         </nav>
+
+                        {canManage && (
+                            <div className="mb-6 flex flex-wrap gap-3">
+                                <Link
+                                    href={edit.url(bike.slug)}
+                                    className="inline-flex items-center gap-2 rounded-sm border border-border bg-surface px-4 py-2 text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle"
+                                >
+                                    <Edit width={16} height={16} />
+                                    Edit bike
+                                </Link>
+                                <button
+                                    type="button"
+                                    onClick={handleDelete}
+                                    className="inline-flex items-center gap-2 rounded-sm border border-border px-4 py-2 text-sm font-medium text-error transition-colors hover:border-error/30 hover:bg-error/5"
+                                >
+                                    <Trash2 width={16} height={16} />
+                                    Delete bike
+                                </button>
+                            </div>
+                        )}
 
                         <div className="grid gap-8 lg:grid-cols-3">
                             <div className="lg:col-span-2">
@@ -205,17 +240,19 @@ export default function BikeShow({ bike }: Readonly<BikeShowProps>) {
                                                 {bike.frameMaterial}
                                             </p>
                                         </div>
-                                        <div>
-                                            <p className="text-xs text-text-subtle">
-                                                Kilometers
-                                            </p>
-                                            <p className="font-medium text-text">
-                                                {bike.kilometers.toLocaleString(
-                                                    'pt-PT',
-                                                )}{' '}
-                                                km
-                                            </p>
-                                        </div>
+                                        {bike.kilometers != null && (
+                                            <div>
+                                                <p className="text-xs text-text-subtle">
+                                                    Kilometers
+                                                </p>
+                                                <p className="font-medium text-text">
+                                                    {bike.kilometers.toLocaleString(
+                                                        'pt-PT',
+                                                    )}{' '}
+                                                    km
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className="mt-4 flex items-center gap-2 text-sm text-text-muted">
@@ -226,11 +263,19 @@ export default function BikeShow({ bike }: Readonly<BikeShowProps>) {
 
                                 <div className="rounded-sm border border-border bg-surface p-6">
                                     <div className="mb-4 flex items-center gap-3">
-                                        <img
-                                            src={seller.avatarUrl}
-                                            alt={seller.name}
-                                            className="h-12 w-12 rounded-full object-cover"
-                                        />
+                                        {seller.avatarUrl ? (
+                                            <img
+                                                src={seller.avatarUrl}
+                                                alt={seller.name}
+                                                className="h-12 w-12 rounded-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-bg-subtle text-sm font-semibold text-text">
+                                                {seller.name
+                                                    .charAt(0)
+                                                    .toUpperCase()}
+                                            </div>
+                                        )}
                                         <div>
                                             <div className="flex items-center gap-2">
                                                 <p className="font-medium text-text">
@@ -294,6 +339,7 @@ export default function BikeShow({ bike }: Readonly<BikeShowProps>) {
                                     </p>
                                     <div className="flex gap-2">
                                         <button
+                                            type="button"
                                             onClick={() => {
                                                 navigator.clipboard.writeText(
                                                     window.location.href,

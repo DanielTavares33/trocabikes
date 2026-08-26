@@ -14,7 +14,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -44,14 +44,35 @@ class BikeController extends Controller
         ]);
     }
 
-    public function show(Bike $bike): Response
+    public function show(Request $request, Bike $bike): Response
     {
-        $this->authorize('view', $bike);
+        if ($bike->status !== BikeStatus::Active) {
+            $user = $request->user();
+
+            if ($user === null || $user->id !== $bike->user_id) {
+                abort(404);
+            }
+        }
 
         $this->recordView($bike);
 
         return Inertia::render('bikes/Show', [
             'bike' => BikePresenter::detail($bike),
+            'canManage' => $request->user()?->id === $bike->user_id,
+        ]);
+    }
+
+    public function myBikes(Request $request): Response
+    {
+        $bikes = Bike::query()
+            ->where('user_id', $request->user()->id)
+            ->with(['bikeBrand', 'primaryImage'])
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(fn (Bike $bike) => BikePresenter::myBike($bike));
+
+        return Inertia::render('my-bikes/Index', [
+            'bikes' => $bikes,
         ]);
     }
 
@@ -64,14 +85,18 @@ class BikeController extends Controller
 
     public function store(StoreBikeRequest $request): RedirectResponse
     {
-        $bike = Bike::query()->create([
-            ...$request->safe()->except(['photos']),
-            'user_id' => $request->user()->id,
-            'status' => BikeStatus::Active,
-            'views' => 0,
-        ]);
+        $bike = DB::transaction(function () use ($request) {
+            $bike = Bike::query()->create([
+                ...$request->safe()->except(['photos']),
+                'user_id' => $request->user()->id,
+                'status' => BikeStatus::Active,
+                'views' => 0,
+            ]);
 
-        $this->storePhotos($bike, $request->file('photos', []));
+            $this->storePhotos($bike, $request->file('photos', []));
+
+            return $bike;
+        });
 
         Inertia::flash('success', 'Your bike is live.');
 
@@ -90,31 +115,28 @@ class BikeController extends Controller
 
     public function update(UpdateBikeRequest $request, Bike $bike): RedirectResponse
     {
-        $bike->update($request->safe()->except(['photos', 'removed_photo_ids']));
-        $bike->refresh();
+        DB::transaction(function () use ($request, $bike): void {
+            $bike->update($request->safe()->except(['photos', 'removed_photo_ids']));
 
-        if ($request->filled('removed_photo_ids')) {
-            $this->removePhotos($bike, $request->input('removed_photo_ids', []));
-        }
+            if ($request->filled('removed_photo_ids')) {
+                $this->removePhotos($bike, $request->input('removed_photo_ids', []));
+            }
 
-        if ($request->hasFile('photos')) {
-            $this->storePhotos($bike, $request->file('photos', []), $bike->images()->count());
-        }
+            if ($request->hasFile('photos')) {
+                $this->storePhotos($bike, $request->file('photos', []), $bike->images()->count());
+            }
 
-        $this->ensurePrimaryImage($bike);
+            $this->ensurePrimaryImage($bike);
+        });
 
         Inertia::flash('success', 'Bike updated successfully.');
 
-        return redirect()->route('bikes.show', $bike);
+        return redirect()->route('bikes.show', $bike->fresh());
     }
 
     public function destroy(Bike $bike): RedirectResponse
     {
         $this->authorize('delete', $bike);
-
-        foreach ($bike->images as $image) {
-            Storage::disk('public')->delete($image->path);
-        }
 
         $bike->delete();
 
@@ -219,6 +241,26 @@ class BikeController extends Controller
             $filters['condition'] = array_filter([(string) $request->input('condition')]);
         }
 
+        foreach (['bike_brand_id', 'bike_category_id', 'year_from', 'year_to', 'location'] as $key) {
+            if (! isset($filters[$key])) {
+                continue;
+            }
+
+            if (! is_scalar($filters[$key])) {
+                unset($filters[$key]);
+
+                continue;
+            }
+
+            $filters[$key] = (string) $filters[$key];
+        }
+
+        $sort = $request->string('sort')->toString();
+
+        $filters['sort'] = in_array($sort, ['newest', 'price_asc', 'price_desc'], true)
+            ? $sort
+            : 'newest';
+
         return $filters;
     }
 
@@ -265,12 +307,9 @@ class BikeController extends Controller
      */
     private function removePhotos(Bike $bike, array $photoIds): void
     {
-        $images = $bike->images()->whereIn('id', $photoIds)->get();
-
-        foreach ($images as $image) {
-            Storage::disk('public')->delete($image->path);
+        $bike->images()->whereIn('id', $photoIds)->each(function (BikeImage $image): void {
             $image->delete();
-        }
+        });
     }
 
     private function ensurePrimaryImage(Bike $bike): void

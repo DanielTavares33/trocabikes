@@ -9,9 +9,7 @@ class BikeObserver
 {
     public function creating(Bike $bike): void
     {
-        if (empty($bike->slug)) {
-            $bike->slug = $this->uniqueSlug($bike->title);
-        }
+        $bike->slug = $this->uniqueSlug($bike->title);
     }
 
     public function updating(Bike $bike): void
@@ -24,6 +22,11 @@ class BikeObserver
     private function uniqueSlug(string $title, ?int $ignoreId = null): string
     {
         $baseSlug = Str::slug($title);
+
+        if ($baseSlug === '') {
+            $baseSlug = 'bike';
+        }
+
         $slug = $baseSlug;
         $counter = 1;
 
