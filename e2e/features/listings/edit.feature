@@ -5,6 +5,9 @@ Feature: Edit bike listing
 
   Scenario: Seller updates a listing title
     Given I am signed in as the seller
-    When I open my bikes
-    And I edit the bike "Canyon Spectral CF 7" title to "Canyon Spectral CF 7 Updated"
-    Then I should be on the bike detail page for "Canyon Spectral CF 7 Updated"
+    When I start selling a bike
+    And I fill in a new bike listing with key "edit-target"
+    And I publish the bike listing
+    And I open my bikes
+    And I edit the bike with key "edit-target" to title key "edit-target-updated"
+    Then I should be on the bike detail page for key "edit-target-updated"

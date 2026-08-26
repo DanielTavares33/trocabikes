@@ -1,10 +1,14 @@
 import { expect } from '@playwright/test';
 
+import { seededBikeTitles } from '../support/catalog';
 import { Given, When, Then } from '../support/fixtures';
 
-Given('there are seeded bikes in the catalog', async ({ page }) => {
+Given('the seeded catalog bikes are visible', async ({ page }) => {
     await page.goto('/bikes');
-    await expect(page.getByText('3 bikes found')).toBeVisible();
+
+    for (const title of seededBikeTitles()) {
+        await expect(page.getByText(title).first()).toBeVisible();
+    }
 });
 
 When('I open the bike catalog', async ({ page }) => {
@@ -34,6 +38,8 @@ Then('I should not see the bike {string}', async ({ page }, title: string) => {
     ).toHaveCount(0);
 });
 
-Then('I should see {string} bikes found', async ({ page }, count: string) => {
-    await expect(page.getByText(`${count} bikes found`)).toBeVisible();
+Then('the seeded catalog bikes should be visible', async ({ page }) => {
+    for (const title of seededBikeTitles()) {
+        await expect(page.getByText(title).first()).toBeVisible();
+    }
 });

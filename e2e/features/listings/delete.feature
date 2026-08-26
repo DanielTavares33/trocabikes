@@ -5,6 +5,9 @@ Feature: Delete bike listing
 
   Scenario: Seller deletes a listing
     Given I am signed in as the seller
-    When I open my bikes
-    And I delete the bike "Trek Domane SL 5"
-    Then the bike "Trek Domane SL 5" should not appear in my bikes
+    When I start selling a bike
+    And I fill in a new bike listing with key "delete-target"
+    And I publish the bike listing
+    And I open my bikes
+    And I delete the bike with key "delete-target"
+    Then the bike with key "delete-target" should not appear in my bikes

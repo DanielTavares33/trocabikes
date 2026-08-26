@@ -1,11 +1,11 @@
 import { createBdd, test as base } from 'playwright-bdd';
 
-import { resetE2eDatabase } from './artisan';
+import { clearScenarioState } from './scenario-state';
 
 export const test = base;
 
 export const { Given, When, Then, Before } = createBdd(test);
 
 Before(async () => {
-    resetE2eDatabase();
+    clearScenarioState();
 });

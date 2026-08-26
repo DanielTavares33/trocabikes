@@ -6,6 +6,6 @@ Feature: Create bike listing
   Scenario: Buyer publishes a new bike
     Given I am signed in as the buyer
     When I start selling a bike
-    And I fill in a new bike listing titled "Custom Gravel Build"
+    And I fill in a new bike listing with key "custom-gravel"
     And I publish the bike listing
-    Then I should be on the bike detail page for "Custom Gravel Build"
+    Then I should be on the bike detail page for key "custom-gravel"

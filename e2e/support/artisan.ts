@@ -1,22 +1,6 @@
-import { execSync } from 'node:child_process';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { prepareE2eDatabase } from './database';
 
-const projectRoot = path.resolve(
-    path.dirname(fileURLToPath(import.meta.url)),
-    '../..',
-);
-
+/** Manual reset only (e.g. local debugging). The suite seeds once in globalSetup. */
 export function resetE2eDatabase(): void {
-    execSync(
-        'php artisan migrate:fresh --seed --seeder=E2eDatabaseSeeder --force --env=e2e',
-        {
-            cwd: projectRoot,
-            stdio: 'inherit',
-            env: {
-                ...process.env,
-                APP_ENV: 'e2e',
-            },
-        },
-    );
+    prepareE2eDatabase();
 }

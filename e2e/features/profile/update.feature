@@ -6,6 +6,6 @@ Feature: Profile settings
   Scenario: Buyer updates profile details
     Given I am signed in as the buyer
     When I open my profile
-    And I update my profile name to "Updated Buyer"
+    And I update my profile with a unique display name
     Then I should see a success toast "Profile updated successfully."
-    And my profile should show the name "Updated Buyer"
+    And my profile should show my updated display name

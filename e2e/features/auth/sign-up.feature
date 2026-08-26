@@ -4,5 +4,5 @@ Feature: Sign up
   So that I can join the marketplace
 
   Scenario: Visitor registers and sees verification notice
-    When I register with name "New User" and email "new-user@trocabikes.test"
+    When I register as a new user
     Then I should see the email verification notice

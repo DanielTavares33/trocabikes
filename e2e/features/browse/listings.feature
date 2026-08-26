@@ -4,7 +4,7 @@ Feature: Bike catalog
   So that I can find listings that match my needs
 
   Background:
-    Given there are seeded bikes in the catalog
+    Given the seeded catalog bikes are visible
 
   Scenario: Visitor opens a bike detail page
     When I click the bike card "Canyon Spectral CF 7"
@@ -15,4 +15,4 @@ Feature: Bike catalog
     Then I should see the bike "Canyon Spectral CF 7"
     And I should not see the bike "Trek Domane SL 5"
     When I clear bike filters
-    Then I should see "3" bikes found
+    Then the seeded catalog bikes should be visible

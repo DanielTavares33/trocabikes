@@ -5,7 +5,9 @@ import {
     E2E_SELLER,
     E2E_UNVERIFIED,
 } from '../support/credentials';
+import { uniqueEmail } from '../support/data';
 import { Given, When, Then } from '../support/fixtures';
+import { setRegisteredEmail } from '../support/scenario-state';
 
 Given('I am signed in as the buyer', async ({ page }) => {
     await page.goto('/sign-in');
@@ -49,9 +51,24 @@ When('I sign out from the account menu', async ({ page }) => {
     await page.getByRole('button', { name: 'Logout' }).click();
 });
 
+When('I register as a new user', async ({ page }) => {
+    const email = uniqueEmail('new-user');
+
+    setRegisteredEmail(email);
+
+    await page.goto('/sign-up');
+    await page.getByLabel('Full name').fill('New User');
+    await page.getByLabel('Email').fill(email);
+    await page.locator('#password').fill('password123');
+    await page.locator('#password_confirmation').fill('password123');
+    await page.getByRole('button', { name: 'Create account' }).click();
+});
+
 When(
     'I register with name {string} and email {string}',
     async ({ page }, name: string, email: string) => {
+        setRegisteredEmail(email);
+
         await page.goto('/sign-up');
         await page.getByLabel('Full name').fill(name);
         await page.getByLabel('Email').fill(email);
