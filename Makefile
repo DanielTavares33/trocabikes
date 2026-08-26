@@ -1,11 +1,8 @@
 .PHONY: help build up up-d down restart rebuild ps logs logs-app logs-mysql shell setup fresh destroy \
-	artisan composer bun test lint migrate wayfinder ci storage-link e2e-setup e2e e2e-fix-perms
+	artisan composer bun test lint migrate wayfinder ci storage-link e2e-setup e2e
 
 COMPOSE := docker compose
 APP := app
-HOST_UID := $(shell id -u)
-HOST_GID := $(shell id -g)
-E2E_ARTIFACTS := .features-gen playwright-report test-results node_modules public/build
 MYSQL := mysql
 DB_DATABASE ?= trocabikes
 
@@ -96,15 +93,6 @@ ci: ## Run full CI pipeline
 
 e2e-setup: ## One-time: install Playwright Chromium + build assets in the app container
 	$(COMPOSE) exec $(APP) bash -lc 'bunx playwright install --with-deps chromium && bun run build'
-	@$(MAKE) e2e-fix-perms
-
-e2e-fix-perms: ## Fix root-owned Docker files so host bun/vite/playwright can write
-	@$(COMPOSE) exec -u 0 $(APP) chown -R $(HOST_UID):$(HOST_GID) $(E2E_ARTIFACTS) || ( \
-		echo "Could not chown via Docker. Run this on the host:"; \
-		echo "  sudo chown -R $(HOST_UID):$(HOST_GID) $(E2E_ARTIFACTS)"; \
-		exit 1; \
-	)
 
 e2e: ## Run Playwright BDD end-to-end tests (run make e2e-setup once first)
 	$(COMPOSE) exec $(APP) bash -lc 'CI=true bun run test:e2e'
-	@$(MAKE) e2e-fix-perms
