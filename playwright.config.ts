@@ -6,6 +6,11 @@ const testDir = defineBddConfig({
     steps: ['e2e/support/fixtures.ts', 'e2e/steps/**/*.ts'],
 });
 
+const headed = process.argv.some((arg) =>
+    ['--headed', '--ui', '--debug'].includes(arg),
+);
+const debug = process.argv.includes('--debug');
+
 export default defineConfig({
     testDir,
     globalSetup: './e2e/support/global-setup.ts',
@@ -18,11 +23,17 @@ export default defineConfig({
         baseURL: 'http://127.0.0.1:8001',
         trace: 'on-first-retry',
         screenshot: 'only-on-failure',
+        ...(headed ? { headless: false } : {}),
+        ...(headed && !debug ? { launchOptions: { slowMo: 500 } } : {}),
     },
     projects: [
         {
             name: 'chromium',
-            use: { ...devices['Desktop Chrome'] },
+            use: {
+                ...devices['Desktop Chrome'],
+                ...(headed ? { headless: false } : {}),
+                ...(headed && !debug ? { launchOptions: { slowMo: 500 } } : {}),
+            },
         },
     ],
     webServer: {

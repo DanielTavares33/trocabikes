@@ -11,9 +11,10 @@
         "lint": "eslint . --fix",
         "lint:check": "eslint .",
         "types:check": "tsc --noEmit",
-        "test:e2e": "bunx bddgen && bunx playwright test",
-        "test:e2e:headed": "bunx bddgen && bunx playwright test --headed",
-        "test:e2e:ui": "bunx bddgen && bunx playwright test --ui"
+        "test:e2e": "bun e2e/run.ts",
+        "test:e2e:headed": "bun e2e/run.ts --headed --slow-mo=500",
+        "test:e2e:ui": "bun e2e/run.ts --ui",
+        "test:e2e:debug": "bun e2e/run.ts --debug"
     },
     "devDependencies": {
         "@playwright/test": "^1.58.2",
