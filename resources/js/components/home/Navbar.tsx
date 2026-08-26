@@ -36,6 +36,9 @@ export default function Navbar() {
             {user ? (
                 <div className="relative" ref={dropdownRef}>
                     <button
+                        type="button"
+                        aria-label="Account menu"
+                        aria-expanded={open}
                         onClick={() => setOpen(!open)}
                         className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-border transition-colors hover:border-border-strong"
                     >

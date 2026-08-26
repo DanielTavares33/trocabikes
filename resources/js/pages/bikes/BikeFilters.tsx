@@ -171,6 +171,7 @@ export default function BikeFilters({
                         Brand
                     </h3>
                     <select
+                        aria-label="Filter by brand"
                         value={normalizeFilterSelectValue(
                             localFilters.bike_brand_id,
                         )}
@@ -196,6 +197,7 @@ export default function BikeFilters({
                         Category
                     </h3>
                     <select
+                        aria-label="Filter by category"
                         value={normalizeFilterSelectValue(
                             localFilters.bike_category_id,
                         )}

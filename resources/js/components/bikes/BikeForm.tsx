@@ -484,6 +484,7 @@ export default function BikeForm({
                 </p>
 
                 <input
+                    id="photos"
                     ref={fileInputRef}
                     type="file"
                     accept="image/png,image/jpeg,image/jpg,image/webp"

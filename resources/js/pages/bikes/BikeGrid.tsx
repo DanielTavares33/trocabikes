@@ -70,6 +70,7 @@ export default function BikeGrid({
                 </p>
 
                 <select
+                    aria-label="Sort bikes"
                     value={sortValue}
                     onChange={(event) => handleSortChange(event.target.value)}
                     className="h-9 rounded-sm border border-border bg-surface px-3 text-sm text-text focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
