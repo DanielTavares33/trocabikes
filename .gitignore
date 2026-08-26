@@ -28,6 +28,6 @@ yarn-error.log
 /.zed
 /test-results
 /playwright-report
-/e2e/.features-gen
+/.features-gen
 /database/e2e.sqlite
 /database/e2e.sqlite-journal
