@@ -1,3 +1,8 @@
+import { Link } from '@inertiajs/react';
+
+import { index as bikesIndex } from '@/routes/bikes';
+import { create } from '@/routes/bikes';
+
 export default function Hero() {
     return (
         <section className="relative flex min-h-[520px] flex-col items-center justify-center overflow-hidden bg-text lg:min-h-[600px]">
@@ -22,18 +27,18 @@ export default function Hero() {
                     from MTB to road, e-bikes to kids' bikes.
                 </p>
                 <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                    <a
-                        href="/browse"
+                    <Link
+                        href={bikesIndex.url()}
                         className="rounded-sm bg-primary px-8 py-3 text-base font-medium text-white transition-colors hover:bg-primary-hover"
                     >
                         Browse bikes
-                    </a>
-                    <a
-                        href="/listings/create"
+                    </Link>
+                    <Link
+                        href={create.url()}
                         className="rounded-sm border border-white/30 bg-white/10 px-8 py-3 text-base font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
                     >
                         Sell your bike
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>

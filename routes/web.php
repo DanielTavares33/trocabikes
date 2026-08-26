@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\BikeController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ProfileController;
@@ -19,10 +21,9 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::inertia('/', 'Welcome')->name('home');
+Route::get('/', HomeController::class)->name('home');
 
-Route::inertia('/browse', 'browse/Browse')->name('browse');
-Route::inertia('/browse/{listing:slug}', 'listing/ListingDetail')->name('listings.show');
+Route::get('/bikes', [BikeController::class, 'index'])->name('bikes.index');
 
 /*
 |--------------------------------------------------------------------------
@@ -100,15 +101,25 @@ Route::middleware([Authenticate::class, EnsureEmailIsVerified::class])->group(fu
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    // User Listings
-    Route::inertia('/my-bikes', 'my-bikes/Index')->name('my-bikes');
+    // User bikes
+    Route::get('/my-bikes', [BikeController::class, 'myBikes'])->name('my-bikes');
 
-    // Saved Bikes
+    // Saved bikes
     Route::inertia('/saved-bikes', 'saved-bikes/Index')->name('saved-bikes');
 
-    // Create Listing
-    Route::inertia('/listings/create', 'listings/Create')->name('listings.create');
+    // Sell a bike (must be registered before /bikes/{bike:slug})
+    Route::get('/bikes/create', [BikeController::class, 'create'])->name('bikes.create');
+    Route::post('/bikes', [BikeController::class, 'store'])
+        ->middleware(ThrottleRequests::class.':10,1')
+        ->name('bikes.store');
+    Route::get('/bikes/{bike:slug}/edit', [BikeController::class, 'edit'])->name('bikes.edit');
+    Route::put('/bikes/{bike:slug}', [BikeController::class, 'update'])
+        ->middleware(ThrottleRequests::class.':10,1')
+        ->name('bikes.update');
+    Route::delete('/bikes/{bike:slug}', [BikeController::class, 'destroy'])->name('bikes.destroy');
 });
+
+Route::get('/bikes/{bike:slug}', [BikeController::class, 'show'])->name('bikes.show');
 
 /*
 |--------------------------------------------------------------------------

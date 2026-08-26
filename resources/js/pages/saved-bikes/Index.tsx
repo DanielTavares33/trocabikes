@@ -1,12 +1,12 @@
 import { Head, Link } from '@inertiajs/react';
 import { Heart } from 'lucide-react';
+import type { BikeCardData } from '~/components/home/BikeCard';
+import BikeCard from '~/components/home/BikeCard';
 import Footer from '~/components/home/Footer';
-import type { ListingCardData } from '~/components/home/ListingCard';
-import ListingCard from '~/components/home/ListingCard';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
 
-const SAVED_BIKES: ListingCardData[] = [
+const SAVED_BIKES: BikeCardData[] = [
     {
         id: 1,
         title: 'Canyon Spectral CF 7 — Full Suspended MTB',
@@ -112,16 +112,13 @@ export default function SavedBikes() {
                                     No saved bikes yet
                                 </h3>
                                 <p className="text-sm text-text-muted">
-                                    Browse listings and save bikes you like.
+                                    Browse bikes and save the ones you like.
                                 </p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
-                                {SAVED_BIKES.map((listing) => (
-                                    <ListingCard
-                                        key={listing.id}
-                                        listing={listing}
-                                    />
+                                {SAVED_BIKES.map((bike) => (
+                                    <BikeCard key={bike.id} bike={bike} />
                                 ))}
                             </div>
                         )}

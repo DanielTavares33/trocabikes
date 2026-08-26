@@ -1,0 +1,28 @@
+---
+description: Run composer ci:check before git commit or push
+alwaysApply: true
+---
+
+# Pre-commit CI check
+
+Before **any** `git commit` or `git push` (including when the user asks you to commit and push):
+
+1. Run the full pipeline:
+
+```bash
+composer ci:check
+```
+
+This runs ESLint, Prettier, TypeScript, Pint, and Pest — the same checks as GitHub CI.
+
+2. If it fails, fix all reported issues (lint, format, types, PHP style, tests).
+3. Re-run `composer ci:check` until it passes.
+4. Only then stage, commit, and push.
+
+## Do not substitute partial checks
+
+Running individual steps (`php artisan test`, `bun run lint`, `vendor/bin/pint`) is fine while developing, but **not** sufficient before commit/push. Always use `composer ci:check` as the final gate.
+
+## If CI fails after push
+
+Fix the issues, run `composer ci:check` again, then create a **new** commit (do not amend if already pushed).

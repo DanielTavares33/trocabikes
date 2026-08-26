@@ -246,7 +246,7 @@ test('unverified user cannot access listings create', function () {
         'email_verified_at' => null,
     ]);
 
-    $response = actingAs($user)->get(route('listings.create'));
+    $response = actingAs($user)->get(route('bikes.create'));
 
     $response->assertRedirect(route('verification.notice'));
 });
