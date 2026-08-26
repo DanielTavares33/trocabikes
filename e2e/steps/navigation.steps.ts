@@ -10,7 +10,7 @@ Given('I am on the home page', async ({ page }) => {
 });
 
 When('I click {string}', async ({ page }, label: string) => {
-    await page.getByRole('link', { name: label, exact: true }).click();
+    await page.getByRole('link', { name: label, exact: true }).first().click();
 });
 
 When('I go to {string}', async ({ page }, path: string) => {

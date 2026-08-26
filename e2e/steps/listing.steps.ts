@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { expect } from '@playwright/test';
 
 import { Given, When, Then } from '../support/fixtures';
+import { myBikeCard } from '../support/locators';
 
 const samplePhoto = path.resolve(
     path.dirname(fileURLToPath(import.meta.url)),
@@ -46,9 +47,7 @@ When('I open my bikes', async ({ page }) => {
 When(
     'I edit the bike {string} title to {string}',
     async ({ page }, currentTitle: string, newTitle: string) => {
-        const card = page.locator('div').filter({
-            has: page.getByRole('heading', { name: currentTitle, level: 3 }),
-        }).first();
+        const card = myBikeCard(page, currentTitle);
 
         await card.getByRole('link', { name: 'Edit' }).click();
         await expect(page.getByLabel('Title')).toHaveValue(currentTitle);
@@ -60,9 +59,7 @@ When(
 When('I delete the bike {string}', async ({ page }, title: string) => {
     page.once('dialog', (dialog) => dialog.accept());
 
-    const card = page.locator('div').filter({
-        has: page.getByRole('heading', { name: title, level: 3 }),
-    }).first();
+    const card = myBikeCard(page, title);
 
     await card.getByRole('button', { name: 'Delete' }).click();
 });

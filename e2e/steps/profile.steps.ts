@@ -14,7 +14,9 @@ When('I update my profile name to {string}', async ({ page }, name: string) => {
 });
 
 Then('I should see a success toast {string}', async ({ page }, message: string) => {
-    await expect(page.getByText(message)).toBeVisible();
+    await expect(
+        page.getByRole('status').filter({ hasText: message }),
+    ).toBeVisible();
 });
 
 Then('my profile should show the name {string}', async ({ page }, name: string) => {

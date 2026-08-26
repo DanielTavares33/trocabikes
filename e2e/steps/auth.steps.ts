@@ -55,8 +55,8 @@ When(
         await page.goto('/sign-up');
         await page.getByLabel('Full name').fill(name);
         await page.getByLabel('Email').fill(email);
-        await page.getByLabel('Password', { exact: true }).fill('password123');
-        await page.getByLabel('Confirm password').fill('password123');
+        await page.locator('#password').fill('password123');
+        await page.locator('#password_confirmation').fill('password123');
         await page.getByRole('button', { name: 'Create account' }).click();
     },
 );
