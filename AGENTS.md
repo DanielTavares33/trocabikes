@@ -16,7 +16,7 @@ Laravel 13 / Inertia 3 / React 19 / Tailwind CSS 4 / Pest 4. Dev uses MySQL (Doc
 | Format (Prettier) | `bun run format` |
 | Type check (tsc --noEmit) | `bun run types:check` |
 | Full CI (lint → format → types → Pint → test) | `composer ci:check` |
-| E2E (Playwright + Cucumber BDD) | `make e2e` or `bun run test:e2e` |
+| E2E (Playwright + Cucumber BDD) | `make e2e-setup` once, then `make e2e` or `bun run test:e2e` |
 | Fresh setup (composer+bun+key+migrate+build) | `composer setup` |
 | Regenerate Wayfinder types | `php artisan wayfinder:generate` |
 
@@ -27,6 +27,7 @@ Laravel 13 / Inertia 3 / React 19 / Tailwind CSS 4 / Pest 4. Dev uses MySQL (Doc
 - `docker compose up` starts app (port 8000) + MySQL 8.0 (port 3306).
 - MySQL has no password (`MYSQL_ALLOW_EMPTY_PASSWORD=yes`). DB name: `trocabikes`.
 - Bun is installed at `/root/.bun/bin` in the container. If `bunx` is not found, rebuild: `docker compose build`.
+- E2E in Docker: run `make e2e-setup` once (installs Playwright Chromium + builds assets), then `make e2e`. On the host, use `bun run test:e2e` after `bunx playwright install chromium` and `bun run build`.
 
 ## Domain
 

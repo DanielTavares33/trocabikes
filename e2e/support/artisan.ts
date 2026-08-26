@@ -1,5 +1,4 @@
 import { execSync } from 'node:child_process';
-import { rmSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -20,16 +19,4 @@ export function resetE2eDatabase(): void {
             },
         },
     );
-
-    for (const directory of ['bikes', 'avatars']) {
-        const target = path.join(
-            projectRoot,
-            'storage',
-            'app',
-            'public',
-            directory,
-        );
-
-        rmSync(target, { recursive: true, force: true });
-    }
 }
