@@ -95,4 +95,4 @@ e2e-setup: ## One-time: install Playwright Chromium + build assets in the app co
 	$(COMPOSE) exec $(APP) bash -lc 'bunx playwright install --with-deps chromium && bun run build'
 
 e2e: ## Run Playwright BDD end-to-end tests (run make e2e-setup once first)
-	$(COMPOSE) exec $(APP) bash -lc 'touch database/e2e.sqlite && php artisan storage:link --force --env=e2e 2>/dev/null || true && CI=true bun run test:e2e'
+	$(COMPOSE) exec $(APP) bash -lc 'CI=true bun run test:e2e'

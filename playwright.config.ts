@@ -13,7 +13,7 @@ export default defineConfig({
     workers: 1,
     forbidOnly: !!process.env.CI,
     retries: process.env.CI ? 1 : 0,
-    reporter: [['html', { open: 'never' }], ['list']],
+    reporter: [['html', { open: 'never' }], ['line']],
     use: {
         baseURL: 'http://127.0.0.1:8001',
         trace: 'on-first-retry',
@@ -27,11 +27,11 @@ export default defineConfig({
     ],
     webServer: {
         command:
-            'php artisan serve --host=127.0.0.1 --port=8001 --env=e2e',
+            'php artisan serve --host=127.0.0.1 --port=8001 --env=e2e --no-reload > /dev/null 2>&1',
         url: 'http://127.0.0.1:8001',
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
-        stdout: 'pipe',
-        stderr: 'pipe',
+        stdout: 'ignore',
+        stderr: 'ignore',
     },
 });

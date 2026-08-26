@@ -12,28 +12,42 @@ const e2eEnv: NodeJS.ProcessEnv = {
     APP_ENV: 'e2e',
 };
 
+function runArtisan(command: string): void {
+    const verbose = process.env.E2E_VERBOSE === '1';
+    const stdio = verbose ? 'inherit' : 'pipe';
+
+    try {
+        execSync(command, {
+            cwd: projectRoot,
+            stdio,
+            env: e2eEnv,
+        });
+    } catch (error) {
+        if (!verbose && error instanceof Error && 'stdout' in error) {
+            const execError = error as Error & {
+                stdout?: Buffer;
+                stderr?: Buffer;
+            };
+
+            if (execError.stdout?.length) {
+                process.stderr.write(execError.stdout);
+            }
+
+            if (execError.stderr?.length) {
+                process.stderr.write(execError.stderr);
+            }
+        }
+
+        throw error;
+    }
+}
+
 export function prepareE2eDatabase(): void {
-    execSync('touch database/e2e.sqlite', {
-        cwd: projectRoot,
-        stdio: 'inherit',
-        env: e2eEnv,
-    });
-
-    execSync(
+    runArtisan('touch database/e2e.sqlite');
+    runArtisan(
         'php artisan storage:link --force --env=e2e 2>/dev/null || true',
-        {
-            cwd: projectRoot,
-            stdio: 'inherit',
-            env: e2eEnv,
-        },
     );
-
-    execSync(
-        'php artisan migrate:fresh --seed --seeder=E2eDatabaseSeeder --force --env=e2e',
-        {
-            cwd: projectRoot,
-            stdio: 'inherit',
-            env: e2eEnv,
-        },
+    runArtisan(
+        'php artisan migrate:fresh --seed --seeder=E2eDatabaseSeeder --force --env=e2e --no-ansi',
     );
 }

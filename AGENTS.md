@@ -28,7 +28,7 @@ Laravel 13 / Inertia 3 / React 19 / Tailwind CSS 4 / Pest 4. Dev uses MySQL (Doc
 - MySQL has no password (`MYSQL_ALLOW_EMPTY_PASSWORD=yes`). DB name: `trocabikes`.
 - Bun is installed at `/root/.bun/bin` in the container. If `bunx` is not found, rebuild: `docker compose build`.
 - E2E in Docker: run `make e2e-setup` once (installs Playwright Chromium + builds assets), then `make e2e`. On the host, use `bun run test:e2e` after `bunx playwright install chromium` and `bun run build`.
-- E2E uses **shared database state**: `e2e/support/global-setup.ts` runs `migrate:fresh --seeder=E2eDatabaseSeeder` once before the suite. `webServer` only starts `php artisan serve`. Scenarios never reset the DB. Read-only flows use seeded users/bikes; mutating flows create unique data via keys in `e2e/support/catalog.ts` and `e2e/support/data.ts`. Tests run with `workers: 1` and `fullyParallel: false`.
+- E2E uses **shared database state**: `e2e/support/global-setup.ts` seeds once before the suite (`webServer` only runs `php artisan serve`). Output is quiet by default; set `E2E_VERBOSE=1` to show migration logs.
 
 ## Domain
 
