@@ -6,10 +6,11 @@ const testDir = defineBddConfig({
     steps: ['e2e/support/fixtures.ts', 'e2e/steps/**/*.ts'],
 });
 
-const headed = process.argv.some((arg) =>
-    ['--headed', '--ui', '--debug'].includes(arg),
-);
-const debug = process.argv.includes('--debug');
+const headed =
+    process.env.HEADED === '1' ||
+    process.argv.some((arg) => ['--headed', '--ui', '--debug'].includes(arg));
+const debug =
+    process.env.E2E_DEBUG === '1' || process.argv.includes('--debug');
 
 export default defineConfig({
     testDir,
@@ -24,7 +25,7 @@ export default defineConfig({
         trace: 'on-first-retry',
         screenshot: 'only-on-failure',
         ...(headed ? { headless: false } : {}),
-        ...(headed && !debug ? { launchOptions: { slowMo: 500 } } : {}),
+        ...(headed && !debug ? { launchOptions: { slowMo: 800 } } : {}),
     },
     projects: [
         {
@@ -32,7 +33,7 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Chrome'],
                 ...(headed ? { headless: false } : {}),
-                ...(headed && !debug ? { launchOptions: { slowMo: 500 } } : {}),
+                ...(headed && !debug ? { launchOptions: { slowMo: 800 } } : {}),
             },
         },
     ],

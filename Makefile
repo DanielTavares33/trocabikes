@@ -99,12 +99,11 @@ e2e-setup: ## One-time: install Playwright Chromium + build assets in the app co
 	@$(MAKE) e2e-fix-perms
 
 e2e-fix-perms: ## Fix root-owned Docker files so host bun/vite/playwright can write
-	@if $(COMPOSE) ps --status running -q $(APP) 2>/dev/null | grep -q .; then \
-		$(COMPOSE) exec $(APP) chown -R $(HOST_UID):$(HOST_GID) $(E2E_ARTIFACTS) 2>/dev/null || true; \
-	else \
-		echo "App container is not running; fix ownership on the host instead:"; \
+	@$(COMPOSE) exec -u 0 $(APP) chown -R $(HOST_UID):$(HOST_GID) $(E2E_ARTIFACTS) || ( \
+		echo "Could not chown via Docker. Run this on the host:"; \
 		echo "  sudo chown -R $(HOST_UID):$(HOST_GID) $(E2E_ARTIFACTS)"; \
-	fi
+		exit 1; \
+	)
 
 e2e: ## Run Playwright BDD end-to-end tests (run make e2e-setup once first)
 	$(COMPOSE) exec $(APP) bash -lc 'CI=true bun run test:e2e'
