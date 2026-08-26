@@ -171,6 +171,7 @@ export default function BikeFilters({
                         Brand
                     </h3>
                     <select
+                        data-testid="bike-filter-brand"
                         aria-label="Filter by brand"
                         value={normalizeFilterSelectValue(
                             localFilters.bike_brand_id,
@@ -338,6 +339,7 @@ export default function BikeFilters({
 
                 <button
                     type="submit"
+                    data-testid="bike-filter-apply"
                     className="h-9 w-full rounded-sm bg-primary text-sm font-medium text-white transition-colors hover:bg-primary-hover"
                 >
                     Apply filters
@@ -345,6 +347,7 @@ export default function BikeFilters({
 
                 <button
                     type="button"
+                    data-testid="bike-filter-clear"
                     onClick={clearFilters}
                     className="h-9 w-full rounded-sm border border-border text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle"
                 >

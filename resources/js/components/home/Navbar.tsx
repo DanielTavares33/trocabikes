@@ -37,6 +37,7 @@ export default function Navbar() {
                 <div className="relative" ref={dropdownRef}>
                     <button
                         type="button"
+                        data-testid="account-menu"
                         aria-label="Account menu"
                         aria-expanded={open}
                         onClick={() => setOpen(!open)}
@@ -60,6 +61,7 @@ export default function Navbar() {
                         <div className="absolute top-full right-0 mt-2 w-48 rounded-sm border border-border bg-bg py-1 shadow-lg">
                             <Link
                                 href={profile.url()}
+                                data-testid="nav-profile"
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-text transition-colors hover:bg-bg-subtle"
                             >
                                 <User className="h-4 w-4" />
@@ -67,6 +69,7 @@ export default function Navbar() {
                             </Link>
                             <Link
                                 href={myBikes.url()}
+                                data-testid="nav-my-bikes"
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-text transition-colors hover:bg-bg-subtle"
                             >
                                 <Bike className="h-4 w-4" />
@@ -84,6 +87,7 @@ export default function Navbar() {
                                 href={logout.url()}
                                 method="post"
                                 as="button"
+                                data-testid="nav-logout"
                                 className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left text-sm text-text transition-colors hover:bg-bg-subtle"
                             >
                                 <LogOut className="h-4 w-4" />
@@ -96,12 +100,14 @@ export default function Navbar() {
                 <div className="flex items-center gap-3">
                     <Link
                         href="/sign-in"
+                        data-testid="nav-sign-in"
                         className="rounded-sm border border-border px-4 py-2 text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle"
                     >
                         Sign in
                     </Link>
                     <Link
                         href="/sign-up"
+                        data-testid="nav-sign-up"
                         className="rounded-sm bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
                     >
                         Sign up

@@ -194,7 +194,10 @@ export default function BikeShow({ bike, canManage }: Readonly<BikeShowProps>) {
                                         <p className="mb-1 text-xs font-medium tracking-wide text-text-subtle uppercase">
                                             {bike.brand}
                                         </p>
-                                        <h1 className="text-2xl leading-tight font-semibold text-text">
+                                        <h1
+                                            data-testid="bike-detail-title"
+                                            className="text-2xl leading-tight font-semibold text-text"
+                                        >
                                             {bike.title}
                                         </h1>
                                     </div>

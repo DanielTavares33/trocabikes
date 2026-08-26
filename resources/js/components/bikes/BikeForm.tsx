@@ -632,6 +632,7 @@ export default function BikeForm({
 
                     <button
                         type="submit"
+                        data-testid="bike-form-submit"
                         disabled={processing}
                         className="h-10 w-full rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                     >

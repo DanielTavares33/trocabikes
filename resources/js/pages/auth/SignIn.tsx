@@ -92,12 +92,18 @@ export default function SignIn() {
                                     </div>
                                 </div>
                                 {errors.email && (
-                                    <p className="text-xs text-error">
+                                    <p
+                                        data-testid="auth-error"
+                                        className="text-xs text-error"
+                                    >
                                         {errors.email}
                                     </p>
                                 )}
                                 {errors.message && (
-                                    <p className="text-xs text-error">
+                                    <p
+                                        data-testid="auth-error"
+                                        className="text-xs text-error"
+                                    >
                                         {errors.message}
                                     </p>
                                 )}
@@ -117,6 +123,7 @@ export default function SignIn() {
                                 </div>
                                 <button
                                     type="submit"
+                                    data-testid="auth-sign-in-submit"
                                     className="mt-2 h-10 w-full rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover"
                                     disabled={processing}
                                 >

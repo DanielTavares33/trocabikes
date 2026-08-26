@@ -98,7 +98,10 @@ export default function BikesIndex({
                                 <span className="mx-2">/</span>
                                 <span className="text-text">Browse bikes</span>
                             </nav>
-                            <h1 className="text-3xl font-semibold text-text">
+                            <h1
+                                data-testid="bike-catalog-heading"
+                                className="text-3xl font-semibold text-text"
+                            >
                                 Browse bikes
                             </h1>
                         </div>

@@ -34,6 +34,7 @@ export default function BikeCard({ bike }: { readonly bike: BikeCardData }) {
     return (
         <Link
             href={show.url(bike.slug)}
+            data-testid={`bike-card-${bike.slug}`}
             className="group relative flex flex-col overflow-hidden rounded-sm border border-border bg-surface transition-all hover:border-border-strong hover:shadow-lg"
         >
             <div className="aspect-[4/3] overflow-hidden bg-bg-subtle">

@@ -5,12 +5,13 @@ import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 import {
+    E2E_FORM_VALUES,
     materializeBikeTitle,
     renameBikeTitle,
     resolveBikeTitle,
 } from '../support/catalog';
 import { When, Then } from '../support/fixtures';
-import { myBikeCard } from '../support/locators';
+import { byTestId, myBikeCard, testIds } from '../support/locators';
 
 const samplePhoto = path.resolve(
     path.dirname(fileURLToPath(import.meta.url)),
@@ -18,19 +19,27 @@ const samplePhoto = path.resolve(
 );
 
 async function fillBikeListingForm(page: Page, title: string): Promise<void> {
-    await page.getByLabel('Title').fill(title);
-    await page.locator('#brand').selectOption({ label: 'Trek' });
-    await page.locator('#category').selectOption({ label: 'Road Bikes' });
-    await page.getByLabel('Description').fill(
+    await page.locator('#title').fill(title);
+    await page
+        .locator('#brand')
+        .selectOption({ value: E2E_FORM_VALUES.brandId });
+    await page
+        .locator('#category')
+        .selectOption({ value: E2E_FORM_VALUES.categoryId });
+    await page.locator('#description').fill(
         'Well maintained bike ready for a new owner.',
     );
-    await page.getByLabel('Price').fill('1500');
-    await page.locator('#condition').selectOption({ label: 'Excelente' });
-    await page.getByLabel('Year').fill('2023');
-    await page.getByLabel('Size').fill('M');
-    await page.locator('#frame_material').selectOption({ label: 'Carbon' });
-    await page.getByLabel('District').fill('Lisboa');
-    await page.getByLabel('City').fill('Lisboa');
+    await page.locator('#price').fill('1500');
+    await page
+        .locator('#condition')
+        .selectOption({ value: E2E_FORM_VALUES.condition });
+    await page.locator('#year').fill('2023');
+    await page.locator('#size').fill('M');
+    await page
+        .locator('#frame_material')
+        .selectOption({ value: E2E_FORM_VALUES.frameMaterial });
+    await page.locator('#district').fill('Lisboa');
+    await page.locator('#city').fill('Lisboa');
     await page.locator('#photos').setInputFiles(samplePhoto);
 }
 
@@ -55,12 +64,12 @@ When(
 );
 
 When('I publish the bike listing', async ({ page }) => {
-    await page.getByRole('button', { name: 'Publish bike' }).click();
+    await byTestId(page, testIds.bikeFormSubmit).click();
 });
 
 When('I open my bikes', async ({ page }) => {
-    await page.getByRole('button', { name: 'Account menu' }).click();
-    await page.getByRole('link', { name: 'My Bikes' }).click();
+    await byTestId(page, testIds.accountMenu).click();
+    await byTestId(page, testIds.navMyBikes).click();
 });
 
 When(
@@ -68,10 +77,10 @@ When(
     async ({ page }, currentTitle: string, newTitle: string) => {
         const card = myBikeCard(page, currentTitle);
 
-        await card.getByRole('link', { name: 'Edit' }).click();
-        await expect(page.getByLabel('Title')).toHaveValue(currentTitle);
-        await page.getByLabel('Title').fill(newTitle);
-        await page.getByRole('button', { name: 'Save changes' }).click();
+        await card.getByTestId(testIds.myBikeEdit).click();
+        await expect(page.locator('#title')).toHaveValue(currentTitle);
+        await page.locator('#title').fill(newTitle);
+        await byTestId(page, testIds.bikeFormSubmit).click();
     },
 );
 
@@ -82,10 +91,10 @@ When(
         const newTitle = materializeBikeTitle(targetKey);
         const card = myBikeCard(page, currentTitle);
 
-        await card.getByRole('link', { name: 'Edit' }).click();
-        await expect(page.getByLabel('Title')).toHaveValue(currentTitle);
-        await page.getByLabel('Title').fill(newTitle);
-        await page.getByRole('button', { name: 'Save changes' }).click();
+        await card.getByTestId(testIds.myBikeEdit).click();
+        await expect(page.locator('#title')).toHaveValue(currentTitle);
+        await page.locator('#title').fill(newTitle);
+        await byTestId(page, testIds.bikeFormSubmit).click();
 
         renameBikeTitle(sourceKey, newTitle);
         renameBikeTitle(targetKey, newTitle);
@@ -97,7 +106,7 @@ When('I delete the bike {string}', async ({ page }, title: string) => {
 
     const card = myBikeCard(page, title);
 
-    await card.getByRole('button', { name: 'Delete' }).click();
+    await card.getByTestId(testIds.myBikeDelete).click();
 });
 
 When('I delete the bike with key {string}', async ({ page }, key: string) => {
@@ -107,11 +116,11 @@ When('I delete the bike with key {string}', async ({ page }, key: string) => {
 
     const card = myBikeCard(page, title);
 
-    await card.getByRole('button', { name: 'Delete' }).click();
+    await card.getByTestId(testIds.myBikeDelete).click();
 });
 
 Then('I should be on the bike detail page for {string}', async ({ page }, title: string) => {
-    await expect(page.getByRole('heading', { name: title })).toBeVisible();
+    await expect(byTestId(page, testIds.bikeDetailTitle)).toHaveText(title);
 });
 
 Then(
@@ -119,12 +128,12 @@ Then(
     async ({ page }, key: string) => {
         const title = resolveBikeTitle(key);
 
-        await expect(page.getByRole('heading', { name: title })).toBeVisible();
+        await expect(byTestId(page, testIds.bikeDetailTitle)).toHaveText(title);
     },
 );
 
 Then('the bike {string} should not appear in my bikes', async ({ page }, title: string) => {
-    await expect(page.getByRole('heading', { name: title })).toHaveCount(0);
+    await expect(myBikeCard(page, title)).toHaveCount(0);
 });
 
 Then(
@@ -132,6 +141,6 @@ Then(
     async ({ page }, key: string) => {
         const title = resolveBikeTitle(key);
 
-        await expect(page.getByRole('heading', { name: title })).toHaveCount(0);
+        await expect(myBikeCard(page, title)).toHaveCount(0);
     },
 );

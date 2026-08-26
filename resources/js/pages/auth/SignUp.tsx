@@ -81,7 +81,10 @@ export default function SignUp() {
                                         </p>
                                     )}
                                     {errors.message && (
-                                        <p className="mt-1 text-xs text-error">
+                                        <p
+                                            data-testid="auth-error"
+                                            className="mt-1 text-xs text-error"
+                                        >
                                             {errors.message}
                                         </p>
                                     )}
@@ -157,6 +160,7 @@ export default function SignUp() {
 
                                 <button
                                     type="submit"
+                                    data-testid="auth-sign-up-submit"
                                     className="mt-2 h-10 w-full rounded-sm bg-primary font-medium text-white transition-colors hover:bg-primary-hover"
                                     disabled={processing}
                                 >

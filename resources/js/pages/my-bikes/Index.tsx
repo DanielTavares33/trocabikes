@@ -169,7 +169,10 @@ function MyBikeCard({ bike }: { bike: MyBike }) {
     };
 
     return (
-        <div className="group flex flex-col overflow-hidden rounded-sm border border-border bg-surface transition-all hover:border-border-strong hover:shadow-md">
+        <div
+            data-testid="my-bike-card"
+            className="group flex flex-col overflow-hidden rounded-sm border border-border bg-surface transition-all hover:border-border-strong hover:shadow-md"
+        >
             <div className="relative aspect-[4/3] overflow-hidden bg-bg-subtle">
                 <img
                     src={bike.imageUrl}
@@ -230,6 +233,7 @@ function MyBikeCard({ bike }: { bike: MyBike }) {
                 <div className="mt-auto grid grid-cols-2 gap-2 border-t border-border pt-4">
                     <Link
                         href={edit.url(bike.slug)}
+                        data-testid="my-bike-edit"
                         className="flex items-center justify-center gap-1.5 rounded-sm border border-border px-3 py-2 text-xs font-medium text-text-subtle transition-all hover:border-border-strong hover:bg-bg-subtle hover:text-text"
                     >
                         <Edit width={14} height={14} strokeWidth={1.5} />
@@ -237,6 +241,7 @@ function MyBikeCard({ bike }: { bike: MyBike }) {
                     </Link>
                     <button
                         type="button"
+                        data-testid="my-bike-delete"
                         onClick={handleDelete}
                         className="flex items-center justify-center gap-1.5 rounded-sm border border-border px-3 py-2 text-xs font-medium text-error transition-all hover:border-error/30 hover:bg-error/5 hover:text-error"
                     >

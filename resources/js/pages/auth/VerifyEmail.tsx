@@ -26,7 +26,10 @@ export default function VerifyEmail({ email }: Readonly<VerifyEmailProps>) {
                         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                             <Mail className="h-6 w-6 text-primary" />
                         </div>
-                        <h1 className="mb-1 text-xl font-semibold text-text">
+                        <h1
+                            data-testid="verify-email-page"
+                            className="mb-1 text-xl font-semibold text-text"
+                        >
                             Check your email
                         </h1>
                         <p className="text-sm text-text-muted">

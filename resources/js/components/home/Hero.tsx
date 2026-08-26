@@ -19,7 +19,10 @@ export default function Hero() {
                 <p className="mb-4 text-sm font-medium tracking-widest text-white uppercase">
                     The bike marketplace
                 </p>
-                <h1 className="mb-6 text-5xl leading-tight font-semibold tracking-tight text-white lg:text-7xl">
+                <h1
+                    data-testid="hero-heading"
+                    className="mb-6 text-5xl leading-tight font-semibold tracking-tight text-white lg:text-7xl"
+                >
                     Find your next ride.
                 </h1>
                 <p className="mx-auto mb-10 max-w-xl text-lg text-white/80">
@@ -29,6 +32,7 @@ export default function Hero() {
                 <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                     <Link
                         href={bikesIndex.url()}
+                        data-testid="hero-browse-bikes"
                         className="rounded-sm bg-primary px-8 py-3 text-base font-medium text-white transition-colors hover:bg-primary-hover"
                     >
                         Browse bikes

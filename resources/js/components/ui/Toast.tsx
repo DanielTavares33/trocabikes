@@ -59,7 +59,7 @@ export default function Toast() {
             {(t) => (
                 <ToastBar toast={t}>
                 {({ icon, message }) => (
-                    <>
+                    <div data-testid="toast">
                     {icon}
                     {message}
                     {t.type !== 'loading' && (
@@ -67,7 +67,7 @@ export default function Toast() {
                             <X width={16} height={16} className="text-text-subtle" />
                         </button>
                     )}
-                    </>
+                    </div>
                 )}
                 </ToastBar>
             )}
