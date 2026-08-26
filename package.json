@@ -12,6 +12,7 @@
         "lint:check": "eslint .",
         "types:check": "tsc --noEmit",
         "test:e2e": "bunx bddgen && bunx playwright test",
+        "test:e2e:headed": "bunx bddgen && bunx playwright test --headed",
         "test:e2e:ui": "bunx bddgen && bunx playwright test --ui"
     },
     "devDependencies": {
