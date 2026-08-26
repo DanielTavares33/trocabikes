@@ -5,7 +5,7 @@ COMPOSE := docker compose
 APP := app
 HOST_UID := $(shell id -u)
 HOST_GID := $(shell id -g)
-E2E_ARTIFACTS := .features-gen playwright-report test-results
+E2E_ARTIFACTS := .features-gen playwright-report test-results node_modules public/build
 MYSQL := mysql
 DB_DATABASE ?= trocabikes
 
@@ -98,7 +98,7 @@ e2e-setup: ## One-time: install Playwright Chromium + build assets in the app co
 	$(COMPOSE) exec $(APP) bash -lc 'bunx playwright install --with-deps chromium && bun run build'
 	@$(MAKE) e2e-fix-perms
 
-e2e-fix-perms: ## Fix root-owned e2e artifacts after Docker runs (run before host e2e)
+e2e-fix-perms: ## Fix root-owned Docker files so host bun/vite/playwright can write
 	@if $(COMPOSE) ps --status running -q $(APP) 2>/dev/null | grep -q .; then \
 		$(COMPOSE) exec $(APP) chown -R $(HOST_UID):$(HOST_GID) $(E2E_ARTIFACTS) 2>/dev/null || true; \
 	else \

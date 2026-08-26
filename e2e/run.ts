@@ -12,8 +12,8 @@ Headed Playwright cannot show a browser inside Docker.
 
 Run this on your host (not via make e2e / docker compose exec):
 
+  make e2e-fix-perms
   bunx playwright install chromium
-  bun run build
   bun run test:e2e:headed -- --grep "Buyer signs in"
 `);
     process.exit(1);
