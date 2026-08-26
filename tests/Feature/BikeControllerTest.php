@@ -29,9 +29,20 @@ function validBikeUpdatePayload(Bike $bike, array $overrides = []): array
     ], $overrides);
 }
 
+function fakeBikeUpload(string $name = 'bike.jpg'): UploadedFile
+{
+    return new UploadedFile(
+        database_path('seeders/assets/listing-sample.jpg'),
+        $name,
+        'image/jpeg',
+        null,
+        true,
+    );
+}
+
 function seedBikePhoto(Bike $bike): void
 {
-    $path = UploadedFile::fake()->image('bike.jpg')->store("bikes/{$bike->id}", 'public');
+    $path = fakeBikeUpload('bike.jpg')->store("bikes/{$bike->id}", 'public');
 
     $bike->images()->create([
         'path' => $path,
@@ -159,7 +170,7 @@ test('verified user can store listing with photos', function () {
         'city' => 'Lisboa',
         'phone_visible' => true,
         'photos' => [
-            UploadedFile::fake()->image('bike.jpg'),
+            fakeBikeUpload('bike.jpg'),
         ],
     ]);
 
@@ -220,7 +231,7 @@ test('owner can update and delete listing but others cannot', function () {
 
     expect($bike->fresh()->title)->toBe('Updated Title');
 
-    $path = UploadedFile::fake()->image('bike.jpg')->store("bikes/{$bike->id}", 'public');
+    $path = fakeBikeUpload('bike.jpg')->store("bikes/{$bike->id}", 'public');
     $image = $bike->images()->create([
         'path' => $path,
         'sort_order' => 0,
@@ -277,7 +288,7 @@ test('update rejects removing all photos', function () {
 
     $owner = User::factory()->create(['email_verified_at' => now()]);
     $bike = Bike::factory()->for($owner)->create();
-    $path = UploadedFile::fake()->image('bike.jpg')->store("bikes/{$bike->id}", 'public');
+    $path = fakeBikeUpload('bike.jpg')->store("bikes/{$bike->id}", 'public');
     $image = $bike->images()->create([
         'path' => $path,
         'sort_order' => 0,
@@ -300,7 +311,7 @@ test('update rejects more than ten photos total', function () {
     $bike = Bike::factory()->for($owner)->create();
 
     foreach (range(1, 8) as $index) {
-        $path = UploadedFile::fake()->image("bike-{$index}.jpg")->store("bikes/{$bike->id}", 'public');
+        $path = fakeBikeUpload("bike-{$index}.jpg")->store("bikes/{$bike->id}", 'public');
         $bike->images()->create([
             'path' => $path,
             'sort_order' => $index - 1,
@@ -311,9 +322,9 @@ test('update rejects more than ten photos total', function () {
     $this->actingAs($owner)
         ->put(route('bikes.update', $bike), validBikeUpdatePayload($bike, [
             'photos' => [
-                UploadedFile::fake()->image('new-1.jpg'),
-                UploadedFile::fake()->image('new-2.jpg'),
-                UploadedFile::fake()->image('new-3.jpg'),
+                fakeBikeUpload('new-1.jpg'),
+                fakeBikeUpload('new-2.jpg'),
+                fakeBikeUpload('new-3.jpg'),
             ],
         ]))
         ->assertSessionHasErrors('photos');
@@ -327,8 +338,8 @@ test('owner can update listing photos', function () {
     $owner = User::factory()->create(['email_verified_at' => now()]);
     $bike = Bike::factory()->for($owner)->create();
 
-    $keepPath = UploadedFile::fake()->image('keep.jpg')->store("bikes/{$bike->id}", 'public');
-    $removePath = UploadedFile::fake()->image('remove.jpg')->store("bikes/{$bike->id}", 'public');
+    $keepPath = fakeBikeUpload('keep.jpg')->store("bikes/{$bike->id}", 'public');
+    $removePath = fakeBikeUpload('remove.jpg')->store("bikes/{$bike->id}", 'public');
 
     $keepImage = $bike->images()->create([
         'path' => $keepPath,
@@ -345,7 +356,7 @@ test('owner can update listing photos', function () {
         ->put(route('bikes.update', $bike), validBikeUpdatePayload($bike, [
             'removed_photo_ids' => [$removeImage->id],
             'photos' => [
-                UploadedFile::fake()->image('added.jpg'),
+                fakeBikeUpload('added.jpg'),
             ],
         ]))
         ->assertRedirect(route('bikes.show', $bike));
@@ -465,7 +476,7 @@ test('store rejects inactive brand', function () {
             'district' => 'Lisboa',
             'city' => 'Lisboa',
             'photos' => [
-                UploadedFile::fake()->image('bike.jpg'),
+                fakeBikeUpload('bike.jpg'),
             ],
         ])
         ->assertSessionHasErrors('bike_brand_id');
