@@ -90,6 +90,3 @@ wayfinder: ## Regenerate Wayfinder TypeScript routes
 
 ci: ## Run full CI pipeline
 	$(COMPOSE) exec $(APP) composer ci:check
-
-e2e: ## Run Playwright BDD end-to-end tests
-	$(COMPOSE) exec $(APP) bash -lc 'touch database/e2e.sqlite && php artisan storage:link --force --env=e2e 2>/dev/null || true && CI=true bun run test:e2e'

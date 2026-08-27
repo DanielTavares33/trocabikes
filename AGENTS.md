@@ -16,7 +16,6 @@ Laravel 13 / Inertia 3 / React 19 / Tailwind CSS 4 / Pest 4. Dev uses MySQL (Doc
 | Format (Prettier) | `bun run format` |
 | Type check (tsc --noEmit) | `bun run types:check` |
 | Full CI (lint → format → types → Pint → test) | `composer ci:check` |
-| E2E (Playwright + Cucumber BDD) | `make e2e` or `bun run test:e2e` |
 | Fresh setup (composer+bun+key+migrate+build) | `composer setup` |
 | Regenerate Wayfinder types | `php artisan wayfinder:generate` |
 
