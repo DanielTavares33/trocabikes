@@ -162,10 +162,10 @@ class BikeController extends Controller
         }
 
         return [
-            'brands' => $brandsQuery->get(['id', 'name']),
+            'brands' => $brandsQuery->get(['id', 'name', 'slug']),
             'categories' => BikeCategory::query()
                 ->orderBy('name')
-                ->get(['id', 'name']),
+                ->get(['id', 'name', 'slug']),
             'conditions' => collect(BikePresenter::conditionLabels())
                 ->map(fn (string $label, string $value) => ['value' => $value, 'label' => $label])
                 ->values()
@@ -186,10 +186,10 @@ class BikeController extends Controller
             'brands' => BikeBrand::query()
                 ->where('is_active', true)
                 ->orderBy('name')
-                ->get(['id', 'name']),
+                ->get(['id', 'name', 'slug']),
             'categories' => BikeCategory::query()
                 ->orderBy('name')
-                ->get(['id', 'name']),
+                ->get(['id', 'name', 'slug']),
             'conditions' => collect(BikePresenter::conditionLabels())
                 ->map(fn (string $label, string $value) => ['value' => $value, 'label' => $label])
                 ->values()
@@ -290,16 +290,26 @@ class BikeController extends Controller
      */
     private function storePhotos(Bike $bike, array $photos, int $startingOrder = 0): void
     {
+        $directory = $this->photoDirectory($bike);
+        $needsPrimary = $startingOrder === 0 && ! $bike->images()->exists();
+
         foreach ($photos as $index => $photo) {
-            $path = $photo->store("bikes/{$bike->id}", 'public');
+            $path = $photo->store($directory, 'public');
 
             BikeImage::query()->create([
                 'bike_id' => $bike->id,
                 'path' => $path,
                 'sort_order' => $startingOrder + $index,
-                'is_primary' => $startingOrder === 0 && $index === 0 && ! $bike->images()->exists(),
+                'is_primary' => $needsPrimary && $index === 0,
             ]);
         }
+    }
+
+    private function photoDirectory(Bike $bike): string
+    {
+        return app()->environment('e2e')
+            ? "e2e/bikes/{$bike->id}"
+            : "bikes/{$bike->id}";
     }
 
     /**

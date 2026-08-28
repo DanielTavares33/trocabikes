@@ -26,3 +26,10 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/.features-gen/
+/database/e2e.sqlite
+/database/e2e.sqlite-journal

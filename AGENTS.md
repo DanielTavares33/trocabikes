@@ -16,6 +16,7 @@ Laravel 13 / Inertia 3 / React 19 / Tailwind CSS 4 / Pest 4. Dev uses MySQL (Doc
 | Format (Prettier) | `bun run format` |
 | Type check (tsc --noEmit) | `bun run types:check` |
 | Full CI (lint → format → types → Pint → test) | `composer ci:check` |
+| E2E (Playwright + BDD) | `make e2e` or `bun run test:e2e` |
 | Fresh setup (composer+bun+key+migrate+build) | `composer setup` |
 | Regenerate Wayfinder types | `php artisan wayfinder:generate` |
 
@@ -51,6 +52,7 @@ Both `@/*` and `~/*` resolve to `resources/js/*`.
 - Pest 4. `RefreshDatabase` applied globally to `Feature` tests only (see `tests/Pest.php`).
 - Use factories for model creation. All feature tests use `RefreshDatabase`.
 - Create tests: `php artisan make:test --pest {name}` (no suite prefix in name).
+- Playwright BDD e2e lives in `e2e/`. It uses `.env.e2e` and `database/e2e.sqlite`, seeded once per suite by `E2eDatabaseSeeder`. Do not point Pest at that sqlite file. Locators use `data-testid` / `data-slug`, never visible copy.
 
 ## Skills (activate when working in domain)
 

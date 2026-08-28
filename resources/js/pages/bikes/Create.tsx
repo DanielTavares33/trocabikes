@@ -10,130 +10,124 @@ import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
 
 interface CreateProps {
-    brands: { id: number; name: string }[];
-    categories: { id: number; name: string }[];
-    conditions: { value: string; label: string }[];
-    frameMaterials: { value: string; label: string }[];
+  brands: { id: number; name: string; slug: string }[];
+  categories: { id: number; name: string; slug: string }[];
+  conditions: { value: string; label: string }[];
+  frameMaterials: { value: string; label: string }[];
 }
 
 const emptyForm: BikeFormData = {
-    title: '',
-    bike_brand_id: '',
-    bike_category_id: '',
-    description: '',
-    price: '',
-    condition: '',
-    year: '',
-    size: '',
-    frame_material: '',
-    kilometers: '',
-    district: '',
-    city: '',
-    phone_visible: false,
-    email_visible: false,
+  title: '',
+  bike_brand_id: '',
+  bike_category_id: '',
+  description: '',
+  price: '',
+  condition: '',
+  year: '',
+  size: '',
+  frame_material: '',
+  kilometers: '',
+  district: '',
+  city: '',
+  phone_visible: false,
+  email_visible: false,
 };
 
 export default function Create({
-    brands,
-    categories,
-    conditions,
-    frameMaterials,
+  brands,
+  categories,
+  conditions,
+  frameMaterials,
 }: Readonly<CreateProps>) {
-    const { data, setData, transform, post, processing, errors } = useForm({
-        ...emptyForm,
-        photos: [] as File[],
-    });
-    const [photos, setPhotos] = useState<File[]>([]);
-    const photoPreviews = useMemo(
-        () => photos.map((file) => URL.createObjectURL(file)),
-        [photos],
-    );
+  const { data, setData, transform, post, processing, errors } = useForm({
+    ...emptyForm,
+    photos: [] as File[],
+  });
+  const [photos, setPhotos] = useState<File[]>([]);
+  const photoPreviews = useMemo(
+    () => photos.map((file) => URL.createObjectURL(file)),
+    [photos],
+  );
 
-    useEffect(() => {
-        return () => {
-            photoPreviews.forEach((preview) => URL.revokeObjectURL(preview));
-        };
-    }, [photoPreviews]);
-
-    const handleChange = (
-        field: keyof BikeFormData,
-        value: string | boolean,
-    ) => {
-        setData(field, value as never);
+  useEffect(() => {
+    return () => {
+      photoPreviews.forEach((preview) => URL.revokeObjectURL(preview));
     };
+  }, [photoPreviews]);
 
-    const handlePhotosChange = (files: File[]) => {
-        setPhotos(files);
-    };
+  const handleChange = (field: keyof BikeFormData, value: string | boolean) => {
+    setData(field, value as never);
+  };
 
-    transform((formData) => ({
-        ...formData,
-        photos,
-    }));
+  const handlePhotosChange = (files: File[]) => {
+    setPhotos(files);
+  };
 
-    const handleSubmit = (event: SubmitEvent) => {
-        event.preventDefault();
-        post(store.url(), { forceFormData: true });
-    };
+  transform((formData) => ({
+    ...formData,
+    photos,
+  }));
 
-    return (
-        <Layout>
-            <Head title="Sell your bike — Trocabikes" />
+  const handleSubmit = (event: SubmitEvent) => {
+    event.preventDefault();
+    post(store.url(), { forceFormData: true });
+  };
 
-            <div className="flex min-h-screen flex-col bg-bg text-text">
-                <Navbar />
+  return (
+    <Layout>
+      <Head title="Sell your bike — Trocabikes" />
 
-                <main className="flex-1 px-6 py-10 lg:px-12">
-                    <div className="mx-auto max-w-2xl">
-                        <nav className="mb-2 text-sm text-text-muted">
-                            <Link
-                                href="/"
-                                className="transition-colors hover:text-text"
-                            >
-                                Home
-                            </Link>
-                            <span className="mx-2">/</span>
-                            <span className="text-text">Sell your bike</span>
-                        </nav>
+      <div
+        data-testid="create-listing-page"
+        className="flex min-h-screen flex-col bg-bg text-text"
+      >
+        <Navbar />
 
-                        <div className="mb-8">
-                            <h1 className="text-3xl font-semibold text-text">
-                                Sell your bike
-                            </h1>
-                            <p className="mt-1 text-text-muted">
-                                Fill in the details below to list your bike on
-                                the marketplace
-                            </p>
-                        </div>
+        <main className="flex-1 px-6 py-10 lg:px-12">
+          <div className="mx-auto max-w-2xl">
+            <nav className="mb-2 text-sm text-text-muted">
+              <Link href="/" className="transition-colors hover:text-text">
+                Home
+              </Link>
+              <span className="mx-2">/</span>
+              <span className="text-text">Sell your bike</span>
+            </nav>
 
-                        <BikeForm
-                            data={data}
-                            errors={errors}
-                            processing={processing}
-                            brands={brands}
-                            categories={categories}
-                            conditions={conditions}
-                            frameMaterials={frameMaterials}
-                            photos={photos}
-                            photoPreviews={photoPreviews}
-                            removedPhotoIds={[]}
-                            onChange={handleChange}
-                            onPhotosChange={handlePhotosChange}
-                            onRemovePhoto={(index) => {
-                                const next = photos.filter(
-                                    (_, i) => i !== index,
-                                );
-                                handlePhotosChange(next);
-                            }}
-                            onRemoveExistingPhoto={() => {}}
-                            onSubmit={handleSubmit}
-                            submitLabel="Publish bike"
-                        />
-                    </div>
-                </main>
-
-                <Footer />
+            <div className="mb-8">
+              <h1 className="text-3xl font-semibold text-text">
+                Sell your bike
+              </h1>
+              <p className="mt-1 text-text-muted">
+                Fill in the details below to list your bike on the marketplace
+              </p>
             </div>
-        </Layout>
-    );
+
+            <BikeForm
+              data={data}
+              errors={errors}
+              processing={processing}
+              brands={brands}
+              categories={categories}
+              conditions={conditions}
+              frameMaterials={frameMaterials}
+              photos={photos}
+              photoPreviews={photoPreviews}
+              removedPhotoIds={[]}
+              onChange={handleChange}
+              onPhotosChange={handlePhotosChange}
+              onRemovePhoto={(index) => {
+                const next = photos.filter((_, i) => i !== index);
+                handlePhotosChange(next);
+              }}
+              onRemoveExistingPhoto={() => {}}
+              onSubmit={handleSubmit}
+              submitLabel="Publish bike"
+            />
+          </div>
+        </main>
+
+        <Footer />
+      </div>
+    </Layout>
+  );
 }

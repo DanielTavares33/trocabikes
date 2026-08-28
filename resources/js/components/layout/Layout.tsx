@@ -4,26 +4,26 @@ import toast from 'react-hot-toast';
 import Toast from '@/components/ui/Toast';
 
 export default function Layout({
-    children,
+  children,
 }: {
-    readonly children: React.ReactNode;
+  readonly children: React.ReactNode;
 }) {
-    const { flash } = usePage();
+  const { flash } = usePage();
 
-    useEffect(() => {
-        if (flash.success) {
-            toast.success(flash.success);
-        }
+  useEffect(() => {
+    if (flash.success) {
+      toast.success(flash.success);
+    }
 
-        if (flash.error) {
-            toast.error(flash.error);
-        }
-    }, [flash]);
+    if (flash.error) {
+      toast.error(flash.error);
+    }
+  }, [flash]);
 
-    return (
-        <>
-            <Toast />
-            {children}
-        </>
-    );
+  return (
+    <>
+      <Toast />
+      {children}
+    </>
+  );
 }

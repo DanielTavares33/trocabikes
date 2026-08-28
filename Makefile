@@ -1,5 +1,5 @@
 .PHONY: help build up up-d down restart rebuild ps logs logs-app logs-mysql shell setup fresh destroy \
-	artisan composer bun test lint migrate wayfinder ci storage-link
+	artisan composer bun test lint migrate wayfinder ci storage-link e2e
 
 COMPOSE := docker compose
 APP := app
@@ -90,3 +90,7 @@ wayfinder: ## Regenerate Wayfinder TypeScript routes
 
 ci: ## Run full CI pipeline
 	$(COMPOSE) exec $(APP) composer ci:check
+
+e2e: ## Run Playwright BDD e2e tests (host PHP + Bun; build assets first)
+	bun run build
+	bun run test:e2e

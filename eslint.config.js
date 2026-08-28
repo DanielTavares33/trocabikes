@@ -118,7 +118,27 @@ export default [
             'resources/js/components/ui/*',
             'resources/js/routes/**',
             'resources/js/wayfinder/**',
+            '.features-gen',
+            'playwright-report',
+            'test-results',
         ],
+    },
+    {
+        files: ['e2e/**/*.ts', 'playwright.config.ts'],
+        languageOptions: {
+            globals: {
+                ...globals.node,
+            },
+        },
+        settings: {
+            'import/resolver': {
+                typescript: {
+                    alwaysTryTypes: true,
+                    project: './e2e/tsconfig.json',
+                },
+                node: true,
+            },
+        },
     },
     prettier, // Turn off all rules that might conflict with Prettier
     {
