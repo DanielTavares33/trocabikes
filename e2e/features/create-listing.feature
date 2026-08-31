@@ -1,3 +1,4 @@
+@listings @seller
 Feature: Seller publishes a listing
   A verified seller can list a bike for sale from My Bikes.
 

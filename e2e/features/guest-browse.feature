@@ -1,3 +1,4 @@
+@browse @guest
 Feature: Guest browses the marketplace
 
   Scenario: Guest sees recent bikes on home

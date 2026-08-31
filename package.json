@@ -12,7 +12,8 @@
         "lint:check": "eslint .",
         "types:check": "tsc --noEmit",
         "test:e2e": "bddgen && playwright test",
-        "test:e2e:ui": "bddgen && playwright test --ui"
+        "test:e2e:ui": "bddgen && playwright test --ui",
+        "test:e2e:tag": "bddgen && playwright test --grep"
     },
     "devDependencies": {
         "@eslint/js": "^9.39.5",

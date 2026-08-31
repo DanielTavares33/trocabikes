@@ -1,3 +1,4 @@
+@auth
 Feature: Seller signs in and out
   A verified seller can open a session from the navbar and end it from the account menu.
 

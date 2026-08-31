@@ -4,4 +4,4 @@ Before planning or editing, find the row whose globs match the file's path and r
 
 | Applies to | Rule file |
 | --- | --- |
-| e2e/** | .ai/rules/e2e.md |
+| e2e/**, playwright.config.ts | .ai/rules/e2e.md |

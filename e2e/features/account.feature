@@ -1,3 +1,4 @@
+@account @seller
 Feature: Seller manages their account
   A signed-in seller can open their profile and the list of bikes they own.
 

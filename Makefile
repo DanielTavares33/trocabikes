@@ -1,5 +1,5 @@
 .PHONY: help build up up-d down restart rebuild ps logs logs-app logs-mysql shell setup fresh destroy \
-	artisan composer bun test lint migrate wayfinder ci storage-link e2e
+	artisan composer bun test lint migrate wayfinder ci storage-link e2e e2e-tag
 
 COMPOSE := docker compose
 APP := app
@@ -94,3 +94,7 @@ ci: ## Run full CI pipeline
 e2e: ## Run Playwright BDD e2e tests (host PHP + Bun; build assets first)
 	bun run build
 	bun run test:e2e
+
+e2e-tag: ## Run e2e tests matching TAG (e.g. make e2e-tag TAG='@auth')
+	bun run build
+	bun run test:e2e:tag -- '$(TAG)'

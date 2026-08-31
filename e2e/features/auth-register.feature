@@ -1,3 +1,4 @@
+@auth @register @guest
 Feature: Guest creates an account
   A guest can register and is asked to verify their email before using the marketplace.
 
