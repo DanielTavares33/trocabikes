@@ -1,5 +1,5 @@
 .PHONY: help build up up-d down restart rebuild ps logs logs-app logs-mysql shell setup fresh destroy \
-	artisan composer bun test lint migrate wayfinder ci storage-link
+	artisan composer bun test lint migrate wayfinder ci storage-link e2e e2e-tag
 
 COMPOSE := docker compose
 APP := app
@@ -91,5 +91,14 @@ wayfinder: ## Regenerate Wayfinder TypeScript routes
 ci: ## Run full CI pipeline
 	$(COMPOSE) exec $(APP) composer ci:check
 
-e2e: ## Run Playwright BDD end-to-end tests
-	$(COMPOSE) exec $(APP) bash -lc 'touch database/e2e.sqlite && php artisan storage:link --force --env=e2e 2>/dev/null || true && CI=true bun run test:e2e'
+e2e: ## Run Playwright BDD e2e tests (host PHP + Bun; build assets first)
+	bun run build
+	bun run test:e2e
+
+e2e-tag: ## Run e2e tests matching TAG (e.g. make e2e-tag TAG='@auth')
+	bun run build
+	bun run test:e2e:tag -- '$(TAG)'
+
+e2e-report: ## Run e2e tests and open Allure HTML report
+	bun run build
+	bun run test:e2e:report

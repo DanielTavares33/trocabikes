@@ -63,8 +63,8 @@ test('browse returns paginated active listings', function () {
             ->has('bikes.data', 1)
             ->where('bikes.data.0.id', $active->id)
             ->where('filters.sort', 'newest')
-            ->has('filterOptions.brands')
-            ->has('filterOptions.categories')
+            ->has('filterOptions.brands.0.slug')
+            ->has('filterOptions.categories.0.slug')
         );
 });
 

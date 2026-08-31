@@ -10,273 +10,264 @@ import Layout from '~/components/layout/Layout';
 type BikeStatus = 'active' | 'sold' | 'archived';
 
 interface MyBike {
-    id: number;
-    title: string;
-    slug: string;
-    brand: string;
-    price: number;
-    year: number;
-    condition: string;
-    status: BikeStatus;
-    views: number;
-    createdAt: string;
-    imageUrl: string;
-    imageAlt: string;
+  id: number;
+  title: string;
+  slug: string;
+  brand: string;
+  price: number;
+  year: number;
+  condition: string;
+  status: BikeStatus;
+  views: number;
+  createdAt: string;
+  imageUrl: string;
+  imageAlt: string;
 }
 
 interface MyBikesProps {
-    bikes: MyBike[];
+  bikes: MyBike[];
 }
 
 const statusConfig: Record<
-    BikeStatus,
-    { label: string; bg: string; text: string; dot: string }
+  BikeStatus,
+  { label: string; bg: string; text: string; dot: string }
 > = {
-    active: {
-        label: 'Active',
-        bg: 'bg-accent-muted',
-        text: 'text-accent',
-        dot: 'bg-accent',
-    },
-    sold: {
-        label: 'Sold',
-        bg: 'bg-orange-100',
-        text: 'text-orange-700',
-        dot: 'bg-orange-500',
-    },
-    archived: {
-        label: 'Archived',
-        bg: 'bg-stone-100',
-        text: 'text-stone-600',
-        dot: 'bg-stone-400',
-    },
+  active: {
+    label: 'Active',
+    bg: 'bg-accent-muted',
+    text: 'text-accent',
+    dot: 'bg-accent',
+  },
+  sold: {
+    label: 'Sold',
+    bg: 'bg-orange-100',
+    text: 'text-orange-700',
+    dot: 'bg-orange-500',
+  },
+  archived: {
+    label: 'Archived',
+    bg: 'bg-stone-100',
+    text: 'text-stone-600',
+    dot: 'bg-stone-400',
+  },
 };
 
 const conditionColors: Record<string, string> = {
-    nova: 'bg-accent-muted text-accent',
-    excelente: 'bg-orange-100 text-orange-700',
-    boa: 'bg-stone-100 text-stone-700',
-    regular: 'bg-amber-100 text-amber-700',
-    usada: 'bg-stone-100 text-stone-700',
-    mau: 'bg-stone-100 text-stone-700',
+  nova: 'bg-accent-muted text-accent',
+  excelente: 'bg-orange-100 text-orange-700',
+  boa: 'bg-stone-100 text-stone-700',
+  regular: 'bg-amber-100 text-amber-700',
+  usada: 'bg-stone-100 text-stone-700',
+  mau: 'bg-stone-100 text-stone-700',
 };
 
 type FilterStatus = 'all' | BikeStatus;
 
 export default function MyBikes({ bikes }: Readonly<MyBikesProps>) {
-    const [filter, setFilter] = React.useState<FilterStatus>('all');
+  const [filter, setFilter] = React.useState<FilterStatus>('all');
 
-    const filteredBikes =
-        filter === 'all'
-            ? bikes
-            : bikes.filter((bike) => bike.status === filter);
+  const filteredBikes =
+    filter === 'all' ? bikes : bikes.filter((bike) => bike.status === filter);
 
-    return (
-        <Layout>
-            <Head title="My Bikes — Trocabikes" />
+  return (
+    <Layout>
+      <Head title="My Bikes — Trocabikes" />
 
-            <div className="flex min-h-screen flex-col bg-bg text-text">
-                <Navbar />
+      <div
+        data-testid="my-bikes-page"
+        className="flex min-h-screen flex-col bg-bg text-text"
+      >
+        <Navbar />
 
-                <main className="flex-1 px-6 py-10 lg:px-12">
-                    <div className="mx-auto max-w-6xl">
-                        <nav className="mb-2 text-sm text-text-muted">
-                            <Link
-                                href="/"
-                                className="transition-colors hover:text-text"
-                            >
-                                Home
-                            </Link>
-                            <span className="mx-2">/</span>
-                            <span className="text-text">My Bikes</span>
-                        </nav>
+        <main className="flex-1 px-6 py-10 lg:px-12">
+          <div className="mx-auto max-w-6xl">
+            <nav className="mb-2 text-sm text-text-muted">
+              <Link href="/" className="transition-colors hover:text-text">
+                Home
+              </Link>
+              <span className="mx-2">/</span>
+              <span className="text-text">My Bikes</span>
+            </nav>
 
-                        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                            <h1 className="text-3xl font-semibold text-text">
-                                My Bikes
-                            </h1>
-                            <Link
-                                href={create.url()}
-                                className="inline-flex items-center gap-2 rounded-sm bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
-                            >
-                                <Plus
-                                    width={18}
-                                    height={18}
-                                    strokeWidth={2.5}
-                                />
-                                Sell a bike
-                            </Link>
-                        </div>
-
-                        <div className="mb-6 flex gap-1 rounded-sm bg-bg-subtle p-1">
-                            {(
-                                [
-                                    'all',
-                                    'active',
-                                    'sold',
-                                    'archived',
-                                ] as FilterStatus[]
-                            ).map((status) => (
-                                <button
-                                    key={status}
-                                    type="button"
-                                    onClick={() => setFilter(status)}
-                                    className={`flex-1 rounded-sm px-4 py-2 text-sm font-medium transition-all ${
-                                        filter === status
-                                            ? 'bg-surface text-text shadow-sm'
-                                            : 'text-text-muted hover:text-text'
-                                    }`}
-                                >
-                                    {status === 'all'
-                                        ? 'All'
-                                        : status.charAt(0).toUpperCase() +
-                                          status.slice(1)}
-                                </button>
-                            ))}
-                        </div>
-
-                        {filteredBikes.length === 0 ? (
-                            <EmptyState hasFilter={filter !== 'all'} />
-                        ) : (
-                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(340px,1fr))]">
-                                {filteredBikes.map((bike) => (
-                                    <MyBikeCard key={bike.id} bike={bike} />
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </main>
-
-                <Footer />
+            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <h1 className="text-3xl font-semibold text-text">My Bikes</h1>
+              <Link
+                href={create.url()}
+                data-testid="my-bikes-sell"
+                className="inline-flex items-center gap-2 rounded-sm bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
+              >
+                <Plus width={18} height={18} strokeWidth={2.5} />
+                Sell a bike
+              </Link>
             </div>
-        </Layout>
-    );
+
+            <div className="mb-6 flex gap-1 rounded-sm bg-bg-subtle p-1">
+              {(['all', 'active', 'sold', 'archived'] as FilterStatus[]).map(
+                (status) => (
+                  <button
+                    key={status}
+                    type="button"
+                    onClick={() => setFilter(status)}
+                    className={`flex-1 rounded-sm px-4 py-2 text-sm font-medium transition-all ${
+                      filter === status
+                        ? 'bg-surface text-text shadow-sm'
+                        : 'text-text-muted hover:text-text'
+                    }`}
+                  >
+                    {status === 'all'
+                      ? 'All'
+                      : status.charAt(0).toUpperCase() + status.slice(1)}
+                  </button>
+                ),
+              )}
+            </div>
+
+            {filteredBikes.length === 0 ? (
+              <EmptyState hasFilter={filter !== 'all'} />
+            ) : (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(340px,1fr))]">
+                {filteredBikes.map((bike) => (
+                  <MyBikeCard key={bike.id} bike={bike} />
+                ))}
+              </div>
+            )}
+          </div>
+        </main>
+
+        <Footer />
+      </div>
+    </Layout>
+  );
 }
 
 function MyBikeCard({ bike }: { bike: MyBike }) {
-    const status = statusConfig[bike.status];
+  const status = statusConfig[bike.status];
 
-    const handleDelete = () => {
-        if (
-            !window.confirm(
-                'Are you sure you want to delete this bike? This cannot be undone.',
-            )
-        ) {
-            return;
-        }
+  const handleDelete = () => {
+    if (
+      !window.confirm(
+        'Are you sure you want to delete this bike? This cannot be undone.',
+      )
+    ) {
+      return;
+    }
 
-        router.delete(destroy.url(bike.slug));
-    };
+    router.delete(destroy.url(bike.slug));
+  };
 
-    return (
-        <div className="group flex flex-col overflow-hidden rounded-sm border border-border bg-surface transition-all hover:border-border-strong hover:shadow-md">
-            <div className="relative aspect-[4/3] overflow-hidden bg-bg-subtle">
-                <img
-                    src={bike.imageUrl}
-                    alt={bike.imageAlt}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-                <div
-                    className={`absolute top-3 left-3 rounded-sm px-2.5 py-1 text-xs font-medium tracking-wide uppercase ${status.bg} ${status.text}`}
-                >
-                    <div className="flex items-center gap-1.5">
-                        <div
-                            className={`h-1.5 w-1.5 rounded-full ${status.dot}`}
-                        />
-                        {status.label}
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex flex-1 flex-col p-4">
-                <div className="mb-1">
-                    <p className="truncate text-xs font-medium tracking-wide text-text-subtle uppercase">
-                        {bike.brand}
-                    </p>
-                    <h3 className="line-clamp-2 text-base font-semibold text-text">
-                        {bike.title}
-                    </h3>
-                </div>
-
-                <div className="mb-3 flex items-center gap-2">
-                    <span
-                        className={`rounded-sm px-2 py-0.5 text-xs font-medium capitalize ${
-                            conditionColors[bike.condition.toLowerCase()] ||
-                            'bg-bg-subtle text-text-muted'
-                        }`}
-                    >
-                        {bike.condition}
-                    </span>
-                    <span className="text-xs text-text-muted">{bike.year}</span>
-                    <span className="ml-auto text-lg font-semibold text-text">
-                        €{bike.price.toLocaleString('pt-PT')}
-                    </span>
-                </div>
-
-                <div className="mb-4 flex items-center gap-4 text-xs text-text-muted">
-                    <div className="flex items-center gap-1">
-                        <Eye width={14} height={14} strokeWidth={1.5} />
-                        <span>{bike.views}</span>
-                    </div>
-                    <span className="ml-auto text-text-subtle">
-                        {new Date(bike.createdAt).toLocaleDateString('pt-PT', {
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric',
-                        })}
-                    </span>
-                </div>
-
-                <div className="mt-auto grid grid-cols-2 gap-2 border-t border-border pt-4">
-                    <Link
-                        href={edit.url(bike.slug)}
-                        className="flex items-center justify-center gap-1.5 rounded-sm border border-border px-3 py-2 text-xs font-medium text-text-subtle transition-all hover:border-border-strong hover:bg-bg-subtle hover:text-text"
-                    >
-                        <Edit width={14} height={14} strokeWidth={1.5} />
-                        <span className="hidden sm:inline">Edit</span>
-                    </Link>
-                    <button
-                        type="button"
-                        onClick={handleDelete}
-                        className="flex items-center justify-center gap-1.5 rounded-sm border border-border px-3 py-2 text-xs font-medium text-error transition-all hover:border-error/30 hover:bg-error/5 hover:text-error"
-                    >
-                        <Trash2 width={14} height={14} strokeWidth={1.5} />
-                        <span className="hidden sm:inline">Delete</span>
-                    </button>
-                </div>
-            </div>
+  return (
+    <div
+      data-testid="my-bike-row"
+      data-slug={bike.slug}
+      className="group flex flex-col overflow-hidden rounded-sm border border-border bg-surface transition-all hover:border-border-strong hover:shadow-md"
+    >
+      <div className="relative aspect-[4/3] overflow-hidden bg-bg-subtle">
+        <img
+          src={bike.imageUrl}
+          alt={bike.imageAlt}
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+        <div
+          className={`absolute top-3 left-3 rounded-sm px-2.5 py-1 text-xs font-medium tracking-wide uppercase ${status.bg} ${status.text}`}
+        >
+          <div className="flex items-center gap-1.5">
+            <div className={`h-1.5 w-1.5 rounded-full ${status.dot}`} />
+            {status.label}
+          </div>
         </div>
-    );
+      </div>
+
+      <div className="flex flex-1 flex-col p-4">
+        <div className="mb-1">
+          <p className="truncate text-xs font-medium tracking-wide text-text-subtle uppercase">
+            {bike.brand}
+          </p>
+          <h3 className="line-clamp-2 text-base font-semibold text-text">
+            {bike.title}
+          </h3>
+        </div>
+
+        <div className="mb-3 flex items-center gap-2">
+          <span
+            className={`rounded-sm px-2 py-0.5 text-xs font-medium capitalize ${
+              conditionColors[bike.condition.toLowerCase()] ||
+              'bg-bg-subtle text-text-muted'
+            }`}
+          >
+            {bike.condition}
+          </span>
+          <span className="text-xs text-text-muted">{bike.year}</span>
+          <span className="ml-auto text-lg font-semibold text-text">
+            €{bike.price.toLocaleString('pt-PT')}
+          </span>
+        </div>
+
+        <div className="mb-4 flex items-center gap-4 text-xs text-text-muted">
+          <div className="flex items-center gap-1">
+            <Eye width={14} height={14} strokeWidth={1.5} />
+            <span>{bike.views}</span>
+          </div>
+          <span className="ml-auto text-text-subtle">
+            {new Date(bike.createdAt).toLocaleDateString('pt-PT', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+            })}
+          </span>
+        </div>
+
+        <div className="mt-auto grid grid-cols-2 gap-2 border-t border-border pt-4">
+          <Link
+            href={edit.url(bike.slug)}
+            data-testid="my-bike-edit"
+            className="flex items-center justify-center gap-1.5 rounded-sm border border-border px-3 py-2 text-xs font-medium text-text-subtle transition-all hover:border-border-strong hover:bg-bg-subtle hover:text-text"
+          >
+            <Edit width={14} height={14} strokeWidth={1.5} />
+            <span className="hidden sm:inline">Edit</span>
+          </Link>
+          <button
+            type="button"
+            data-testid="my-bike-delete"
+            onClick={handleDelete}
+            className="flex items-center justify-center gap-1.5 rounded-sm border border-border px-3 py-2 text-xs font-medium text-error transition-all hover:border-error/30 hover:bg-error/5 hover:text-error"
+          >
+            <Trash2 width={14} height={14} strokeWidth={1.5} />
+            <span className="hidden sm:inline">Delete</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function EmptyState({ hasFilter }: { hasFilter: boolean }) {
-    return (
-        <div className="flex flex-col items-center justify-center rounded-sm border border-border bg-surface py-20 text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-bg-subtle">
-                <TrendingUp
-                    width={32}
-                    height={32}
-                    strokeWidth={1.5}
-                    className="text-text-subtle"
-                />
-            </div>
-            <h3 className="mb-1 text-base font-semibold text-text">
-                {hasFilter ? 'No bikes with this status' : 'No bikes yet'}
-            </h3>
-            <p className="mb-4 text-sm text-text-muted">
-                {hasFilter
-                    ? 'Try selecting a different filter above.'
-                    : 'Start by selling your first bike.'}
-            </p>
-            {!hasFilter && (
-                <Link
-                    href={create.url()}
-                    className="inline-flex items-center gap-2 rounded-sm bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
-                >
-                    <Plus width={18} height={18} strokeWidth={2.5} />
-                    Sell a bike
-                </Link>
-            )}
-        </div>
-    );
+  return (
+    <div className="flex flex-col items-center justify-center rounded-sm border border-border bg-surface py-20 text-center">
+      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-bg-subtle">
+        <TrendingUp
+          width={32}
+          height={32}
+          strokeWidth={1.5}
+          className="text-text-subtle"
+        />
+      </div>
+      <h3 className="mb-1 text-base font-semibold text-text">
+        {hasFilter ? 'No bikes with this status' : 'No bikes yet'}
+      </h3>
+      <p className="mb-4 text-sm text-text-muted">
+        {hasFilter
+          ? 'Try selecting a different filter above.'
+          : 'Start by selling your first bike.'}
+      </p>
+      {!hasFilter && (
+        <Link
+          href={create.url()}
+          className="inline-flex items-center gap-2 rounded-sm bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
+        >
+          <Plus width={18} height={18} strokeWidth={2.5} />
+          Sell a bike
+        </Link>
+      )}
+    </div>
+  );
 }

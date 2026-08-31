@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [master]
 
+permissions:
+  contents: read
+
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -25,7 +28,7 @@ jobs:
           bun-version: latest
 
       - name: Get Composer Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.composer/cache
           key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
@@ -69,11 +72,21 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
+          extensions: sqlite3, pdo_sqlite
+          coverage: none
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+
+      - name: Get Composer Cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
 
       - name: Install PHP Dependencies
         run: composer install --no-interaction
@@ -83,10 +96,11 @@ jobs:
       - name: Install Bun Dependencies
         run: bun install
 
-      - name: Prepare E2E Environment
-        run: |
-          touch database/e2e.sqlite
-          php artisan storage:link --force --env=e2e
+      - name: Copy Environment File
+        run: cp .env.example .env
+
+      - name: Generate Application Key
+        run: php artisan key:generate
 
       - name: Generate Wayfinder Types
         run: php artisan wayfinder:generate
@@ -97,15 +111,77 @@ jobs:
       - name: Install Playwright Chromium
         run: bunx playwright install --with-deps chromium
 
-      - name: Run E2E Tests
-        run: bun run test:e2e
-        env:
-          CI: true
-
-      - name: Upload Playwright Report
-        if: failure()
-        uses: actions/upload-artifact@v4
+      - name: Restore Allure history
+        uses: actions/cache@v5
         with:
-          name: playwright-report
+          path: .allure-history
+          key: allure-history-${{ github.ref_name }}
+          restore-keys: |
+            allure-history-
+
+      - name: Run Playwright e2e
+        run: bun run test:e2e
+
+      - name: Generate Allure report
+        if: always()
+        run: bun run allure:generate
+
+      - name: Upload Allure report
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: allure-report-${{ github.run_id }}
+          path: allure-report/
+          retention-days: 14
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: allure-results-${{ github.run_id }}
+          path: allure-results/
+          retention-days: 7
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-report-${{ github.run_id }}
           path: playwright-report/
           retention-days: 7
+
+  deploy-allure:
+    needs: e2e
+    # Pages deploy only on direct pushes to master (merge PR → master triggers this).
+    # Skipped on pull_request runs and feature-branch pushes by design.
+    if: >-
+      always() &&
+      needs.e2e.result != 'cancelled' &&
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Download Allure report
+        uses: actions/download-artifact@v6
+        with:
+          name: allure-report-${{ github.run_id }}
+          path: allure-report
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

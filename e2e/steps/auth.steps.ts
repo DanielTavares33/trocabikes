@@ -1,83 +1,51 @@
 import { expect } from '@playwright/test';
 
-import {
-    E2E_BUYER,
-    E2E_SELLER,
-    E2E_UNVERIFIED,
-} from '../support/credentials';
-import { Given, When, Then } from '../support/fixtures';
+import { Given, Then, When } from './fixtures';
+import { openAccountMenu, signInAsSeller, submitSellerSignIn } from './session';
 
-Given('I am signed in as the buyer', async ({ page }) => {
-    await page.goto('/sign-in');
-    await page.getByLabel('Email').fill(E2E_BUYER.email);
-    await page.getByLabel('Password').fill(E2E_BUYER.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
-    await expect(page).toHaveURL('/');
-});
+let registeredEmail = '';
 
 Given('I am signed in as the seller', async ({ page }) => {
-    await page.goto('/sign-in');
-    await page.getByLabel('Email').fill(E2E_SELLER.email);
-    await page.getByLabel('Password').fill(E2E_SELLER.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
-    await expect(page).toHaveURL('/');
+  await signInAsSeller(page);
 });
 
-When('I sign in as the buyer', async ({ page }) => {
-    await page.goto('/sign-in');
-    await page.getByLabel('Email').fill(E2E_BUYER.email);
-    await page.getByLabel('Password').fill(E2E_BUYER.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+When('I sign in as the seller', async ({ page }) => {
+  await submitSellerSignIn(page);
 });
 
-When('I sign in with invalid credentials', async ({ page }) => {
-    await page.goto('/sign-in');
-    await page.getByLabel('Email').fill(E2E_BUYER.email);
-    await page.getByLabel('Password').fill('wrong-password');
-    await page.getByRole('button', { name: 'Sign in' }).click();
+When('I sign out', async ({ page }) => {
+  await openAccountMenu(page);
+  await page.getByTestId('nav-logout').click();
 });
 
-When('I sign in as the unverified user', async ({ page }) => {
-    await page.goto('/sign-in');
-    await page.getByLabel('Email').fill(E2E_UNVERIFIED.email);
-    await page.getByLabel('Password').fill(E2E_UNVERIFIED.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+Then('I should be signed in', async ({ page }) => {
+  await expect(page.getByTestId('nav-account-menu')).toBeVisible();
+  await expect(page.getByTestId('nav-sign-in')).toHaveCount(0);
 });
 
-When('I sign out from the account menu', async ({ page }) => {
-    await page.getByRole('button', { name: 'Account menu' }).click();
-    await page.getByRole('button', { name: 'Logout' }).click();
+Then('I should be signed out', async ({ page }) => {
+  await expect(page.getByTestId('nav-sign-in')).toBeVisible();
+  await expect(page.getByTestId('nav-account-menu')).toHaveCount(0);
 });
 
-When(
-    'I register with name {string} and email {string}',
-    async ({ page }, name: string, email: string) => {
-        await page.goto('/sign-up');
-        await page.getByLabel('Full name').fill(name);
-        await page.getByLabel('Email').fill(email);
-        await page.locator('#password').fill('password123');
-        await page.locator('#password_confirmation').fill('password123');
-        await page.getByRole('button', { name: 'Create account' }).click();
-    },
-);
+When('I register with a unique email', async ({ page }) => {
+  registeredEmail = `e2e-${Date.now()}@example.com`;
 
-Then('I should see the sign in link in the navbar', async ({ page }) => {
-    await expect(page.getByRole('link', { name: 'Sign in' })).toBeVisible();
-});
-
-Then('I should see the account menu', async ({ page }) => {
-    await expect(
-        page.getByRole('button', { name: 'Account menu' }),
-    ).toBeVisible();
+  await page.getByTestId('nav-sign-up').click();
+  await expect(page.getByTestId('sign-up-form')).toBeVisible();
+  await page.getByTestId('sign-up-name').fill('E2E New User');
+  await page.getByTestId('sign-up-email').fill(registeredEmail);
+  await page.getByTestId('sign-up-password').fill('password');
+  await page.getByTestId('sign-up-password-confirmation').fill('password');
+  await page.getByTestId('sign-up-submit').click();
 });
 
 Then(
-    'I should see the error {string}',
-    async ({ page }, message: string) => {
-        await expect(page.getByText(message)).toBeVisible();
-    },
+  'I should see the email verification notice for that address',
+  async ({ page }) => {
+    await expect(page.getByTestId('verify-email-page')).toBeVisible();
+    await expect(page.getByTestId('verify-email-address')).toHaveText(
+      registeredEmail,
+    );
+  },
 );
-
-Then('I should see the email verification notice', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'Check your email' })).toBeVisible();
-});
