@@ -14,3 +14,6 @@ Playwright starts `webServer` before `globalSetup`. On a fresh clone, `/` return
 
 ## E2E tags filter scenarios by domain
 Tag features (or scenarios) in Gherkin; playwright-bdd emits Playwright `{ tag: [...] }` on each test. Feature tags apply to all scenarios in that file. Current tags: `@browse` (guest marketplace), `@auth` / `@register`, `@listings`, `@account`, `@guest` (no sign-in), `@seller` (signed-in seller). Run a subset with `bun run test:e2e:tag -- '@auth'`, `make e2e-tag TAG='@browse'`, or `bun run test:e2e -- --grep '@seller'`. Cucumber tag expressions at codegen: `bddgen test --tags '@auth and not @register'`.
+
+## Allure reports for e2e
+Every Playwright run writes raw results to `allure-results/` via the `allure-playwright` reporter in `playwright.config.ts`. Generate and open HTML with `bun run allure:report` or run tests + report with `bun run test:e2e:report` / `make e2e-report`. Trend history is stored in `.allure-history/history.jsonl` (`allurerc.json`); CI caches it per branch and deploys the latest HTML report to GitHub Pages on every `master` push (repo Settings → Pages → Source: GitHub Actions). Allure output dirs are gitignored.

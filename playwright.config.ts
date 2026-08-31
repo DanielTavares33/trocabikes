@@ -18,7 +18,18 @@ export default defineConfig({
   expect: {
     timeout: 10_000,
   },
-  reporter: [['list'], ['html', { open: 'never' }]],
+  reporter: [
+    ['list'],
+    ['html', { open: 'never' }],
+    [
+      'allure-playwright',
+      {
+        resultsDir: 'allure-results',
+        detail: true,
+        suiteTitle: true,
+      },
+    ],
+  ],
   globalSetup: './e2e/global-setup.ts',
   use: {
     baseURL,

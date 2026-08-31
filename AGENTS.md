@@ -18,6 +18,9 @@ Laravel 13 / Inertia 3 / React 19 / Tailwind CSS 4 / Pest 4. Dev uses MySQL (Doc
 | Full CI (lint → format → types → Pint → test) | `composer ci:check` |
 | E2E (Playwright + BDD) | `make e2e` or `bun run test:e2e` |
 | E2E by tag | `bun run test:e2e:tag -- '@auth'` or `make e2e-tag TAG='@browse'` |
+| E2E + Allure report | `make e2e-report` or `bun run test:e2e:report` |
+| Allure report only | `bun run allure:report` (after a test run) |
+| Allure on GitHub Pages | Deployed from `master` e2e runs; enable Pages source “GitHub Actions” in repo settings |
 | Fresh setup (composer+bun+key+migrate+build) | `composer setup` |
 | Regenerate Wayfinder types | `php artisan wayfinder:generate` |
 

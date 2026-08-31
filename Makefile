@@ -98,3 +98,7 @@ e2e: ## Run Playwright BDD e2e tests (host PHP + Bun; build assets first)
 e2e-tag: ## Run e2e tests matching TAG (e.g. make e2e-tag TAG='@auth')
 	bun run build
 	bun run test:e2e:tag -- '$(TAG)'
+
+e2e-report: ## Run e2e tests and open Allure HTML report
+	bun run build
+	bun run test:e2e:report

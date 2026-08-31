@@ -28,6 +28,9 @@ yarn-error.log
 /.zed
 /test-results/
 /playwright-report/
+/allure-results/
+/allure-report/
+/.allure-history/
 /blob-report/
 /playwright/.cache/
 /.features-gen/
