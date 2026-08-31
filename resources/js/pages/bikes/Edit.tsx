@@ -101,7 +101,11 @@ export default function Edit({
     <Layout>
       <Head title={`Edit ${bike.title} — Trocabikes`} />
 
-      <div className="flex min-h-screen flex-col bg-bg text-text">
+      <div
+        data-testid="edit-listing-page"
+        data-slug={bike.slug}
+        className="flex min-h-screen flex-col bg-bg text-text"
+      >
         <Navbar />
 
         <main className="flex-1 px-6 py-10 lg:px-12">

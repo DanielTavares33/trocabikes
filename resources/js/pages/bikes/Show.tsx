@@ -132,6 +132,7 @@ export default function BikeShow({ bike, canManage }: Readonly<BikeShowProps>) {
               <div className="mb-6 flex flex-wrap gap-3">
                 <Link
                   href={edit.url(bike.slug)}
+                  data-testid="bike-show-edit"
                   className="inline-flex items-center gap-2 rounded-sm border border-border bg-surface px-4 py-2 text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-bg-subtle"
                 >
                   <Edit width={16} height={16} />
@@ -139,6 +140,7 @@ export default function BikeShow({ bike, canManage }: Readonly<BikeShowProps>) {
                 </Link>
                 <button
                   type="button"
+                  data-testid="bike-show-delete"
                   onClick={handleDelete}
                   className="inline-flex items-center gap-2 rounded-sm border border-border px-4 py-2 text-sm font-medium text-error transition-colors hover:border-error/30 hover:bg-error/5"
                 >
@@ -202,7 +204,11 @@ export default function BikeShow({ bike, canManage }: Readonly<BikeShowProps>) {
                   </div>
 
                   <div className="mb-6 flex items-baseline justify-between">
-                    <p className="text-3xl font-bold text-text">
+                    <p
+                      data-testid="bike-show-price"
+                      data-price={bike.price}
+                      className="text-3xl font-bold text-text"
+                    >
                       {formatPrice(bike.price)}
                     </p>
                     <span

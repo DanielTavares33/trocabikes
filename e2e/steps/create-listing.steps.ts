@@ -13,6 +13,9 @@ const listingPhoto = path.resolve(
 );
 
 let publishedTitle = '';
+let publishedSlug = '';
+
+export { publishedSlug, publishedTitle };
 
 When('I publish a new listing', async ({ page }) => {
   publishedTitle = `E2E Orbea Oiz ${Date.now()}`;
@@ -42,4 +45,6 @@ When('I publish a new listing', async ({ page }) => {
 Then('I should see the published listing', async ({ page }) => {
   await expect(page.getByTestId('bike-show')).toBeVisible();
   await expect(page.getByTestId('bike-show-title')).toHaveText(publishedTitle);
+  publishedSlug =
+    (await page.getByTestId('bike-show').getAttribute('data-slug')) ?? '';
 });

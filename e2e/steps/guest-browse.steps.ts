@@ -59,6 +59,16 @@ When(
   },
 );
 
+When(
+  'I filter the catalog by category {string}',
+  async ({ page }, slug: string) => {
+    await selectBySlug(page, 'filter-category', slug);
+    await page.getByTestId('filter-apply').click();
+    await expect(page).toHaveURL(/bike_category_id=/);
+    await expect(page.getByTestId('bike-grid')).toBeVisible();
+  },
+);
+
 Then(
   'I should not see the catalog bike {string}',
   async ({ page }, slug: string) => {

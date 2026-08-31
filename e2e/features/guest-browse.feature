@@ -18,6 +18,12 @@ Feature: Guest browses the marketplace
     Then I should see the catalog bike "trek-fuel-ex-8"
     And I should not see the catalog bike "specialized-allez"
 
+  Scenario: Guest filters the catalog by category
+    Given I am on the catalog page
+    When I filter the catalog by category "mountain-bikes-mtb"
+    Then I should see the catalog bike "trek-fuel-ex-8"
+    And I should not see the catalog bike "specialized-allez"
+
   Scenario: Guest opens a bike listing from the catalog
     Given I am on the catalog page
     When I open the catalog bike "trek-fuel-ex-8"
