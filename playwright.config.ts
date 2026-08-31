@@ -26,7 +26,9 @@ export default defineConfig({
   },
   webServer: {
     command: 'php artisan serve --host=127.0.0.1 --port=8001 --env=e2e',
-    url: baseURL,
+    // Port-only readiness: globalSetup runs after the server starts, so `/` would
+    // return 500 on a fresh clone until migrate:fresh creates database/e2e.sqlite.
+    port: 8001,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
