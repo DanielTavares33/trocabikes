@@ -28,7 +28,7 @@ jobs:
           bun-version: latest
 
       - name: Get Composer Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.composer/cache
           key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
@@ -81,7 +81,7 @@ jobs:
           bun-version: latest
 
       - name: Get Composer Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.composer/cache
           key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
@@ -112,7 +112,7 @@ jobs:
         run: bunx playwright install --with-deps chromium
 
       - name: Restore Allure history
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .allure-history
           key: allure-history-${{ github.ref_name }}
@@ -128,7 +128,7 @@ jobs:
 
       - name: Upload Allure report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: allure-report-${{ github.run_id }}
           path: allure-report/
@@ -136,7 +136,7 @@ jobs:
 
       - name: Upload Allure results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: allure-results-${{ github.run_id }}
           path: allure-results/
@@ -144,7 +144,7 @@ jobs:
 
       - name: Upload Playwright report
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: playwright-report-${{ github.run_id }}
           path: playwright-report/
@@ -152,6 +152,8 @@ jobs:
 
   deploy-allure:
     needs: e2e
+    # Pages deploy only on direct pushes to master (merge PR → master triggers this).
+    # Skipped on pull_request runs and feature-branch pushes by design.
     if: >-
       always() &&
       needs.e2e.result != 'cancelled' &&
@@ -167,7 +169,7 @@ jobs:
 
     steps:
       - name: Download Allure report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: allure-report-${{ github.run_id }}
           path: allure-report
