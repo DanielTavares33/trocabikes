@@ -28,3 +28,17 @@ Feature: Guest browses the marketplace
     Given I am on the catalog page
     When I open the catalog bike "trek-fuel-ex-8"
     Then I should be on the bike listing "trek-fuel-ex-8"
+
+  Scenario: Guest searches from home
+    Given I am on the home page
+    When I search from home for "trek"
+    Then I should be on the catalog page
+    And I should see the catalog bike "trek-fuel-ex-8"
+    And I should not see the catalog bike "specialized-allez"
+
+  Scenario: Guest opens a category from home
+    Given I am on the home page
+    When I open the home category "mountain-bikes-mtb"
+    Then I should be on the catalog page
+    And I should see the catalog bike "trek-fuel-ex-8"
+    And I should not see the catalog bike "specialized-allez"

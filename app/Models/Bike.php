@@ -158,6 +158,18 @@ class Bike extends Model
             $query->where('year', '<=', $request->integer('year_to'));
         }
 
+        if ($request->filled('q')) {
+            $pattern = '%'.self::escapeLike($request->string('q')->toString()).'%';
+
+            $query->where(function (Builder $builder) use ($pattern): void {
+                self::whereLikeContains($builder, 'title', $pattern);
+                self::whereLikeContains($builder, 'description', $pattern, 'or');
+                $builder->orWhereHas('bikeBrand', function (Builder $brand) use ($pattern): void {
+                    self::whereLikeContains($brand, 'name', $pattern);
+                });
+            });
+        }
+
         if ($request->filled('location')) {
             $location = self::escapeLike($request->string('location')->toString());
 
@@ -186,6 +198,26 @@ class Bike extends Model
             'price_desc' => $query->orderByDesc('price'),
             default => $query->orderByDesc('created_at'),
         };
+    }
+
+    /**
+     * @param  Builder<Bike|BikeBrand>  $query
+     */
+    private static function whereLikeContains(Builder $query, string $column, string $pattern, string $boolean = 'and'): void
+    {
+        $escape = $query->getConnection()->getDriverName() === 'sqlite'
+            ? "escape '\\'"
+            : "escape '\\\\'";
+
+        $sql = $column.' like ? '.$escape;
+
+        if ($boolean === 'or') {
+            $query->orWhereRaw($sql, [$pattern]);
+
+            return;
+        }
+
+        $query->whereRaw($sql, [$pattern]);
     }
 
     private static function escapeLike(string $value): string

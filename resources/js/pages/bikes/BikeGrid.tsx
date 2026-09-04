@@ -5,7 +5,10 @@ import { index as bikesIndex } from '@/routes/bikes';
 import type { BikeCardData } from '~/components/home/BikeCard';
 import BikeCard from '~/components/home/BikeCard';
 import type { BikeFiltersState } from '~/pages/bikes/BikeFilters';
-import { normalizeBikeSortValue } from '~/pages/bikes/BikeFilters';
+import {
+  catalogQueryFromFilters,
+  normalizeBikeSortValue,
+} from '~/pages/bikes/BikeFilters';
 
 interface BikeGridProps {
   bikes: BikeCardData[];
@@ -21,38 +24,10 @@ export default function BikeGrid({
   const sortValue = normalizeBikeSortValue(filters.sort);
 
   const handleSortChange = (sort: string) => {
-    const params: Record<string, string | string[]> = { sort };
-
-    if (filters.bike_brand_id) {
-      params.bike_brand_id = filters.bike_brand_id;
-    }
-
-    if (filters.bike_category_id) {
-      params.bike_category_id = filters.bike_category_id;
-    }
-
-    if (filters.price) {
-      params.price = filters.price;
-    }
-
-    if (filters.condition && filters.condition.length > 0) {
-      params.condition = filters.condition;
-    }
-
-    if (filters.year_from) {
-      params.year_from = filters.year_from;
-    }
-
-    if (filters.year_to) {
-      params.year_to = filters.year_to;
-    }
-
-    if (filters.location) {
-      params.location = filters.location;
-    }
-
     router.get(
-      bikesIndex.url({ query: params }),
+      bikesIndex.url({
+        query: catalogQueryFromFilters({ ...filters, sort }),
+      }),
       {},
       {
         preserveState: true,

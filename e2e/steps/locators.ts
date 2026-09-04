@@ -12,6 +12,10 @@ export function recentBike(page: Page, slug: string): Locator {
   return bikeCard(page.getByTestId('home-recent-bikes'), slug);
 }
 
+export function homeCategory(page: Page, slug: string): Locator {
+  return page.locator(`[data-testid="home-category"][data-slug="${slug}"]`);
+}
+
 export function myBikeRow(page: Page, slug: string): Locator {
   return page.locator(`[data-testid="my-bike-row"][data-slug="${slug}"]`);
 }

@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import { index as bikesIndex } from '@/routes/bikes';
 import type { BikeCardData } from '~/components/home/BikeCard';
 import BikeCard from '~/components/home/BikeCard';
+import type { HomeCategory } from '~/components/home/CategoriesGrid';
 import CategoriesGrid from '~/components/home/CategoriesGrid';
 import Footer from '~/components/home/Footer';
 import Hero from '~/components/home/Hero';
@@ -11,9 +12,13 @@ import Layout from '~/components/layout/Layout';
 
 interface WelcomeProps {
   recentBikes: BikeCardData[];
+  categories: HomeCategory[];
 }
 
-export default function Welcome({ recentBikes }: Readonly<WelcomeProps>) {
+export default function Welcome({
+  recentBikes,
+  categories,
+}: Readonly<WelcomeProps>) {
   return (
     <Layout>
       <Head title="Trocabikes — Find your next bike" />
@@ -24,7 +29,7 @@ export default function Welcome({ recentBikes }: Readonly<WelcomeProps>) {
         <main className="flex-1">
           <Hero />
           <SearchSection />
-          <CategoriesGrid />
+          <CategoriesGrid categories={categories} />
 
           <section
             data-testid="home-recent-bikes"

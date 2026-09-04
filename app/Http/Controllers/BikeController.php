@@ -219,6 +219,7 @@ class BikeController extends Controller
             'year_from',
             'year_to',
             'location',
+            'q',
             'sort',
             'page',
         ]);
@@ -241,7 +242,7 @@ class BikeController extends Controller
             $filters['condition'] = array_filter([(string) $request->input('condition')]);
         }
 
-        foreach (['bike_brand_id', 'bike_category_id', 'year_from', 'year_to', 'location'] as $key) {
+        foreach (['bike_brand_id', 'bike_category_id', 'year_from', 'year_to', 'location', 'q'] as $key) {
             if (! isset($filters[$key])) {
                 continue;
             }
