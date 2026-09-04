@@ -6,8 +6,9 @@ import Footer from '~/components/home/Footer';
 import Navbar from '~/components/home/Navbar';
 import Layout from '~/components/layout/Layout';
 import Pagination from '~/components/Pagination';
-import BikeFilters from '~/pages/bikes/BikeFilters';
 import type { BikeFiltersState } from '~/pages/bikes/BikeFilters';
+import BikeFilters from '~/pages/bikes/BikeFilters';
+import { catalogQueryFromFilters } from '~/pages/bikes/BikeFilters';
 import BikeGrid from '~/pages/bikes/BikeGrid';
 
 interface PaginatedBikes {
@@ -34,42 +35,10 @@ export default function BikesIndex({
   filterOptions,
 }: Readonly<BikesIndexProps>) {
   const handlePageChange = (page: number) => {
-    const params: Record<string, string | string[] | number> = { page };
-
-    if (filters.bike_brand_id) {
-      params.bike_brand_id = filters.bike_brand_id;
-    }
-
-    if (filters.bike_category_id) {
-      params.bike_category_id = filters.bike_category_id;
-    }
-
-    if (filters.price) {
-      params.price = filters.price;
-    }
-
-    if (filters.condition && filters.condition.length > 0) {
-      params.condition = filters.condition;
-    }
-
-    if (filters.year_from) {
-      params.year_from = filters.year_from;
-    }
-
-    if (filters.year_to) {
-      params.year_to = filters.year_to;
-    }
-
-    if (filters.location) {
-      params.location = filters.location;
-    }
-
-    if (filters.sort) {
-      params.sort = filters.sort;
-    }
-
     router.get(
-      bikesIndex.url({ query: params }),
+      bikesIndex.url({
+        query: { ...catalogQueryFromFilters(filters), page },
+      }),
       {},
       {
         preserveState: true,

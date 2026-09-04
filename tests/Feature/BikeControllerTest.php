@@ -112,6 +112,69 @@ test('browse filters by brand category price condition and location', function (
         );
 });
 
+test('browse filters listings by keyword in title description and brand', function () {
+    $trek = BikeBrand::factory()->create(['name' => 'Trek']);
+    $specialized = BikeBrand::factory()->create(['name' => 'Specialized']);
+
+    $titleMatch = Bike::factory()->create([
+        'title' => 'Trek Fuel EX 8',
+        'description' => 'Trail bike',
+        'bike_brand_id' => $specialized->id,
+    ]);
+    $descriptionMatch = Bike::factory()->create([
+        'title' => 'Canyon Grail',
+        'description' => 'A trek across gravel roads',
+        'bike_brand_id' => $specialized->id,
+    ]);
+    $brandMatch = Bike::factory()->create([
+        'title' => 'Domane SL 5',
+        'description' => 'Endurance road bike',
+        'bike_brand_id' => $trek->id,
+    ]);
+    $miss = Bike::factory()->create([
+        'title' => 'Specialized Allez',
+        'description' => 'Aluminum road bike',
+        'bike_brand_id' => $specialized->id,
+    ]);
+
+    $this->get(route('bikes.index', ['q' => 'trek']))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->has('bikes.data', 3)
+            ->where('filters.q', 'trek')
+            ->where('bikes.data', function ($bikes) use ($titleMatch, $descriptionMatch, $brandMatch, $miss) {
+                $ids = collect($bikes)->pluck('id');
+
+                return $ids->contains($titleMatch->id)
+                    && $ids->contains($descriptionMatch->id)
+                    && $ids->contains($brandMatch->id)
+                    && $ids->doesntContain($miss->id);
+            })
+        );
+});
+
+test('browse treats like wildcards in keywords as literals', function (string $q, string $matchTitle, string $missTitle) {
+    $match = Bike::factory()->create([
+        'title' => $matchTitle,
+        'description' => 'Keyword fixture',
+    ]);
+    Bike::factory()->create([
+        'title' => $missTitle,
+        'description' => 'Keyword fixture',
+    ]);
+
+    $this->get(route('bikes.index', ['q' => $q]))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->has('bikes.data', 1)
+            ->where('bikes.data.0.id', $match->id)
+            ->where('filters.q', $q)
+        );
+})->with([
+    'percent' => ['100%', '100% carbon trail bike', '1000 carbon trail bike'],
+    'underscore' => ['size_m', 'size_m frame', 'sizeXm frame'],
+]);
+
 test('browse respects sort and pagination', function () {
     Bike::factory()->create(['price' => 100, 'created_at' => now()->subDay()]);
     Bike::factory()->create(['price' => 900, 'created_at' => now()]);
@@ -415,6 +478,20 @@ test('home page shows recent active bikes', function () {
             ->component('Welcome')
             ->has('recentBikes', 1)
             ->where('recentBikes.0.id', $recent->id)
+        );
+});
+
+test('home page passes categories for shortcuts', function () {
+    $category = BikeCategory::factory()->create(['name' => 'Mountain Bikes (MTB)']);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Welcome')
+            ->has('categories', 1)
+            ->where('categories.0.id', $category->id)
+            ->where('categories.0.name', 'Mountain Bikes (MTB)')
+            ->where('categories.0.slug', 'mountain-bikes-mtb')
         );
 });
 

@@ -2,7 +2,12 @@ import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 import { Given, Then, When } from './fixtures';
-import { catalogBike, recentBike, selectBySlug } from './locators';
+import {
+  catalogBike,
+  homeCategory,
+  recentBike,
+  selectBySlug,
+} from './locators';
 
 async function gotoHome(page: Page): Promise<void> {
   await page.goto('/');
@@ -78,6 +83,19 @@ Then(
 
 When('I open the catalog bike {string}', async ({ page }, slug: string) => {
   await catalogBike(page, slug).click();
+});
+
+When('I search from home for {string}', async ({ page }, query: string) => {
+  await page.getByTestId('home-search-q').fill(query);
+  await page.getByTestId('home-search-submit').click();
+  await expect(page.getByTestId('catalog-page')).toBeVisible();
+  await expect(page).toHaveURL(/[?&]q=/);
+});
+
+When('I open the home category {string}', async ({ page }, slug: string) => {
+  await homeCategory(page, slug).click();
+  await expect(page.getByTestId('catalog-page')).toBeVisible();
+  await expect(page).toHaveURL(/bike_category_id=/);
 });
 
 Then(

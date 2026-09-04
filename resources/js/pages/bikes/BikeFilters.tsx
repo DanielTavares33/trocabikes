@@ -22,6 +22,7 @@ interface PriceRange {
 }
 
 export interface BikeFiltersState {
+  q?: string;
   bike_brand_id?: string;
   bike_category_id?: string;
   price?: string;
@@ -55,6 +56,50 @@ export function normalizeFilterSelectValue(value: unknown): string {
   return String(value);
 }
 
+export function catalogQueryFromFilters(
+  filters: BikeFiltersState,
+): Record<string, string | string[]> {
+  const params: Record<string, string | string[]> = {};
+
+  if (filters.q) {
+    params.q = filters.q;
+  }
+
+  if (filters.bike_brand_id) {
+    params.bike_brand_id = filters.bike_brand_id;
+  }
+
+  if (filters.bike_category_id) {
+    params.bike_category_id = filters.bike_category_id;
+  }
+
+  if (filters.price) {
+    params.price = filters.price;
+  }
+
+  if (filters.condition && filters.condition.length > 0) {
+    params.condition = filters.condition;
+  }
+
+  if (filters.year_from) {
+    params.year_from = filters.year_from;
+  }
+
+  if (filters.year_to) {
+    params.year_to = filters.year_to;
+  }
+
+  if (filters.location) {
+    params.location = filters.location;
+  }
+
+  if (filters.sort) {
+    params.sort = filters.sort;
+  }
+
+  return params;
+}
+
 interface BikeFiltersProps {
   filters: BikeFiltersState;
   filterOptions: {
@@ -70,6 +115,7 @@ export default function BikeFilters({
   filterOptions,
 }: Readonly<BikeFiltersProps>) {
   const [localFilters, setLocalFilters] = useState<BikeFiltersState>({
+    q: filters.q ?? '',
     bike_brand_id: normalizeFilterSelectValue(filters.bike_brand_id),
     bike_category_id: normalizeFilterSelectValue(filters.bike_category_id),
     price: filters.price ?? '',
@@ -82,42 +128,13 @@ export default function BikeFilters({
   const applyFilters = (event?: SubmitEvent) => {
     event?.preventDefault();
 
-    const params: Record<string, string | string[]> = {};
-
-    if (localFilters.bike_brand_id) {
-      params.bike_brand_id = localFilters.bike_brand_id;
-    }
-
-    if (localFilters.bike_category_id) {
-      params.bike_category_id = localFilters.bike_category_id;
-    }
-
-    if (localFilters.price) {
-      params.price = localFilters.price;
-    }
-
-    if (localFilters.condition && localFilters.condition.length > 0) {
-      params.condition = localFilters.condition;
-    }
-
-    if (localFilters.year_from) {
-      params.year_from = localFilters.year_from;
-    }
-
-    if (localFilters.year_to) {
-      params.year_to = localFilters.year_to;
-    }
-
-    if (localFilters.location) {
-      params.location = localFilters.location;
-    }
-
-    if (filters.sort) {
-      params.sort = filters.sort;
-    }
-
     router.get(
-      bikesIndex.url({ query: params }),
+      bikesIndex.url({
+        query: catalogQueryFromFilters({
+          ...localFilters,
+          sort: filters.sort,
+        }),
+      }),
       {},
       {
         preserveState: true,
@@ -128,6 +145,7 @@ export default function BikeFilters({
 
   const clearFilters = () => {
     setLocalFilters({
+      q: '',
       bike_brand_id: '',
       bike_category_id: '',
       price: '',
@@ -167,6 +185,23 @@ export default function BikeFilters({
       </h2>
 
       <form onSubmit={applyFilters} className="flex flex-col gap-6">
+        <div>
+          <h3 className="mb-3 text-sm font-medium text-text">Keyword</h3>
+          <input
+            type="text"
+            name="q"
+            value={localFilters.q ?? ''}
+            onChange={(event) =>
+              setLocalFilters((current) => ({
+                ...current,
+                q: event.target.value,
+              }))
+            }
+            placeholder="Brand, model, or keyword"
+            className="h-9 w-full rounded-sm border border-border bg-bg px-3 text-sm text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+          />
+        </div>
+
         <div>
           <h3 className="mb-3 text-sm font-medium text-text">Brand</h3>
           <select

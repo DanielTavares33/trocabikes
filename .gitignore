@@ -33,6 +33,7 @@ yarn-error.log
 /.allure-history/
 /blob-report/
 /playwright/.cache/
+.playwright-mcp/
 /.features-gen/
 /database/e2e.sqlite
 /database/e2e.sqlite-journal

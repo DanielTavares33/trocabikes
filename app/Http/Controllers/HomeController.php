@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bike;
+use App\Models\BikeCategory;
 use App\Support\BikePresenter;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -20,6 +21,9 @@ class HomeController extends Controller
 
         return Inertia::render('Welcome', [
             'recentBikes' => BikePresenter::cardCollection($recentBikes),
+            'categories' => BikeCategory::query()
+                ->orderBy('name')
+                ->get(['id', 'name', 'slug']),
         ]);
     }
 }
